@@ -1,4 +1,4 @@
-﻿using Dapper;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Linq;
 using WebApplication1.Models.Common;
@@ -10,16 +10,13 @@ namespace WebApplication1.Models.Dao
         public string GetDbVersion()
         {
             string rtnVal = null;
-            using(var conn = base.GetConnection())
+            using(var db = new CopycatContext())
             {
-                string sql = "SELECT @@VERSION";
-                var p = new DynamicParameters();
+                var comments = db.Comments.ToList();
 
-                conn.Open();
 
-                rtnVal = conn.Query<string>(sql, p, commandType: CommandType.Text).FirstOrDefault();
+                rtnVal = comments[0].Comment1;
             }
-
             return rtnVal;
         }
     }
