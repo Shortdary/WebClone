@@ -6,7 +6,7 @@ namespace WebApplication1.Models.Service
     {
         private PostDao postDao = new PostDao();
 
-        public string GetPopularPosts()
+        public List<Post> GetPopularPosts()
         {
             return postDao.GetPopularPosts();
         }
