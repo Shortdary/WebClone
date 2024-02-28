@@ -7,13 +7,13 @@ namespace MvcMovie.Controllers
 {
     public class PopularPostController : Controller
     {
-        public PostService postService = new PostService();
+        PostService _postService = new PostService();
         // 
         // GET: /popularpost/
 
         public IActionResult Index()
         {
-            List<PostWithUser> popularPosts = postService.GetPopularPosts();
+            List<PostWithUser> popularPosts = _postService.GetPopularPosts();
             return View(popularPosts);
         }
 

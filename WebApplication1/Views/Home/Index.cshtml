@@ -2,7 +2,7 @@
     ViewData["Title"] = "짭하하";
 }
 
-<div class="text-center">
+<article id="list">
     <div class="stream">
         <div class="youtube">
             <h2>
@@ -17,5 +17,5 @@
             <div class="you-video">영상2</div>
         </div>
     </div>
-    <partial name="./Privacy.cshtml" />
-</div>
+    <partial name="../PopularPost/Index.cshtml" model=Model/>
+</article>

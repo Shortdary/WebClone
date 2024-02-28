@@ -17,7 +17,8 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<PostWithUser> popularPosts = _postService.GetPopularPosts();
+            return View(popularPosts);
         }
 
         public IActionResult Privacy()
