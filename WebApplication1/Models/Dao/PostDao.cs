@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using Microsoft.Extensions.Hosting;
+using System.Data;
 using System.Data.SqlClient;
 using WebApplication1.Models.Common;
 
@@ -6,27 +7,35 @@ namespace WebApplication1.Models.Dao
 {
     public class PostDao: DBHelper
     {
-        public string GetPopularPosts()
+        public List<Post> GetPopularPosts()
         {
-            string rtnVal = null;
-            //using(var db = new CopycatContext())
+            List<Post> Posts = new();
             using (var conn = base.GetConnection())
             {
-                SqlCommand cmd = new SqlCommand("spSelectPopularPosts", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                SqlCommand cmd = new("spSelectPopularPosts", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
-
-                List<Post> Posts = new List<Post>();
-                Post post = null;
-
                 while (reader.Read())
                 {
-                    rtnVal += $"{reader["subject"].ToString()}\n\r";
+                    Post p = new()
+                    {
+                        Id = Int32.Parse(reader["id"].ToString()),
+                        BoardId = Int32.Parse(reader["board_id"].ToString()),
+                        Subject = reader["subject"].ToString(),
+                        CommentCount = Int32.Parse(reader["comment_count"].ToString()),
+                        ViewCount = Int32.Parse(reader["view_count"].ToString()),
+                        LikeCount = Int32.Parse(reader["id"].ToString()),
+                        CreatedTime = DateTime.Parse(reader["created_time"].ToString()),
+                        CreatedUid = Int32.Parse(reader["created_uid"].ToString())
+                    };
+                    Posts.Add(p);
                 }
             }
-            return rtnVal;
+            return Posts;
         }
 
         public string GetPostsByBoardId(int boardId)
