@@ -1,3 +1,33 @@
+:root {
+    --default-font-color: #000;
+    --reverse-font-color: #eee;
+    --default-background-color: #fff;
+    --sercondary-background-color: #eee;
+    --default-anchor-color: #222;
+    --default-visited-anchor-color: #bbb;
+    --alpha-5: rgb(0 0 0 / 5%);
+    --alpha-10: rgb(0 0 0 / 10%);
+    --alpha-20: rgb(0 0 0 / 20%);
+    --alpha-30: rgb(0 0 0 / 30%);
+    --alpha-40: rgb(0 0 0 / 40%);
+    --alpha-50: rgb(0 0 0 / 50%);
+    --alpha-70: rgb(0 0 0 / 70%);
+    --alpha-80: rgb(0 0 0 / 80%);
+    --apple-color: #000;
+    --google-color: #d0543f;
+    --facebook-color: #1a76f2;
+    --twitter-color: #1ea1f1;
+    --naver-color: #1ec800;
+    --kakao-color: #ffe003;
+    --tumblr-color: #001935;
+    --pinterest-color: #e70022;
+    --flash-success-color: #10b886;
+    --flash-error-color: #e74c3c;
+    --list-line: var(--alpha-5);
+    --gap: 10px;
+    --mobile-gap: 10px;
+}
+
 html {
   font-size: 14px;
 }
@@ -14,7 +44,13 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-size: 14px;
+}
+
+a {
+    color: var(--default-anchor-color);
+    text-decoration: none;
 }
 
 .stream {
@@ -44,4 +80,63 @@ body {
     border: 1px;
     border-color: black;
     border-style: solid;
+}
+
+#list h1 {
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 1.5em;
+    border-radius: 12px;
+}
+
+section#title {
+    padding: 0 10px;
+    width: 100%;
+}
+
+#title .description {
+    margin-top: 5px;
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--alpha-50);
+}
+
+footer .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+footer .guide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.darkmode {
+    padding: 5px;
+    margin-bottom: 5px;
+    font-size: .8em;
+    font-weight: 700;
+    color: var(--reverse-font-color);
+    background-color: var(--alpha-80);
+    border-radius: 5px;
+}
+
+footer .license {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 3px 0;
+    text-align: center;
+}
+
+footer .license a {
+    color: var(--body-font-color);
 }
