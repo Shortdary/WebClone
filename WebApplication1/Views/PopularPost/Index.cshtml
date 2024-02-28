@@ -1,4 +1,4 @@
-﻿@model List<Post>
+﻿@model List<PostWithUser>
 @{
     ViewData["Title"] = "인기글 - 짭하하";
 }
@@ -10,18 +10,34 @@
             <div class="description">추천 많이 받으면 올라갑니다</div>
         </h1>
     </section>
-    <table>
+    <section id="boardList">
         @foreach (var p in Model)
         {
-            <tr>
-                <td>
-                    @p.Id
-                </td>
-                <td>
-                    @p.Subject
-                </td>
-            </tr>
+            <a class="item" href="#">
+                <div class="image">
+                    <img src="/asset/thumbnail.png">
+                </div>
+                <div class="info">
+                    <div class="titleContainer">
+                        <span class="category">침착맨 짤</span>
+                        <span class="title">
+                            <span class="text">@p.Subject</span>
+                            <span class="commentCount">@p.CommentCount</span>
+                        </span>
+                    </div>
+                    <div class="etc">
+                        <div class="nickName">@p.Nickname</div>
+                        <div class="dot"></div>
+                        <div class="datetime">@p.CreatedTime</div>
+                        <div class="dot"></div>
+                        <div class="viewCount"><i class="fa-regular fa-eye"></i>@p.ViewCount</div>
+                        <div class="dot"></div>
+                        <div class="likeCount"><i class="fa-regular fa-thumbs-up"></i>@p.LikeCount</div>
+                    </div>
+                </div>
+            </a>
 
         }
-    </table>
+
+    </section>
 </article>

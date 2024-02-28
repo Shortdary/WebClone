@@ -7,9 +7,9 @@ namespace WebApplication1.Models.Dao
 {
     public class PostDao: DBHelper
     {
-        public List<Post> GetPopularPosts()
+        public List<PostWithUser> GetPopularPosts()
         {
-            List<Post> Posts = new();
+            List<PostWithUser> Posts = new();
             using (var conn = base.GetConnection())
             {
                 SqlCommand cmd = new("spSelectPopularPosts", conn)
@@ -21,16 +21,17 @@ namespace WebApplication1.Models.Dao
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Post p = new()
+                    PostWithUser p = new()
                     {
-                        Id = Int32.Parse(reader["id"].ToString()),
-                        BoardId = Int32.Parse(reader["board_id"].ToString()),
-                        Subject = reader["subject"].ToString(),
-                        CommentCount = Int32.Parse(reader["comment_count"].ToString()),
-                        ViewCount = Int32.Parse(reader["view_count"].ToString()),
-                        LikeCount = Int32.Parse(reader["id"].ToString()),
-                        CreatedTime = DateTime.Parse(reader["created_time"].ToString()),
-                        CreatedUid = Int32.Parse(reader["created_uid"].ToString())
+                        Id = Int32.Parse(reader["id"].ToString()!),
+                        BoardId = Int32.Parse(reader["board_id"].ToString()!),
+                        Subject = reader["subject"].ToString()!,
+                        CommentCount = Int32.Parse(reader["comment_count"].ToString()!),
+                        ViewCount = Int32.Parse(reader["view_count"].ToString()!),
+                        LikeCount = Int32.Parse(reader["id"].ToString()!),
+                        CreatedTime = DateTime.Parse(reader["created_time"].ToString()!),
+                        CreatedUid = Int32.Parse(reader["created_uid"].ToString()!),
+                        Nickname = reader["nickname"].ToString()!
                     };
                     Posts.Add(p);
                 }

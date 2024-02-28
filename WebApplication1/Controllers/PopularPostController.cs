@@ -13,8 +13,7 @@ namespace MvcMovie.Controllers
 
         public IActionResult Index()
         {
-            List<Post> popularPosts = postService.GetPopularPosts();
-            System.Diagnostics.Debug.WriteLine(popularPosts);
+            List<PostWithUser> popularPosts = postService.GetPopularPosts();
             return View(popularPosts);
         }
 

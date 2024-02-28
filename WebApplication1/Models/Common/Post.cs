@@ -21,3 +21,10 @@ public partial class Post
 
     public int CreatedUid { get; set; }
 }
+
+public partial class PostWithUser: Post
+{
+    public string Nickname { get; set; } = null!;
+
+    public string BoardName { get; set; } = null!;
+}
