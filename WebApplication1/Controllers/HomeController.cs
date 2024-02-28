@@ -8,7 +8,7 @@ namespace WebApplication1.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        SampleService _sampleService = new SampleService();
+        PostService _postService = new PostService();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -17,8 +17,8 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
-            object rtnVal = _sampleService.GetDbVersion();
-            return View(rtnVal);
+            List<PostWithUser> popularPosts = _postService.GetPopularPosts();
+            return View(popularPosts);
         }
 
         public IActionResult Privacy()

@@ -1,3 +1,33 @@
+:root {
+    --default-font-color: #000;
+    --reverse-font-color: #eee;
+    --default-background-color: #fff;
+    --sercondary-background-color: #eee;
+    --default-anchor-color: #222;
+    --default-visited-anchor-color: #bbb;
+    --alpha-5: rgb(0 0 0 / 5%);
+    --alpha-10: rgb(0 0 0 / 10%);
+    --alpha-20: rgb(0 0 0 / 20%);
+    --alpha-30: rgb(0 0 0 / 30%);
+    --alpha-40: rgb(0 0 0 / 40%);
+    --alpha-50: rgb(0 0 0 / 50%);
+    --alpha-70: rgb(0 0 0 / 70%);
+    --alpha-80: rgb(0 0 0 / 80%);
+    --apple-color: #000;
+    --google-color: #d0543f;
+    --facebook-color: #1a76f2;
+    --twitter-color: #1ea1f1;
+    --naver-color: #1ec800;
+    --kakao-color: #ffe003;
+    --tumblr-color: #001935;
+    --pinterest-color: #e70022;
+    --flash-success-color: #10b886;
+    --flash-error-color: #e74c3c;
+    --list-line: var(--alpha-5);
+    --gap: 10px;
+    --mobile-gap: 10px;
+}
+
 html {
   font-size: 14px;
 }
@@ -14,5 +44,219 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-size: 14px;
+}
+
+a {
+    color: var(--default-anchor-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.stream {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    border: 1px;
+    border-color: black;
+}
+
+.stream a {
+    color: black;
+    text-decoration: none;
+    font-size: 16.8px;
+    font-weight: 700;
+}
+
+.youtube {
+    width: 50%;
+    text-align: left;
+}
+
+.you-video {
+    height: 273px;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+#list h1 {
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 1.5em;
+    border-radius: 12px;
+}
+
+section#title {
+    padding: 0 10px;
+    width: 100%;
+}
+
+#title .description {
+    margin-top: 5px;
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--alpha-50);
+}
+
+footer .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+footer .guide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.darkmode {
+    padding: 5px;
+    margin-bottom: 5px;
+    font-size: .8em;
+    font-weight: 700;
+    color: var(--reverse-font-color);
+    background-color: var(--alpha-80);
+    border-radius: 5px;
+}
+
+footer .license {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 3px 0;
+    text-align: center;
+}
+
+footer .license a {
+    color: var(--body-font-color);
+}
+
+#boardList .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--list-line);
+}
+
+#boardList .item .image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    margin-right: 10px;
+    color: var(--alpha-40);
+}
+
+#boardList .item .image img {
+    width: 65px;
+}
+
+#boardList .item .info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+    width: 80%;
+}
+
+#boardList .item .titleContainer {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    overflow: hidden;
+}
+
+#boardList .item .category {
+    box-sizing: border-box;
+    padding: 4px 6px;
+    margin-right: 8px;
+    font-size: .9em;
+    color: var(--default-font-color);
+    word-break: keep-all;
+    white-space: nowrap;
+    background-color: var(--alpha-5);
+    border: solid 1px var(--alpha-10);
+    border-radius: 6px;
+}
+
+#boardList .item .title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+#boardList .item .title .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#boardList .item .title .commentCount, #boardList.simple .item .commentCount, #galleryList .info .titleContainer .commentCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    margin-left: 5px;
+    font-size: .9em;
+    font-weight: 700;
+    color: var(--point-background-color);
+    text-align: center;
+    border-radius: 3px;
+}
+
+#boardList .item .etc {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 2px 0;
+    font-size: .8em;
+    color: var(--alpha-40);
+    white-space: nowrap;
+}
+
+#boardList .item .info svg, #boardList .item .info i {
+    margin-right: 4px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 100%;
+}
+
+.dot::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    content: "";
+    background-color: var(--alpha-10);
+    transform: translate(-50%, -50%);
+}
+
+#boardList .item .etc .likeCount {
+    color: var(--default-font-color);
 }
