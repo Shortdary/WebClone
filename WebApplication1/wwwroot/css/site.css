@@ -16,3 +16,32 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.stream {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    border: 1px;
+    border-color: black;
+}
+
+.stream a {
+    color: black;
+    text-decoration: none;
+    font-size: 16.8px;
+    font-weight: 700;
+}
+
+.youtube {
+    width: 50%;
+    text-align: left;
+}
+
+.you-video {
+    height: 273px;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+}
