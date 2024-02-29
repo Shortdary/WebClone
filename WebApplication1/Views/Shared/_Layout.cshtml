@@ -12,8 +12,8 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3" style="width: 100%">
+            <div style ="width: 950px; padding-left: 0px;" class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -30,34 +30,316 @@
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            <div class="logo" style="display: flex; align-items: center; justify-content: center">
-                <a href="/" class="nav-link text-dark">
-                    <h1 class="display-4" style="font-family: GangwonEduPowerExtraBoldA; font-size:42px; font-weight: 700;">짭하하</h1>
-                </a>
-            </div>
-
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="padding: 0">
-                <div class="container-fluid" style="background-color: #1ca8afc8">
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-white" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">인기글</a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">인기글</a>
-                                    <a class="dropdown-item" href="#">알렉산드리아 짤 도서관</a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-white" asp-area="">전체글</a>
-                            </li>
-                        </ul>
-                    </div>
-
+        <div class="logo" style="display: flex; align-items: center; justify-content: center">
+            <a href="/" class="nav-link text-dark">
+                <h1 class="display-4" style="font-family: GangwonEduPowerExtraBoldA; font-size:42px; font-weight: 700;">짭하하</h1>
+            </a>
+        </div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="padding: 0">
+            <div class="container-fluid" style="background-color: #1ca8afc8">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown" style="background-color: #0B4C5F;">
+                            <a class="nav-link dropdown-toggle text-white" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">인기글</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">인기글</a>
+                                <a class="dropdown-item" href="#">알렉산드리아 짤 도서관</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white" asp-area="">전체글</a>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
+
+       @*  <section id="nav">
+            <div class="navWrap">
+                <nav>
+                    <ul>
+                        <li style="background-color: #0B4C5F;">
+                            <div class="menu">
+                                <a style="font-weight: bold; color: #F7FE2E;" href="/best">👍인기글</a>
+                                <div class="dropdownBtn">
+                                    <i class="fa-solid fa-caret-up"></i>
+                                </div>
+                            </div>
+                            <ul class="active ">
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: bold; " href="/best">👍인기글</a>
+                                </li>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: bold; " href="/humor">🏛️알렉산드리아 짤 도서관</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                            <div class="menu">
+                                <a style="font-weight: bold; " href="/new">전체글</a>
+                                <div class="dropdownBtn">
+                                    <i class="fa-solid fa-caret-up"></i>
+                                </div>
+                            </div>
+                            <ul class="active ">
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/boards">전체 게시판 목록</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                            <div class="menu">
+                                <a style="font-weight: bold; " href="/new/chim">침착맨</a>
+                                <div class="dropdownBtn">
+                                    <i class="fa-solid fa-caret-up"></i>
+                                </div>
+                            </div>
+                            <ul class="active ">
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/notice">👀방송일정 및 공지</a>
+                                </li>
+                                <hr>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/stream_free">😊침착맨</a>
+                                </li>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/stream_meme">🎃침착맨 짤</a>
+                                </li>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/stream_fanart">🎨침착맨 팬아트</a>
+                                </li>
+                                <hr>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/request_find">🍳침투부 찾아요 &amp; 공유해요</a>
+                                </li>
+                                <hr>
+                                <li style="background-color: inherit;">
+                                    <a style="font-weight: normal; " href="/chim_painting">🎪침착맨의 그림</a>
+                                </li>
+                            </ul>
+                        </li>
+                        @* <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/new/humor">웃음</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active ">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: bold; " href="/humor">🏛️알렉산드리아 짤 도서관</a>
+                        </li>
+                        <hr>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/humor_try">🌅짤</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/humor_user">😄유머</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/story">📖이야기&amp;썰</a>
+                        </li>
+                        </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/new/sports">스포츠</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active ">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/football">⚽축구</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/baseball">⚾야구</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/other_sports">🏅기타스포츠</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/exercise">🏋️운동&amp;다이어트</a>
+                        </li>
+                        </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/new/hobby">취미</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active ">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/food_trip">🍽️음식&amp;여행</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/pet">🐶반려동물</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/lol">⚔️리그 오브 레전드</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/game">🕹️게임</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/video">🎥영화&amp;드라마</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/music">🎵음악</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/fashion1">👟패션</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/idol">💃아이돌</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/recommend_comics">📖기타취미</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/dooly">🤢둘리회</a>
+                        </li>
+                        <hr>
+                        </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/new/district">인물</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active two">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/baeguson">📻위인사당(배성재)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/pearl">👨&zwj;🦲대인국(주펄)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/woojae">💀꺽다리는꺽꺽하고웃지(주우재)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/kwak">🌏준빈나라(곽튜브)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/orbit">🚀궤도사령부(궤도)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/vivailcinema">👑구쭈왕국(박정민)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/swab85">👨&zwj;🍳이세계식당(승우아빠)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/yagubu">🦷나비치과 탕비실(매직박)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/chicken">🍞빵굽는마을(통닭천사)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/pani">🥔감자밭(빠니보틀)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/min">🏜️모든 길은 이집트로(곽민수)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/imsemo">🧩퍼즐세상(임세모)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/109ace">🍜차돌짬뽕 잠실점(철면수심)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/offcafe">🏢미래전략실(김풍)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/dangun">😈진보맹국(단군)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/qm">❓물음표전진기지(QM)</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/can">🐈괘시판(심윤수)</a>
+                        </li>
+                        </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/internet">인방</a>
+                        </div>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/life">익명</a>
+                        </div>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/check">소원의 돌</a>
+                        </div>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/recommend_goods">구쭈</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active ">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/recommend_goods">👕구쭈</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/goods_review">📸구쭈 후기</a>
+                        </li>
+                        </ul>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <div class="menu">
+                        <a style="font-weight: bold; " href="/wantnotice">행정실</a>
+                        <div class="dropdownBtn">
+                        <i class="fa-solid fa-caret-up"></i>
+                        </div>
+                        </div>
+                        <ul class="active ">
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/wantnotice">📋게시판 요청</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/submit">🙋시청자 참여</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: bold; " href="/apply">🙏침투부 지원하기</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/doodle">🤡침하하 두들</a>
+                        </li>
+                        <hr>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/songquest">🎶음악방송 신청곡</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/request_content">📣방송 해줘요</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/request_shorts">🎬쇼츠 만들어줘요</a>
+                        </li>
+                        <li style="background-color: inherit;">
+                        <a style="font-weight: normal; " href="/askanything">🈚무엇이든 물어보세요</a>
+                        </li>
+                        </ul>
+                        </li> 
+                    </ul> *@
+                </nav>
+            </div>
+            <div class="navBackground"></div>
+        </section>
+    </header>
+    <div class="container" style="width: 950px">
+        <main role="main" class="pb-3">
+
             @RenderBody()
         </main>
     </div>

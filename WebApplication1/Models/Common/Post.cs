@@ -28,3 +28,8 @@ public partial class PostWithUser: Post
 
     public string BoardName { get; set; } = null!;
 }
+
+public partial class PostDetailWithUser : PostWithUser
+{
+    public string Detail { get; set; } = null!;
+}

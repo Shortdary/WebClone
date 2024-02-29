@@ -26,6 +26,10 @@
     --list-line: var(--alpha-5);
     --gap: 10px;
     --mobile-gap: 10px;
+    --point-background-color: #1ca8af;
+    --site-width: 950px;
+    --banner-gap: 20px;
+    --banner-mobile-gap: 10px;
 }
 
 html {
@@ -44,8 +48,18 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
     font-size: 14px;
+    line-height: normal;
+    color: var(--default-anchor-color);
+}
+
+header, footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 a {
@@ -259,4 +273,90 @@ footer .license a {
 
 #boardList .item .etc .likeCount {
     color: var(--default-font-color);
+}
+
+header #nav {
+    background-color: var(--point-background-color);
+}
+
+@media (min-width: 951px) {
+    header, .shortcuts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    header #nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    header nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 950px;
+    }
+
+    header nav > ul {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: start;
+    }
+
+    header nav > ul > li {
+        position: relative;
+        flex: 0 0 auto;
+        list-style: none;
+    }
+
+    header nav > ul > li .dropdownBtn {
+        display: none;
+    }
+
+    header #sub {
+        position: relative;
+    }
+
+    header #sub ul {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: end;
+        width: 950px;
+        margin: auto;
+    }
+
+    header nav > ul > li > ul {
+        position: absolute;
+        z-index: 5;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        text-align: center;
+    }
+
+    header nav > ul > li > ul > li {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 100%;
+    }
+
+    header nav > ul > li > ul > li > a {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 100%;
+        padding: 10px 15px;
+        color: #222;
+        white-space: nowrap;
+    }
 }

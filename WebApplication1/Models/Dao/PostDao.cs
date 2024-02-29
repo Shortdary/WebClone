@@ -74,5 +74,36 @@ namespace WebApplication1.Models.Dao
             }
             return rtnVal;
         }
+
+        public PostDetailWithUser GetPostDetail(int postId)
+        {
+            PostDetailWithUser p = new();
+            using (var conn = base.GetConnection())
+            {
+                SqlCommand cmd = new("spSelectPostDetail", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.Add(new SqlParameter("@id", postId));
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    p.Id = Int32.Parse(reader["id"].ToString()!);
+                    p.BoardId = Int32.Parse(reader["board_id"].ToString()!);
+                    p.Subject = reader["subject"].ToString()!;
+                    p.CommentCount = Int32.Parse(reader["comment_count"].ToString()!);
+                    p.ViewCount = Int32.Parse(reader["view_count"].ToString()!);
+                    p.LikeCount = Int32.Parse(reader["id"].ToString()!);
+                    p.CreatedTime = DateTime.Parse(reader["created_time"].ToString()!);
+                    p.CreatedUid = Int32.Parse(reader["created_uid"].ToString()!);
+                    p.Nickname = reader["nickname"].ToString()!;
+                    p.Detail = reader["detail"].ToString()!;
+                }
+            }
+
+            return p;
+        }
     }
 }
