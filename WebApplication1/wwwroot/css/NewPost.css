@@ -1,0 +1,106 @@
+﻿article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+    article h1 {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 15px 0;
+        color: var(--default-font-color);
+    }
+
+    article form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+    article .subContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        article .subContainer > .mainMinorSubject {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+    article .boardContainer, article .categoryContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-weight: bold;
+        border-radius: 8px;
+    }
+
+    article select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        color: var(--default-font-color);
+        background-color: var(--default-background-color);
+        border: 1px solid var(--alpha-30);
+        border-radius: 8px;
+    }
+
+option {
+    font-weight: normal;
+    display: block;
+    min-height: 1.2em;
+    padding: 0px 2px 1px;
+    white-space: nowrap;
+}
+
+article .checkBox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+article .title {
+    display: flex;
+    width: 100%;
+}
+
+#title, #boardList, #galleryList, .categories, .searchAndWrite {
+    padding: 0 10px;
+}
+
+article .content {
+    color: var(--default-font-color);
+    border-radius: 8px;
+}
+
+    article .content .textareaContainer {
+        width: 100%;
+    }
+
+        article .content .textareaContainer textarea, article .content .textareaContainer .ck-content {
+            border: 1px solid var(--alpha-30) !important;
+        }
+
+        article .content .textareaContainer .wordCount {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            margin: 10px 0;
+        }
+
+article .button {
+    flex: 1;
+}
+
+article form > div {
+    width: 100%;
+}

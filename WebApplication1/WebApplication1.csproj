@@ -18,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="TinyMCE" Version="6.8.3" />
   </ItemGroup>
 
   <ItemGroup>

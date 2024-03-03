@@ -7,7 +7,7 @@ namespace MvcMovie.Controllers
 {
     public class PopularPostController : Controller
     {
-        PostService _postService = new PostService();
+        private readonly PostService _postService = new ();
 
         // GET: /best/
         [HttpGet("best")]
@@ -22,7 +22,7 @@ namespace MvcMovie.Controllers
         [HttpGet("best/{postId}")]
         public IActionResult Detail(int postId)
         {
-            PostDetailWithUser postDetail = _postService.GetPostDetail(postId);
+            PostWithUser postDetail = _postService.GetPostDetail(postId);
             return View(postDetail);
         }
     }

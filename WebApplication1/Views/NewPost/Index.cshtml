@@ -1,0 +1,34 @@
+﻿@model Post
+@{
+}
+<link rel="stylesheet" href="@(Url.Content("~/css/NewPost.css"))" />
+
+<div>
+    @Html.BeginForm("add", "NewPost", FormMethod.Post)
+    {
+    <article data-article-id="">
+        <h1>글쓰기</h1>
+        <div class="subContainer">
+            <div class="mainMinorSubject">
+                <div class="boardContainer">
+                    <select name="boardId" id="boardId">
+                        <option value="" data-slug="none">게시판을 선택해 주세요</option>
+                        <option data-slug="stream_free" value="2">😊침착맨</option>
+                        <option data-slug="stream_meme" value="3">🎃침착맨 짤</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="title">
+            @*TextBox <> TextBoxFor 차이점 *@
+            @Html.TextBoxFor(x => x.Subject)
+        </div>
+        @Html.
+        <textarea name="detail" id="detail" placeholder="내용"></textarea>
+        <div class="button" action="submit"><button>등록</button></div>
+        @Html.AntiForgeryToken()
+    </article>
+    }
+
+</div>

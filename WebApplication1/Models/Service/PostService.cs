@@ -4,7 +4,13 @@ namespace WebApplication1.Models.Service
 {
     public class PostService
     {
-        private PostDao postDao = new PostDao();
+        private readonly PostDao postDao = new();
+
+        // 글 쓰기
+        public string CreatePost(Post p)
+        {
+            return postDao.CreatePost(p);
+        }
 
         // 인기글 조회
         public List<PostWithUser> GetPopularPosts()
@@ -13,12 +19,13 @@ namespace WebApplication1.Models.Service
         }
 
         // 게시판ID를 통한 게시물 조회
-        public string GetPostsByBoadId(int boardId)
+        public List<PostWithUser> GetPostsByBoadId(int boardId)
         {
             return postDao.GetPostsByBoardId(boardId);
         }
 
-        public PostDetailWithUser GetPostDetail(int postId)
+        // 글 내용 조회
+        public PostWithUser GetPostDetail(int postId)
         {
             return postDao.GetPostDetail(postId);
         }
