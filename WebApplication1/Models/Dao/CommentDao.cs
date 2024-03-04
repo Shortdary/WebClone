@@ -8,7 +8,7 @@ namespace WebApplication1.Models.Dao
     {
         public string GetCommentByPostId(int postId)
         {
-            string rtnVal = null;
+            string? rtnVal = null;
             //using(var db = new CopycatContext())
             using(var conn = base.GetConnection())
             {
@@ -22,14 +22,14 @@ namespace WebApplication1.Models.Dao
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 List<Comment> TestComment = new List<Comment>();
-                Comment comment = null;
+                Comment? comment = null;
 
                 while(reader.Read())
                 {
                     comment = new Comment();
-                    comment.Id = int.Parse(reader["id"].ToString());
-                    comment.Comment1 = reader["comment"].ToString();
-                    comment.LikeCount = int.Parse(reader["like_count"].ToString());
+                    comment.Id = int.Parse(reader["id"].ToString()!);
+                    comment.Comment1 = reader["comment"].ToString()!;
+                    comment.LikeCount = int.Parse(reader["like_count"].ToString()!);
                     TestComment.Add(comment);
                 }
 

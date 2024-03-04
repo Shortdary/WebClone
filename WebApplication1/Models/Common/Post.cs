@@ -6,7 +6,6 @@ namespace WebApplication1.Models;
 
 public partial class Post
 {
-    [Required]
     [Range(0, int.MaxValue)]
     public int Id { get; set; }
 
@@ -15,6 +14,7 @@ public partial class Post
     [Required(AllowEmptyStrings = false)]
     public string Subject { get; set; } = null!;
 
+    [Required(AllowEmptyStrings = false)]
     public string Detail { get; set; } = null!;
 
     public int CommentCount { get; set; }
@@ -26,7 +26,6 @@ public partial class Post
     public DateTime CreatedTime { get; set; }
 
     public int CreatedUid { get; set; }
-
 }
 
 public partial class PostWithUser: Post
@@ -34,4 +33,28 @@ public partial class PostWithUser: Post
     public string Nickname { get; set; } = null!;
 
     public string BoardName { get; set; } = null!;
+}
+
+public partial class PostInsert
+{
+    [Required]
+    [Range(1, int.MaxValue, ErrorMessage = "게시판을 선택해주세요")]
+    public int BoardId { get; set; }
+
+    [Required(AllowEmptyStrings = false, ErrorMessage = "제목을 입력해주세요")]
+    public string Subject { get; set; } = null!;
+
+    [Required(AllowEmptyStrings = false, ErrorMessage = "내용을 입력해주세요")]
+    public string Detail { get; set; } = null!;
+
+    [Required]
+    public int CreatedUid { get; set; }
+
+    public int CommentCount { get; set; } = 0;
+
+    public int ViewCount { get; set; } = 0;
+
+    public int LikeCount { get; set; } = 0;
+
+    public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
 }

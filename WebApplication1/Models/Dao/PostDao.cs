@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using WebApplication1.Models.Common;
 
@@ -7,7 +6,7 @@ namespace WebApplication1.Models.Dao
 {
     public class PostDao: DBHelper
     {
-        public string CreatePost(Post p)
+        public string CreatePost(PostInsert p)
         {
             using var conn = GetConnection();
             SqlCommand cmd = new("spInsertPost", conn)

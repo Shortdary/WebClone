@@ -7,7 +7,7 @@ namespace WebApplication1.Models.Service
         private readonly PostDao postDao = new();
 
         // 글 쓰기
-        public string CreatePost(Post p)
+        public string CreatePost(PostInsert p)
         {
             return postDao.CreatePost(p);
         }
