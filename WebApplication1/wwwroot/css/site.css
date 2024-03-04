@@ -32,9 +32,6 @@
     --banner-mobile-gap: 10px;
 }
 
-html {
-  font-size: 14px;
-}
 
 @media (min-width: 768px) {
   html {
@@ -42,9 +39,15 @@ html {
   }
 }
 
+article {
+    width: 950px;
+    min-width: 950px;
+}
+
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
 }
 
 body {
