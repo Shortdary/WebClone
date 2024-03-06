@@ -33,7 +33,7 @@ public partial class CopycatContext : DbContext
             entity.Property(e => e.Comment1)
                 .HasMaxLength(50)
                 .HasColumnName("comment");
-            entity.Property(e => e.CraetedUid).HasColumnName("craeted_uid");
+            entity.Property(e => e.CreatedUid).HasColumnName("created_uid");
             entity.Property(e => e.CreatedTime)
                 .HasColumnType("datetime")
                 .HasColumnName("created_time");

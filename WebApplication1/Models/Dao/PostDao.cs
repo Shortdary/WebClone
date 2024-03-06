@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
 using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
@@ -39,25 +40,24 @@ namespace WebApplication1.Models.Dao
                 };
 
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
 
-                // TODO : 읽기 방식 ? 변경
-                while (reader.Read())
-                {
-                    PostWithUser p = new()
+                DataTable dt = new();
+                SqlDataAdapter da = new(cmd);
+                da.Fill(dt);
+                
+                Posts = dt.AsEnumerable().Select(row =>
+                    new PostWithUser
                     {
-                        Id = Int32.Parse(reader["id"].ToString()!),
-                        BoardId = Int32.Parse(reader["board_id"].ToString()!),
-                        Subject = reader["subject"].ToString()!,
-                        CommentCount = Int32.Parse(reader["comment_count"].ToString()!),
-                        ViewCount = Int32.Parse(reader["view_count"].ToString()!),
-                        LikeCount = Int32.Parse(reader["id"].ToString()!),
-                        CreatedTime = DateTime.Parse(reader["created_time"].ToString()!),
-                        CreatedUid = Int32.Parse(reader["created_uid"].ToString()!),
-                        Nickname = reader["nickname"].ToString()!
-                    };
-                    Posts.Add(p);
-                }
+                        Id = row.Field<int>("id"),
+                        BoardId = row.Field<int>("board_id"),
+                        Subject = row.Field<string>("subject")!,
+                        CommentCount = row.Field<int>("comment_count"),
+                        ViewCount = row.Field<int>("view_count"),
+                        LikeCount = row.Field<int>("like_count"),
+                        CreatedTime = row.Field<DateTime>("created_time"),
+                        CreatedUid = row.Field<int>("created_uid"),
+                        Nickname = row.Field<string>("nickname")!
+                    }).ToList();
             }
             return Posts;
         }
@@ -76,6 +76,7 @@ namespace WebApplication1.Models.Dao
 
                 conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
+                // TODO : 읽기 방식 ? 변경
                 while (reader.Read())
                 {
                     PostWithUser p = new()
@@ -90,6 +91,9 @@ namespace WebApplication1.Models.Dao
                         CreatedUid = Int32.Parse(reader["created_uid"].ToString()!),
                         Nickname = reader["nickname"].ToString()!
                     };
+
+
+                    
                     Posts.Add(p);
                 }
             }
@@ -100,28 +104,59 @@ namespace WebApplication1.Models.Dao
         {
             PostWithUser p = new();
             using (var conn = GetConnection())
+            using (var conn2 = GetConnection())
             {
-                SqlCommand cmd = new("spSelectPostDetail", conn)
+                SqlCommand postCmd = new("spSelectPostDetail", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add(new SqlParameter("@id", postId));
-
+                postCmd.Parameters.Add(new SqlParameter("@id", postId));
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+
+                SqlCommand commentCmd = new("spSelectCommentsByPostId", conn2)
                 {
-                    p.Id = Int32.Parse(reader["id"].ToString()!);
-                    p.BoardId = Int32.Parse(reader["board_id"].ToString()!);
-                    p.Subject = reader["subject"].ToString()!;
-                    p.CommentCount = Int32.Parse(reader["comment_count"].ToString()!);
-                    p.ViewCount = Int32.Parse(reader["view_count"].ToString()!);
-                    p.LikeCount = Int32.Parse(reader["id"].ToString()!);
-                    p.CreatedTime = DateTime.Parse(reader["created_time"].ToString()!);
-                    p.CreatedUid = Int32.Parse(reader["created_uid"].ToString()!);
-                    p.Nickname = reader["nickname"].ToString()!;
-                    p.Detail = reader["detail"].ToString()!;
-                }
+                    CommandType = CommandType.StoredProcedure
+                };
+                commentCmd.Parameters.Add(new SqlParameter("@post_id", postId));
+                conn2.Open();
+
+                List<Comment> Comments = new();
+
+                DataTable pdt = new();
+                SqlDataAdapter pda = new(postCmd);
+                pda.Fill(pdt);
+
+                DataTable cdt = new();
+                SqlDataAdapter cda = new(commentCmd);
+                cda.Fill(cdt);
+
+                Comments = cdt.AsEnumerable().Select(row =>
+                    new Comment
+                    {
+                        Id = row.Field<int>("id"),
+                        PostId = row.Field<int>("post_id"),
+                        Comment1 = row.Field<string>("comment")!,
+                        LikeCount = row.Field<int>("like_count"),
+                        CreatedTime = row.Field<DateTime>("created_time"),
+                        CreatedUid = row.Field<int>("created_uid"),
+                        Nickname = row.Field<string>("nickname")!
+                    }).ToList();
+
+                p = pdt.AsEnumerable().Select(row =>
+                new PostWithUser
+                {
+                    Id = row.Field<int>("id"),
+                    BoardId = row.Field<int>("board_id"),
+                    Subject = row.Field<string>("subject")!,
+                    Detail = row.Field<string>("detail")!,
+                    CommentCount = row.Field<int>("comment_count"),
+                    ViewCount = row.Field<int>("view_count"),
+                    LikeCount = row.Field<int>("like_count"),
+                    CreatedTime = row.Field<DateTime>("created_time"),
+                    CreatedUid = row.Field<int>("created_uid"),
+                    Nickname = row.Field<string>("nickname")!
+                }).ToList()[0];
+                p.Comments = Comments;
             }
 
             return p;
