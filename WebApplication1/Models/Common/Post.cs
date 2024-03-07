@@ -34,6 +34,8 @@ public partial class PostWithUser : Post
 
     public string BoardName { get; set; } = null!;
 
+    public string BoardNameEng { get; set; } = null!;
+
     public List<Comment> Comments { get; set; } = null!;
 }
 

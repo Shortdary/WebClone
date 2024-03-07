@@ -20,4 +20,16 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "best",
+    pattern: "best/{postId?}");
+
+app.MapControllerRoute(
+    name: "stream_free",
+    pattern: "stream_free/{postId?}");
+
+app.MapControllerRoute(
+    name: "stream_meme",
+    pattern: "stream_meme/{postId?}");
+
 app.Run();

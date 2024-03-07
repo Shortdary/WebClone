@@ -1,4 +1,5 @@
-﻿using WebApplication1.Models.Dao;
+﻿using WebApplication1.Models.Common;
+using WebApplication1.Models.Dao;
 
 namespace WebApplication1.Models.Service
 {
@@ -7,7 +8,7 @@ namespace WebApplication1.Models.Service
         private readonly PostDao postDao = new();
 
         // 글 쓰기
-        public string CreatePost(PostInsert p)
+        public (int, string) CreatePost(PostInsert p)
         {
             return postDao.CreatePost(p);
         }
@@ -19,7 +20,7 @@ namespace WebApplication1.Models.Service
         }
 
         // 게시판ID를 통한 게시물 조회
-        public List<PostWithUser> GetPostsByBoadId(int boardId)
+        public BoardInfoWithPostList GetPostsByBoadId(int boardId)
         {
             return postDao.GetPostsByBoardId(boardId);
         }

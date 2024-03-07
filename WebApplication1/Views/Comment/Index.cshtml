@@ -8,14 +8,20 @@
     </div>
     @foreach (var c in Model.Comments)
     {
-        <div class="comment" id=`comment${@c.Id}` aid=`${@c.PostId}` uid=`${@c.CreatedUid}` pid=`${@c.Id}` gid=`${@c.Id}`>
+        <div class="comment" id=@("comment" + c.Id) aid=@c.PostId uid=@c.CreatedUid pid=@c.Id gid=@c.Id>
             <div class="main ">
-                <div class="userImage" style="background-image: url('/assets/defaultuser.png');"></div>
+                <div class="userImage" style="background-image: url('/asset/defaultuser.png');"></div>
                 <div class="commentWrapper">
                     <div class="info">
                         <div class="left">
                             <div class="nickName">
-                                <div class="text"><span>@c.Nickname</span> </div>
+                                <div class="text">
+                                    <span>@c.Nickname</span>
+                                    @if (c.CreatedUid == Model.CreatedUid)
+                                    {
+                                        <span class="author">글쓴이</span>
+                                    }
+                                </div>
                             </div>
                             <div class="counts">
                                 <div class="datetime">@c.CreatedTime</div>

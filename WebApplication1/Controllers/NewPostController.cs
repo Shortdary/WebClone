@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using WebApplication1.Models.Service;
 
@@ -19,13 +20,17 @@ namespace WebApplication1.Controllers
         //[ValidateAntiForgeryToken]
         public IActionResult Add(Models.PostInsert p)
         {
+            int newPostId;
+            string newPostBoardName;
             // TODO : Delete here
             p.CreatedUid = 1;
 
             if (ModelState.IsValid)
             {
-                _postService.CreatePost(p);
+                (newPostId, newPostBoardName) = _postService.CreatePost(p);
+                return RedirectToRoute("best", new { postId = newPostId });
             }
+
             return View("Index");
         }
     }
