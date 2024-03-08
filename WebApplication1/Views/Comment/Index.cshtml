@@ -8,8 +8,8 @@
     </div>
     @foreach (var c in Model.Comments)
     {
-        <div class="comment" id=@("comment" + c.Id) aid=@c.PostId uid=@c.CreatedUid pid=@c.Id gid=@c.Id>
-            <div class="main ">
+        <div class="comment" id=@("comment" + c.Id) aid=@c.PostId uid=@c.CreatedUid pid=@c.ParentCommentId gid=@c.Id>
+            <div class="main @(@c.ParentCommentId is null? string.Empty : "isReply")">
                 <div class="userImage" style="background-image: url('/asset/defaultuser.png');"></div>
                 <div class="commentWrapper">
                     <div class="info">

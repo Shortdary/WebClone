@@ -1,6 +1,7 @@
 ﻿@model BoardInfoWithPostList
 @{
     ViewData["Title"] = $"{Model.BoardName}";
+    int pageIndex = (Model.PageNumber - 1) / 5;
 }
 
 <article id="list">
@@ -13,7 +14,7 @@
     <section id="boardList">
         @foreach (var p in Model.PostList)
         {
-            <a class="item" href="/best/@p.Id">
+            <a class="item" asp-route=@Model.BoardNameEng asp-route-postId=@p.Id>
                 <div class="image">
                     <img src="/asset/thumbnail.png">
                 </div>
@@ -38,4 +39,48 @@
             </a>
         }
     </section>
+    <section class="pagination">
+        <div class="prev">
+            @{
+                if (pageIndex > 0)
+                {
+                    <a asp-route=@Model.BoardNameEng asp-route-page_number=@(pageIndex * 5)>이전</a>
+                }
+            }
+        </div>
+        <div class="number">
+            @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Max(3, pageIndex * 5 + 5); pageNumber++)
+            {
+                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-route=@Model.BoardNameEng asp-route-page_number=@pageNumber>@pageNumber</a>
+            }
+        </div>
+        <div class="next">
+            @{
+                if (true)
+                {
+                    <a asp-route=@Model.BoardNameEng asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
+                }
+            }
+        </div>
+    </section>
+    <div class="searchAndWrite">
+        <div></div>
+        <div>
+            <form action="/stream_fanart">
+                <div class="search">
+                    <select name="searchType">
+                        <option value="title">제목</option>
+                        <option value="titleAndContent">제목 + 내용</option>
+
+                        <option value="nickName">글쓴이</option>
+                    </select>
+                    <input type="text" name="keyword" maxlength="50" value="">
+                    <button>검색</button>
+                </div>
+            </form>
+        </div>
+        <div class="write">
+            <a href="/stream_fanart/new">글쓰기</a>
+        </div>
+    </div>
 </article>

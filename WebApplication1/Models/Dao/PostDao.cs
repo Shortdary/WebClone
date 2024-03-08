@@ -64,7 +64,7 @@ namespace WebApplication1.Models.Dao
             return Posts;
         }
 
-        public BoardInfoWithPostList GetPostsByBoardId(int boardId)
+        public BoardInfoWithPostList GetPostsByBoardId(int boardId, int pageNumber = 1, int pageSize = 1)
         {
             BoardInfoWithPostList boardWithPosts = new();
             using (var conn = GetConnection())
@@ -81,6 +81,8 @@ namespace WebApplication1.Models.Dao
                     postCmd.Parameters.Add(new SqlParameter("@board_id", boardId));
                 }
                 postCmd.CommandType = CommandType.StoredProcedure;
+                postCmd.Parameters.Add(new SqlParameter("@page_number", pageNumber));
+                postCmd.Parameters.Add(new SqlParameter("@page_size", pageSize));
                 conn.Open();
 
                 SqlCommand boardCmd = new("spSelectBoardInfoByBoardId", conn2)
@@ -103,8 +105,10 @@ namespace WebApplication1.Models.Dao
                 {
                     Id = row.Field<int>("id"),
                     BoardName = row.Field<string>("board_name")!,
-                    BoardNameEng = row.Field<string>("board_name_eng")!,
-                    Description = row.Field<string>("description")!
+                    BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                    Description = row.Field<string>("description")!,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
                 }).ToList();
 
                 if (boardInfo.Count > 0) boardWithPosts = boardInfo[0];
@@ -148,7 +152,7 @@ namespace WebApplication1.Models.Dao
                 commentCmd.Parameters.Add(new SqlParameter("@post_id", postId));
                 conn2.Open();
 
-                List<Comment> Comments = new();
+                List<Comment> comments = new();
 
                 DataTable pdt = new();
                 SqlDataAdapter pda = new(postCmd);
@@ -158,7 +162,7 @@ namespace WebApplication1.Models.Dao
                 SqlDataAdapter cda = new(commentCmd);
                 cda.Fill(cdt);
 
-                Comments = cdt.AsEnumerable().Select(row =>
+                comments = cdt.AsEnumerable().Select(row =>
                     new Comment
                     {
                         Id = row.Field<int>("id"),
@@ -167,6 +171,7 @@ namespace WebApplication1.Models.Dao
                         LikeCount = row.Field<int>("like_count"),
                         CreatedTime = row.Field<DateTime>("created_time"),
                         CreatedUid = row.Field<int>("created_uid"),
+                        ParentCommentId = row.Field<int?>("parent_comment_id"),
                         Nickname = row.Field<string>("nickname")!
                     }).ToList();
 
@@ -188,7 +193,7 @@ namespace WebApplication1.Models.Dao
                 }).ToList();
                 if (postContents.Count > 0) p = postContents[0];
 
-                p.Comments = Comments;
+                p.Comments = comments;
             }
 
             return p;

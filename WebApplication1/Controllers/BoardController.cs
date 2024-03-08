@@ -22,24 +22,27 @@ namespace WebApplication1.Controllers
             return View(postDetail);
         }
 
-        [HttpGet("best")]
-        public IActionResult Best()
+        [HttpGet]
+        [Route("best")]
+        public IActionResult Best(int pageNumber = 1)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(24);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(24, pageNumber);
             return View("Index", boardWithPosts);
         }
 
-        [HttpGet("stream_free")]
-        public IActionResult StreamFree()
+        [HttpGet]
+        [Route("stream_free")]
+        public IActionResult StreamFree(int page_number = 1)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(2);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(2, page_number);
             return View("Index", boardWithPosts);
         }
 
-        [HttpGet("stream_meme")]
-        public IActionResult StreamMeme()
+        [HttpGet]
+        [Route("stream_meme")]
+        public IActionResult StreamMeme(int pageNumber = 1)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(3);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(3, pageNumber);
             return View("Index", boardWithPosts);
         }
     }

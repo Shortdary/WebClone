@@ -16,5 +16,10 @@
     {
         public List<PostWithUser> PostList { get; set; } = null!;
 
+        public int PageNumber { get; set; } = 1;
+
+        public int PageSize { get; set; } = 1;
+
+        public int TotalRowNum { get; set; } = 1;
     }
 }
