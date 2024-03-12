@@ -15,10 +15,16 @@ namespace WebApplication1.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(BoardControllerCommonParameter controllerParameter)
         {
-            List<PostWithUser> popularPosts = _postService.GetPopularPosts();
-            return View(popularPosts);
+            BoardServiceCommonParameter serviceParameter = new()
+            {
+                BoardId = 24,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            return View("Index", boardWithPosts);
         }
 
         public IActionResult Privacy()

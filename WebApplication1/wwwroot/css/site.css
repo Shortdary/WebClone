@@ -111,6 +111,15 @@ a:hover {
     border-radius: 12px;
 }
 
+#title h1 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 1.5em;
+    color: var(--default-font-color);
+    border-radius: 12px
+}
+
 section#title {
     padding: 0 10px;
     width: 100%;

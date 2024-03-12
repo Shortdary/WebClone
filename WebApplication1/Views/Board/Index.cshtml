@@ -1,6 +1,7 @@
 ﻿@model BoardInfoWithPostList
 @{
     ViewData["Title"] = $"{Model.BoardName}";
+    string currentUrl = Url.ActionContext.HttpContext.Request.Path;
     int pageIndex = (Model.PageNumber - 1) / 5;
     int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
 }
@@ -9,7 +10,10 @@
     <section id="title">
         <h1>
             <div style="font-weight: 700; font-size: 21px">@Model.BoardName</div>
-            <div class="description">@Model.Description</div>
+            @if (currentUrl.Contains("best"))
+            {
+                <div class="description">@Model.Description</div>
+            }
         </h1>
     </section>
     <section id="boardList">
@@ -45,21 +49,21 @@
             @{
                 if (pageIndex > 0)
                 {
-                    <a asp-route=@Model.BoardNameEng asp-route-page_number=@(pageIndex * 5)>이전</a>
+                    <a asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@(pageIndex * 5)>이전</a>
                 }
             }
         </div>
         <div class="number">
             @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
             {
-                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-route=@Model.BoardNameEng asp-route-page_number=@pageNumber>@pageNumber</a>
+                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@pageNumber>@pageNumber</a>
             }
         </div>
         <div class="next">
             @{
                 if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
                 {
-                    <a asp-route=@Model.BoardNameEng asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
+                    <a asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
                 }
             }
         </div>
