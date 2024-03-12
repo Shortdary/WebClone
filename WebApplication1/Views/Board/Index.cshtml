@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = $"{Model.BoardName}";
     int pageIndex = (Model.PageNumber - 1) / 5;
+    int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
 }
 
 <article id="list">
@@ -49,14 +50,14 @@
             }
         </div>
         <div class="number">
-            @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Max(3, pageIndex * 5 + 5); pageNumber++)
+            @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
             {
                 <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-route=@Model.BoardNameEng asp-route-page_number=@pageNumber>@pageNumber</a>
             }
         </div>
         <div class="next">
             @{
-                if (true)
+                if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
                 {
                     <a asp-route=@Model.BoardNameEng asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
                 }

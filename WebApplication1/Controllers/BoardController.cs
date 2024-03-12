@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using WebApplication1.Models;
 using WebApplication1.Models.Common;
 using WebApplication1.Models.Service;
@@ -8,6 +9,8 @@ namespace WebApplication1.Controllers
     public class BoardController : Controller
     {
         private readonly PostService _postService = new();
+        private readonly int _defaultPageNumber = 1;
+        private readonly int _defaultPageSize = 2;
 
         public IActionResult Index(BoardInfoWithPostList model)
         {
@@ -24,25 +27,43 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         [Route("best")]
-        public IActionResult Best(int pageNumber = 1)
+        public IActionResult Best(BoardControllerCommonParameter controllerParameter)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(24, pageNumber);
+            BoardServiceCommonParameter serviceParameter = new()
+            {
+                BoardId = 24,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
 
         [HttpGet]
         [Route("stream_free")]
-        public IActionResult StreamFree(int page_number = 1)
+        public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(2, page_number);
+            BoardServiceCommonParameter serviceParameter = new()
+            {
+                BoardId = 2,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
 
         [HttpGet]
         [Route("stream_meme")]
-        public IActionResult StreamMeme(int pageNumber = 1)
+        public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter)
         {
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(3, pageNumber);
+            BoardServiceCommonParameter serviceParameter = new()
+            {
+                BoardId = 3,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
     }

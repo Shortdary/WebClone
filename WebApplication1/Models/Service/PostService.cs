@@ -20,9 +20,9 @@ namespace WebApplication1.Models.Service
         }
 
         // 게시판ID를 통한 게시물 조회
-        public BoardInfoWithPostList GetPostsByBoadId(int boardId, int pageNumber = 1, int pageSize = 1)
+        public BoardInfoWithPostList GetPostsByBoadId(BoardServiceCommonParameter serviceParamter)
         {
-            return postDao.GetPostsByBoardId(boardId, pageNumber, pageSize);
+            return postDao.GetPostsByBoardId(serviceParamter);
         }
 
         // 글 내용 조회

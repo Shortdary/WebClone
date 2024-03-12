@@ -64,56 +64,64 @@ namespace WebApplication1.Models.Dao
             return Posts;
         }
 
-        public BoardInfoWithPostList GetPostsByBoardId(int boardId, int pageNumber = 1, int pageSize = 1)
+        public BoardInfoWithPostList GetPostsByBoardId(BoardServiceCommonParameter p)
         {
             BoardInfoWithPostList boardWithPosts = new();
             using (var conn = GetConnection())
             using (var conn2 = GetConnection())
             {
                 SqlCommand postCmd = new(string.Empty, conn);
-                if (boardId == 24)
+                if (p.BoardId == 24)
                 {
                     postCmd.CommandText = "spSelectPopularPosts";
                 }
                 else
                 {
                     postCmd.CommandText = "spSelectPostsByBoardId";
-                    postCmd.Parameters.Add(new SqlParameter("@board_id", boardId));
+                    postCmd.Parameters.Add(new SqlParameter("@board_id", p.BoardId));
                 }
                 postCmd.CommandType = CommandType.StoredProcedure;
-                postCmd.Parameters.Add(new SqlParameter("@page_number", pageNumber));
-                postCmd.Parameters.Add(new SqlParameter("@page_size", pageSize));
+                postCmd.Parameters.Add(new SqlParameter("@page_number", p.PageNumber));
+                postCmd.Parameters.Add(new SqlParameter("@page_size", p.PageSize));
                 conn.Open();
 
                 SqlCommand boardCmd = new("spSelectBoardInfoByBoardId", conn2)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                boardCmd.Parameters.Add(new SqlParameter("@board_id", boardId));
+                boardCmd.Parameters.Add(new SqlParameter("@board_id", p.BoardId));
                 conn2.Open();
 
-                DataTable pdt = new();
+                DataSet pds = new();
                 SqlDataAdapter pda = new(postCmd);
-                pda.Fill(pdt);
+                pda.Fill(pds);
 
                 DataTable bdt = new();
                 SqlDataAdapter bda = new(boardCmd);
                 bda.Fill(bdt);
 
-                var boardInfo = bdt.AsEnumerable().Select(row =>
-                new BoardInfoWithPostList
+
+                DataRow? row = bdt.Rows.Cast<DataRow>().FirstOrDefault();
+                if(row is null)
                 {
-                    Id = row.Field<int>("id"),
-                    BoardName = row.Field<string>("board_name")!,
-                    BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
-                    Description = row.Field<string>("description")!,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                }).ToList();
 
-                if (boardInfo.Count > 0) boardWithPosts = boardInfo[0];
+                }
+                else
+                {
+                    boardWithPosts = new()
+                    {
+                        Id = row.Field<int>("id"),
+                        BoardName = row.Field<string>("board_name")!,
+                        BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                        Description = row.Field<string>("description")!,
+                        PageNumber = p.PageNumber,
+                        PageSize = p.PageSize,
+                    };
+                }
 
-                boardWithPosts.PostList = pdt.AsEnumerable().Select(row =>
+                // if (boardInfo.Count > 0) boardWithPosts = boardInfo[0];
+
+                boardWithPosts.PostList = pds.Tables[0].AsEnumerable().Select(row =>
                     new PostWithUser
                     {
                         Id = row.Field<int>("id"),
@@ -128,6 +136,8 @@ namespace WebApplication1.Models.Dao
                         CreatedUid = row.Field<int>("created_uid"),
                         Nickname = row.Field<string>("nickname")!
                     }).ToList();
+
+                boardWithPosts.TotalRowNum = pds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
             }
             return boardWithPosts;
         }
