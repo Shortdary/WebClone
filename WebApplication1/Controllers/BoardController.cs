@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using WebApplication1.Models;
-using WebApplication1.Models.Common;
-using WebApplication1.Models.Service;
 
 namespace WebApplication1.Controllers
 {
     public class BoardController : Controller
     {
         private readonly PostService _postService = new();
-        private readonly int _defaultPageNumber = 1;
-        private readonly int _defaultPageSize = 2;
 
         public IActionResult Index(BoardInfoWithPostList model)
         {

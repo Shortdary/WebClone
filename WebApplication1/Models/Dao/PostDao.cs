@@ -29,41 +29,6 @@ namespace WebApplication1.Models.Dao
             return ((int)returnId.Value, ((string)returnBoardName.Value).Trim());
         }
 
-        public List<PostWithUser> GetPopularPosts()
-        {
-            List<PostWithUser> Posts = new();
-            using (var conn = GetConnection())
-            {
-                SqlCommand cmd = new("spSelectPopularPosts", conn)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-
-                conn.Open();
-
-                DataTable dt = new();
-                SqlDataAdapter da = new(cmd);
-                da.Fill(dt);
-                
-                Posts = dt.AsEnumerable().Select(row =>
-                    new PostWithUser
-                    {
-                        Id = row.Field<int>("id"),
-                        BoardId = row.Field<int>("board_id"),
-                        BoardName = row.Field<string>("board_name")!,
-                        BoardNameEng = row.Field<string>("board_name_eng")!,
-                        Subject = row.Field<string>("subject")!,
-                        CommentCount = row.Field<int>("comment_count"),
-                        ViewCount = row.Field<int>("view_count"),
-                        LikeCount = row.Field<int>("like_count"),
-                        CreatedTime = row.Field<DateTime>("created_time"),
-                        CreatedUid = row.Field<int>("created_uid"),
-                        Nickname = row.Field<string>("nickname")!
-                    }).ToList();
-            }
-            return Posts;
-        }
-
         public BoardInfoWithPostList GetPostsByBoardId(BoardServiceCommonParameter p)
         {
             BoardInfoWithPostList boardWithPosts = new();
@@ -100,7 +65,6 @@ namespace WebApplication1.Models.Dao
                 SqlDataAdapter bda = new(boardCmd);
                 bda.Fill(bdt);
 
-
                 DataRow? row = bdt.Rows.Cast<DataRow>().FirstOrDefault();
                 if(row is null)
                 {
@@ -118,8 +82,6 @@ namespace WebApplication1.Models.Dao
                         PageSize = p.PageSize,
                     };
                 }
-
-                // if (boardInfo.Count > 0) boardWithPosts = boardInfo[0];
 
                 boardWithPosts.PostList = pds.Tables[0].AsEnumerable().Select(row =>
                     new PostWithUser

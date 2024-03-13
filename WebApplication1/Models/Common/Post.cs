@@ -62,3 +62,13 @@ public partial class PostInsert
 
     public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
 }
+
+public partial class PostDelete
+{
+    public int PostId { get; set; }
+}
+
+public partial class PostEdit
+{
+    public int PostId { get; set; }
+}
