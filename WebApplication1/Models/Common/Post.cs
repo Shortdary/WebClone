@@ -12,10 +12,10 @@ public partial class Post
     public int BoardId { get; set; }
 
     [Required(AllowEmptyStrings = false)]
-    public string Subject { get; set; } = null!;
+    public string? Subject { get; set; }
 
     [Required(AllowEmptyStrings = false)]
-    public string Detail { get; set; } = null!;
+    public string? Detail { get; set; }
 
     public int CommentCount { get; set; }
 
@@ -30,13 +30,13 @@ public partial class Post
 
 public partial class PostWithUser : Post
 {
-    public string Nickname { get; set; } = null!;
+    public string? Nickname { get; set; }
 
-    public string BoardName { get; set; } = null!;
+    public string? BoardName { get; set; }
 
-    public string BoardNameEng { get; set; } = null!;
+    public string? BoardNameEng { get; set; }
 
-    public List<Comment> Comments { get; set; } = null!;
+    public List<Comment>? Comments { get; set; }
 }
 
 public partial class PostInsert
@@ -46,10 +46,10 @@ public partial class PostInsert
     public int BoardId { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "제목을 입력해주세요")]
-    public string Subject { get; set; } = null!;
+    public string? Subject { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "내용을 입력해주세요")]
-    public string Detail { get; set; } = null!;
+    public string? Detail { get; set; }
 
     [Required]
     public int CreatedUid { get; set; }

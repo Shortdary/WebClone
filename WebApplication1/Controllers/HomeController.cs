@@ -24,7 +24,7 @@ namespace WebApplication1.Controllers
                 PageSize = controllerParameter.PageSize
             };
             BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
-            return View("Index", boardWithPosts);
+            return View(boardWithPosts);
         }
 
         public IActionResult Privacy()

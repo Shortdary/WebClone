@@ -39,6 +39,37 @@
   }
 }
 
+main {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+}
+
+#socialAuth a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 5px;
+    color: #fff;
+    background-color: var(--alpha-10);
+    border-radius: 8px;
+}
+
+#socialAuth .naver {
+    background-color: var(--naver-color);
+}
+
+#socialAuth a img {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+}
+
 article {
     width: 950px;
     min-width: 950px;

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
-using WebApplication1.Models.Service;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {

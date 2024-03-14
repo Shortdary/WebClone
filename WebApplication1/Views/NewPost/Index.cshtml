@@ -4,38 +4,38 @@
 <link rel="stylesheet" href="@(Url.Content("~/css/NewPost.css"))" />
 
 <div>
-    @Html.BeginForm("add", "NewPost", FormMethod.Post)
+    @using (Html.BeginForm("add", "NewPost", FormMethod.Post))
     {
-    @*@Html.AntiForgeryToken()*@
-    <article data-article-id="">
-        <h1>글쓰기</h1>
-        <div class="subContainer">
-            <div class="mainMinorSubject">
-                <div class="boardContainer">
-                    @Html.DropDownListFor(x => x.BoardId,
-                   new List<SelectListItem>()
-                   {
-                       new SelectListItem("게시판을 선택해주세요", "", true, true)
-                       ,new SelectListItem("😊침착맨", "2")
-                       ,new SelectListItem("🎃침착맨 짤", "3")
-                   }, new { @name = "boardId", @id = "boardId" })
-                    @*<select name="boardId" id="boardId">
-                        <option value="" data-slug="none">게시판을 선택해 주세요</option>
-                        <option data-slug="stream_free" value="2">😊침착맨</option>
-                        <option data-slug="stream_meme" value="3">🎃침착맨 짤</option>
+        @*@Html.AntiForgeryToken()*@
+        <article data-article-id="">
+            <h1>글쓰기</h1>
+            <div class="subContainer">
+                <div class="mainMinorSubject">
+                    <div class="boardContainer">
+                        @Html.DropDownListFor(x => x.BoardId,
+                                 new List<SelectListItem>()
+                    {
+                    new SelectListItem("게시판을 선택해주세요", "", true, true)
+                    ,new SelectListItem("😊침착맨", "2")
+                    ,new SelectListItem("🎃침착맨 짤", "3")
+                    }, new { @name = "boardId", @id = "boardId" })
+                        @*<select name="boardId" id="boardId">
+                    <option value="" data-slug="none">게시판을 선택해 주세요</option>
+                    <option data-slug="stream_free" value="2">😊침착맨</option>
+                    <option data-slug="stream_meme" value="3">🎃침착맨 짤</option>
                     </select>*@
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="title">
-            @*TextBox <> TextBoxFor 차이점 *@
-            @Html.TextBoxFor(x => x.Subject, new { @placeholder = "제목" })
-        </div>
-        @Html.TextArea("detail", htmlAttributes: new { @placeholder = "내용" })
-        @Html.ValidationSummary()
-        <div class="button" action="submit"><button>등록</button></div>
-    </article>
+            <div class="title">
+                @*TextBox <> TextBoxFor 차이점 *@
+                @Html.TextBoxFor(x => x.Subject, new { @placeholder = "제목" })
+            </div>
+            @Html.TextArea("detail", htmlAttributes: new { @placeholder = "내용" })
+            @Html.ValidationSummary()
+            <div class="button" action="submit"><button>등록</button></div>
+        </article>
     }
 
 </div>

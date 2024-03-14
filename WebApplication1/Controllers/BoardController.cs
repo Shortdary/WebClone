@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BoardController : Controller
     {
         private readonly PostService _postService = new();
@@ -24,6 +28,10 @@ namespace WebApplication1.Controllers
         [Route("best")]
         public IActionResult Best(BoardControllerCommonParameter controllerParameter)
         {
+
+            System.Diagnostics.Debug.WriteLine($"Best!!");
+            System.Diagnostics.Debug.WriteLine(Request.Cookies["Authorization"]);
+
             BoardServiceCommonParameter serviceParameter = new()
             {
                 BoardId = 24,

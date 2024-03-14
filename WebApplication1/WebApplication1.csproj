@@ -18,13 +18,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
     <PackageReference Include="TinyMCE" Version="6.8.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\asset\" />
   </ItemGroup>
 
 </Project>
