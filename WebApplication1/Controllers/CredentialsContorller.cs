@@ -2,25 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using WebApplication1.JWT;
-using System.Runtime.InteropServices;
-using System.Net;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 
 namespace WebApplication1.Controllers
 {
     public class CredentialsContorller : Controller
     {
-
-        private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
         private readonly UserService _userService = new();
 
-        public CredentialsContorller(IConfiguration config, ILogger<HomeController> logger)
+        public CredentialsContorller(IConfiguration config)
         {
-            _logger = logger;
             _config = config;
         }
 
@@ -54,13 +46,22 @@ namespace WebApplication1.Controllers
                     //Domain = Request.Path.Value,
                     Path = "/",
                     HttpOnly = true,
+                    SameSite = SameSiteMode.Strict
                 };
                 Response.Cookies.Append("Authorization", $"Bearer {tokenString}", cookieOptions);
-                //Response.Cookies.Append("Authorization", tokenString, cookieOptions);
 
-                return RedirectToRoute("");
+                return RedirectToRoute("home");
             }
+
             return View("Login");
+        }
+
+        [Authorize]
+        [Route("credentials/logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("Authorization");
+            return RedirectToRoute("home");
         }
     }
 }

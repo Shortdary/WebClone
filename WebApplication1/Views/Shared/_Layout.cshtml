@@ -23,7 +23,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1" style="flex-direction: row-reverse">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/login">로그인</a>
+                            @if (string.IsNullOrEmpty(this.ViewContext.HttpContext.Request.Cookies["Authorization"]) || this.ViewContext.HttpContext.Request.Cookies["Authorization"] == "None")
+                            {
+                                <a class="nav-link text-dark" href="/login">로그인</a>
+                            } else
+                            {
+                                <a class="nav-link text-dark" href="/credentials/logout">로그아웃</a>
+                            }
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">회원가입</a>

@@ -1,43 +1,36 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebApplication1.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-//{
-//    options.Events = new JwtBearerEvents
-//    {
-//        OnMessageReceived = context =>
-//        {
-//            context.Token = context.Request.Cookies["Authentication"];
-//            return Task.CompletedTask;
-//        }
-//    };
-//});
 
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.IncludeErrorDetails = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer"),
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration.GetValue<string>("Jwt:Audience"),
+        //ValidateLifetime = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:SecretKey"))),
+    };
     options.Events = new JwtBearerEvents
     {
+        OnChallenge = context =>
+        {
+            return new JwtEventsHandler().OnChallenge(context);
+        },
         OnMessageReceived = context =>
         {
-            System.Diagnostics.Debug.WriteLine("OnMessageReceived");
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
-            System.Diagnostics.Debug.WriteLine("OnTokenValidated");
             var user = context.Principal.Identity.Name;
             //Grab the http context user and validate the things you need to
             //if you are not satisfied with the validation fail the request using the below commented code
@@ -46,18 +39,6 @@ builder.Services.AddAuthentication(options =>
             //otherwise succeed the request
             return Task.CompletedTask;
         }
-    };
-    //options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        //ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer"),
-        ValidAudience = builder.Configuration.GetValue<string>("Jwt:Audience"),
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:SecretKey"))),
-        ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256Signature }
     };
 });
 
@@ -70,10 +51,16 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 
+app.UseMiddleware<AddHeaderMiddleware>();
+//app.UseStatusCodePagesWithRedirects("/login");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "home",
+    pattern: "");
 
 app.MapControllerRoute(
     name: "best",
@@ -88,7 +75,6 @@ app.MapControllerRoute(
     pattern: "stream_meme/{postId?}");
 
 app.UseRouting();
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:5263"));
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -97,6 +83,5 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-
 
 app.Run();
