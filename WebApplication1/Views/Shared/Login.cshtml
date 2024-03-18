@@ -2,10 +2,13 @@
 @{
 }
 
-<link rel="stylesheet" href="@(Url.Content("~/css/LoginAndJoin.css"))" />
+<link rel="stylesheet" href="@(Url.Content("~/css/loginAndJoin.css"))" />
 
 <div>
     <main>
+        <div class="smallWrap">
+            <h1>로그인</h1>
+        </div>
         <div class="plainLogin">
             @using (Html.BeginForm("login", "Credentials", FormMethod.Post))
             {

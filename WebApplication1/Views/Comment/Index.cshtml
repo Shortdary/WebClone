@@ -49,10 +49,22 @@
 <div class="commentContainer" id="newComment">
     <div class="contentContainer">
         <div class="commentInput">
-            <div class="commentContent">
-                <textarea disabled="" name="content" placeholder="로그인 해주세요"></textarea>
-            </div>
-            <div class="submit"><button type="button" onclick="login(event);">로그인</button></div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="commentContent">
+                    <textarea name="content" placeholder="댓글을 작성해주세요" maxlength="400"></textarea>
+                    <div class="attached"></div>
+                </div>
+                <div class="submit"><button>등록</button></div>
+            }
+            else
+            {
+                <div class="commentContent">
+                    <textarea disabled="" name="content" placeholder="로그인 해주세요"></textarea>
+                    <div class="attached"></div>
+                </div>
+                <div class="submit"><button type="button" onclick="login(event);">로그인</button></div>
+            }
         </div>
     </div>
 </div>

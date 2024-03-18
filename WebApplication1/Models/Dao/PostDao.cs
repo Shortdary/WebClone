@@ -28,6 +28,27 @@ namespace WebApplication1.Models.Dao
             cmd.ExecuteNonQuery();
             return ((int)returnId.Value, ((string)returnBoardName.Value).Trim());
         }
+        public (int, string) EditPost(PostEdit p)
+        {
+            // TODO : 수정 권한 있는지 확인
+            using var conn = GetConnection();
+            SqlCommand cmd = new("spUpdatePost", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.Add(new SqlParameter("@post_id", p.PostId));
+        }
+
+        public void DeletePost(PostDelete p)
+        {
+            // TODO : 삭제 권한 있는지 확인
+            using var conn = GetConnection();
+            SqlCommand cmd = new("spDeletePost", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.Add(new SqlParameter("@post_id", p.PostId));
+        }
 
         public BoardInfoWithPostList GetPostsByBoardId(BoardServiceCommonParameter p)
         {
@@ -170,5 +191,7 @@ namespace WebApplication1.Models.Dao
 
             return p;
         }
+
+        
     }
 }

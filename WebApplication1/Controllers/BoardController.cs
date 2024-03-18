@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -24,7 +24,6 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Authorize] // TODO : delete
         [Route("best")]
         public IActionResult Best(BoardControllerCommonParameter controllerParameter)
         {

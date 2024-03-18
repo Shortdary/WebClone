@@ -32,6 +32,7 @@ namespace WebApplication1.Models.Dao
                 {
                     user = new User()
                     {
+                        UserId = row.Field<int>("id"),
                         Nickname = row.Field<string>("nickname")!
                     };
                 }

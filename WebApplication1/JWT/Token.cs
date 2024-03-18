@@ -28,7 +28,8 @@ namespace WebApplication1.JWT
             {
                 Subject = new ClaimsIdentity(new Claim[]
                         {
-                        new(ClaimTypes.Name, userInfo.Nickname),
+                            new(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
+                            new(ClaimTypes.Name, userInfo.Nickname),
                             // 필요한 경우에 사용자 클레임 추가
                         }),
 

@@ -24,4 +24,9 @@ public class PostService
     {
         return _postDao.GetPostDetail(postId);
     }
+
+    public (int, string) EditPost(PostEdit p)
+    {
+        return _postDao.EditPost(p);
+    }
 }

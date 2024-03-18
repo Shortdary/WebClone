@@ -85,7 +85,10 @@
             </form>
         </div>
         <div class="write">
-            <a href="/stream_fanart/new">글쓰기</a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/new">글쓰기</a>
+            }
         </div>
     </div>
 </article>

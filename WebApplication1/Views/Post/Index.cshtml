@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="@(Url.Content("~/css/NewPost.css"))" />
 
 <div>
-    @using (Html.BeginForm("add", "NewPost", FormMethod.Post))
+    @using (Html.BeginForm("add", "Post", FormMethod.Post))
     {
         @*@Html.AntiForgeryToken()*@
         <article data-article-id="">

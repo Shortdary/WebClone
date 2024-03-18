@@ -70,5 +70,17 @@ public partial class PostDelete
 
 public partial class PostEdit
 {
-    public int PostId { get; set; }
+    [Range(1, int.MaxValue)]
+    public int BoardId { get; set; }
+
+    [Required(AllowEmptyStrings = false, ErrorMessage = "제목을 입력해주세요")]
+    public string? Subject { get; set; }
+
+    [Required(AllowEmptyStrings = false, ErrorMessage = "내용을 입력해주세요")]
+    public string? Detail { get; set; }
+
+    [Required]
+    public int UpdatedUid { get; set; }
+
+    public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 }

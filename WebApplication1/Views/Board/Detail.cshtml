@@ -1,8 +1,11 @@
-﻿@model PostWithUser
+﻿@using System.Security.Claims
+@model PostWithUser
 @{
     ViewData["Title"] = $"{Model.Subject}";
+    int userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 }
-<link rel="stylesheet" href="@(Url.Content("~/css/Detail.css"))" />
+
+<link rel="stylesheet" href="@(Url.Content("~/css/read.css"))" />
 <link rel="stylesheet" href="@(Url.Content("~/css/Comment.css"))" /> /* TODO: 나중에 분리 */
 
 <article id="article">
@@ -36,6 +39,33 @@
                     <div class="dot"></div>
                     <div class="likeCount"><i class="fa-regular fa-thumbs-up"></i> @Model.LikeCount</div>
                 </div>
+                <div class="right">
+                    @if (userId == Model.CreatedUid)
+                    {
+                        <div class="buttons" onclick="OpenPopUp()">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-v" class="svg-inline--fa fa-ellipsis-v fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512">
+                                <path fill="#AAAAAA" d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"></path>
+                            </svg>
+                        </div>
+                        <ul class="popUp">
+                            <form action="/humor_try/692/edit" method="POST">
+                            <li class="edit">
+                                <a href="/humor_try/692/edit">
+                                    <button type="button" name="submit" value="edit">
+                                        <i class="fa-regular fa-edit"></i>&nbsp;수정
+                                    </button>
+                                </a>
+                            </li>
+                            <li class="delete">
+                                <button name="submit" value="delete"><i class="fa-regular fa-trash-alt"></i>&nbsp;삭제</button>
+                            </li>
+                            @* <li class="share">
+                                <button type="button" id="share"><i class="fa-solid fa-share-from-square"></i>공유</button>
+                            </li> *@
+                            </form>
+                        </ul>
+                    }
+                </div>
             </div>
         </div>
         <div class="content ck-content"><figure class="image"><img src="https://resources.chimhaha.net/article/1709540184992-bboqyxi2lwi.webp"></figure><p>@Model.Detail</p></div>
@@ -63,7 +93,7 @@
             <div class="right">
             </div>
         </div>
-        @Html.Partial("../Comment/Index.cshtml")        
+        @Html.Partial("../Comment/Index.cshtml")
         <div class="listAndEdit">
             <div class="left">
                 <div class="button">
@@ -82,3 +112,18 @@
 
 
 </article>
+
+@section Scripts {
+    <script>
+        function OpenPopUp() {
+            const popUp = document.querySelector("ul.popUp");
+            if (popUp) {
+                if (popUp.style.display == 'none') {
+                    popUp.style.display = 'block';
+                } else {
+                    popUp.style.display = 'none';
+                }
+            }
+        }
+    </script>
+}
