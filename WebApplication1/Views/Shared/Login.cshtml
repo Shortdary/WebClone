@@ -13,10 +13,8 @@
             @using (Html.BeginForm("login", "Credentials", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
-
                 @Html.TextBoxFor(x => x.LoginId, new { @placeholder = "아이디", @type = "text" })
                 @Html.TextBoxFor(x => x.Password, new { @placeholder = "비밀번호", @type = "password" })
-
                 @Html.ValidationSummary()
                 <div class="button" action="submit"><button>로그인</button></div>
             }

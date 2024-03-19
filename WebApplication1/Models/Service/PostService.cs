@@ -25,8 +25,13 @@ public class PostService
         return _postDao.GetPostDetail(postId);
     }
 
-    public (int, string) EditPost(PostEdit p)
+    public void EditPost(PostEdit p)
     {
-        return _postDao.EditPost(p);
+        _postDao.EditPost(p);
+    }
+
+    public void DeletePost(PostDelete p)
+    {
+        _postDao.DeletePost(p);
     }
 }

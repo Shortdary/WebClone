@@ -74,6 +74,10 @@ app.MapControllerRoute(
     name: "stream_meme",
     pattern: "stream_meme/{postId?}");
 
+app.MapControllerRoute(
+    name: "notice",
+    pattern: "notice/{postId?}");
+
 app.UseRouting();
 
 app.UseAuthentication();

@@ -48,9 +48,9 @@
                             </svg>
                         </div>
                         <ul class="popUp">
-                            <form action="/humor_try/692/edit" method="POST">
+                            <form asp-route='@($"/{Model.BoardNameEng?.Trim()}/{Model.Id}/edit")' method="GET">
                             <li class="edit">
-                                <a href="/humor_try/692/edit">
+                                <a href='@($"/{Model.BoardNameEng?.Trim()}/{Model.Id}/edit")'>
                                     <button type="button" name="submit" value="edit">
                                         <i class="fa-regular fa-edit"></i>&nbsp;수정
                                     </button>
@@ -59,9 +59,9 @@
                             <li class="delete">
                                 <button name="submit" value="delete"><i class="fa-regular fa-trash-alt"></i>&nbsp;삭제</button>
                             </li>
-                            @* <li class="share">
-                                <button type="button" id="share"><i class="fa-solid fa-share-from-square"></i>공유</button>
-                            </li> *@
+                                @* <li class="share">
+                        <button type="button" id="share"><i class="fa-solid fa-share-from-square"></i>공유</button>
+                        </li> *@
                             </form>
                         </ul>
                     }

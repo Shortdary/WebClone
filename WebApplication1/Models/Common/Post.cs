@@ -53,14 +53,6 @@ public partial class PostInsert
 
     [Required]
     public int CreatedUid { get; set; }
-
-    public int CommentCount { get; set; } = 0;
-
-    public int ViewCount { get; set; } = 0;
-
-    public int LikeCount { get; set; } = 0;
-
-    public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
 }
 
 public partial class PostDelete
@@ -70,8 +62,9 @@ public partial class PostDelete
 
 public partial class PostEdit
 {
-    [Range(1, int.MaxValue)]
-    public int BoardId { get; set; }
+    public int PostId { get; set; }
+
+    public string? BoardNameEng { get; set; }
 
     [Required(AllowEmptyStrings = false, ErrorMessage = "제목을 입력해주세요")]
     public string? Subject { get; set; }
@@ -81,6 +74,4 @@ public partial class PostEdit
 
     [Required]
     public int UpdatedUid { get; set; }
-
-    public DateTime UpdatedTime { get; set; } = DateTime.UtcNow;
 }

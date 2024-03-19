@@ -9,15 +9,15 @@ namespace WebApplication1.Controllers
     {
         private readonly PostService _postService = new();
 
-        [HttpGet("new")]
-        public IActionResult Index()
+        [HttpGet("new_post")]
+        public IActionResult Add()
         {
-            return View();
+            return View("New");
         }
 
         [Authorize]
-        [HttpPost("new")]
-        //[ValidateAntiForgeryToken]
+        [HttpPost("new_post")]
+        [ValidateAntiForgeryToken]
         public IActionResult Add(Models.PostInsert p)
         {
             p.CreatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -27,23 +27,55 @@ namespace WebApplication1.Controllers
                 return RedirectToRoute(newPostBoardName, new { postId = newPostId });
             }
 
-            return View("Index");
+            return View("New");
         }
 
         [Authorize]
-        [HttpPost("edit")]
-        //[ValidateAntiForgeryToken]
-        public IActionResult Edit(PostEdit p)
+        [HttpGet("{boardName}/{postId}/edit")]
+        public IActionResult GetEdit(int postId)
         {
+            int editorUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            PostWithUser p = _postService.GetPostDetail(postId);
+
+            if (editorUid != p.CreatedUid)
+            {
+                return RedirectToRoute("home");
+            }
+
+            return View("Edit", p);
+        }
+
+        [Authorize]
+        [HttpPost("{boardName}/{postId}/edit")]
+        [ValidateAntiForgeryToken]
+        public IActionResult PostEdit(PostEdit p)
+        {
+            PostWithUser postDetail = _postService.GetPostDetail(p.PostId);
+
             p.UpdatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            p.BoardNameEng = postDetail.BoardNameEng;
             if (ModelState.IsValid)
             {
-                (int editPostId, string editPostBoardName) = _postService.EditPost(p);
-                return RedirectToRoute(editPostBoardName, new { postId = editPostId });
+                _postService.EditPost(p);
+                return RedirectToRoute(p.BoardNameEng!.Trim(), new { postId = p.PostId });
+            }
+
+            return View("Edit", postDetail);
+        }
+
+        [Authorize]
+        [HttpPost("delete_post")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(PostDelete p)
+        {
+            if (ModelState.IsValid)
+            {
+                _postService.DeletePost(p);
+                return RedirectToRoute("home");
             }
 
             return View("Index");
         }
     }
-    
+
 }

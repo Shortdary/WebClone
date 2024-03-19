@@ -38,6 +38,20 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [Route("notice")]
+        public IActionResult Notice(BoardControllerCommonParameter controllerParameter)
+        {
+            BoardServiceCommonParameter serviceParameter = new()
+            {
+                BoardId = 1,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            return View("Index", boardWithPosts);
+        }
+
+        [HttpGet]
         [Route("stream_free")]
         public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter)
         {

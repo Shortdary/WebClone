@@ -28,15 +28,20 @@ namespace WebApplication1.Models.Dao
             cmd.ExecuteNonQuery();
             return ((int)returnId.Value, ((string)returnBoardName.Value).Trim());
         }
-        public (int, string) EditPost(PostEdit p)
+        public void EditPost(PostEdit p)
         {
-            // TODO : 수정 권한 있는지 확인
             using var conn = GetConnection();
             SqlCommand cmd = new("spUpdatePost", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.Add(new SqlParameter("@post_id", p.PostId));
+            cmd.Parameters.Add(new SqlParameter("@id", p.PostId));
+            cmd.Parameters.Add(new SqlParameter("@subject", p.Subject));
+            cmd.Parameters.Add(new SqlParameter("@detail", p.Detail));
+            cmd.Parameters.Add(new SqlParameter("@updated_uid", p.UpdatedUid));
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
         }
 
         public void DeletePost(PostDelete p)
@@ -48,6 +53,8 @@ namespace WebApplication1.Models.Dao
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.Add(new SqlParameter("@post_id", p.PostId));
+            conn.Open();
+            cmd.ExecuteNonQuery();
         }
 
         public BoardInfoWithPostList GetPostsByBoardId(BoardServiceCommonParameter p)
@@ -110,7 +117,7 @@ namespace WebApplication1.Models.Dao
                         Id = row.Field<int>("id"),
                         BoardId = row.Field<int>("board_id"),
                         BoardName = row.Field<string>("board_name")!,
-                        BoardNameEng = row.Field<string>("board_name_eng")!,
+                        BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
                         Subject = row.Field<string>("subject")!,
                         CommentCount = row.Field<int>("comment_count"),
                         ViewCount = row.Field<int>("view_count"),
@@ -174,7 +181,7 @@ namespace WebApplication1.Models.Dao
                     Id = row.Field<int>("id"),
                     BoardId = row.Field<int>("board_id"),
                     BoardName = row.Field<string>("board_name")!,
-                    BoardNameEng = row.Field<string>("board_name_eng")!,
+                    BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
                     Subject = row.Field<string>("subject")!,
                     Detail = row.Field<string>("detail")!,
                     CommentCount = row.Field<int>("comment_count"),
