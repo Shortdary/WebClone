@@ -57,11 +57,15 @@ public partial class PostInsert
 
 public partial class PostDelete
 {
+    [Required]
+    [Range(1, int.MaxValue)]
     public int PostId { get; set; }
 }
 
 public partial class PostEdit
 {
+    [Required]
+    [Range(1, int.MaxValue)]
     public int PostId { get; set; }
 
     public string? BoardNameEng { get; set; }

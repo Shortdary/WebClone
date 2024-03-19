@@ -52,7 +52,7 @@ namespace WebApplication1.Models.Dao
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.Add(new SqlParameter("@post_id", p.PostId));
+            cmd.Parameters.Add(new SqlParameter("@id", p.PostId));
             conn.Open();
             cmd.ExecuteNonQuery();
         }

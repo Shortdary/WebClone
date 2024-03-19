@@ -1,32 +1,32 @@
 ﻿@model PostWithUser
 @{
 }
+<link rel="stylesheet" href="@(Url.Content("~/css/write/new.css"))" />
 <link rel="stylesheet" href="@(Url.Content("~/css/NewPost.css"))" />
 
-<div>
-    @using (Html.BeginRouteForm($"{Model.BoardNameEng}/{Model.Id}/edit", FormMethod.Post))
-    {
-        <article data-article-id="">
-            <h1>글쓰기</h1>
-            <div class="subContainer">
-                <div class="mainMinorSubject">
-                    <div class="boardContainer">
-                        @Html.DropDownListFor(x => x.BoardId, 
-                        new List<SelectListItem>()
-                        {
-                            new SelectListItem("게시판을 선택해주세요", "", true, true)
-                            ,new SelectListItem("😊침착맨", "2")
-                            ,new SelectListItem("🎃침착맨 짤", "3")
-                        }, new { @name = "boardId", @id = "boardId", @disabled = true, @value = Model.BoardId})
-                    </div>
+
+<article data-article-id="">
+@using (Html.BeginRouteForm($"{Model.BoardNameEng}/{Model.Id}/edit", FormMethod.Post))
+{
+        <h1>글쓰기</h1>
+        <div class="subContainer">
+            <div class="mainMinorSubject">
+                <div class="boardContainer">
+                    @Html.DropDownListFor(x => x.BoardId, 
+                    new List<SelectListItem>()
+                    {
+                        new SelectListItem("게시판을 선택해주세요", "", true, true)
+                        ,new SelectListItem("😊침착맨", "2")
+                        ,new SelectListItem("🎃침착맨 짤", "3")
+                    }, new { @name = "boardId", @id = "boardId", @disabled = true, @value = Model.BoardId})
                 </div>
             </div>
-            <div class="title">
-                @Html.TextBoxFor(x => x.Subject, new { @placeholder = "제목", @value = Model.Subject })
-            </div>
-            @Html.TextArea("detail", htmlAttributes: new { @placeholder = "내용", @value = Model.Detail })
-            @Html.ValidationSummary()
-            <div class="button" action="submit"><button>등록</button></div>
-        </article>
+        </div>
+        <div class="title">
+            @Html.TextBoxFor(x => x.Subject, new { @placeholder = "제목", @name = "title", @id = "title", @value = Model.Subject })
+        </div>
+        @Html.TextArea("detail", htmlAttributes: new { @placeholder = "내용", @value = Model.Detail })
+        @Html.ValidationSummary()
+        <div class="button" action="submit"><button>등록</button></div>
     }
-</div>
+</article>

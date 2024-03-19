@@ -64,9 +64,9 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
-        [HttpPost("delete_post")]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(PostDelete p)
+        [HttpPost("{boardName}/{postId}/delete")]
+        // [ValidateAntiForgeryToken]
+        public IActionResult PostDelete(PostDelete p)
         {
             if (ModelState.IsValid)
             {

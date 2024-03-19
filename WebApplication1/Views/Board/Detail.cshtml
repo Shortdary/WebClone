@@ -48,20 +48,23 @@
                             </svg>
                         </div>
                         <ul class="popUp">
-                            <form asp-route='@($"/{Model.BoardNameEng?.Trim()}/{Model.Id}/edit")' method="GET">
+                            <form action='@($"/{Model.BoardNameEng}/{Model.Id}/edit")' method="get">
                             <li class="edit">
-                                <a href='@($"/{Model.BoardNameEng?.Trim()}/{Model.Id}/edit")'>
-                                    <button type="button" name="submit" value="edit">
+                                <a href='@($"/{Model.BoardNameEng}/{Model.Id}/edit")'>
+                                    <button type="submit" name="submit" value="edit">
                                         <i class="fa-regular fa-edit"></i>&nbsp;수정
                                     </button>
                                 </a>
                             </li>
+                            </form>
+                            <form action='@($"/{Model.BoardNameEng}/{Model.Id}/delete")' method="post">
                             <li class="delete">
-                                <button name="submit" value="delete"><i class="fa-regular fa-trash-alt"></i>&nbsp;삭제</button>
+                                <a href='@($"/{Model.BoardNameEng}/{Model.Id}/delete")'>
+                                    <button type="submit" name="submit" value="delete">
+                                        <i class="fa-regular fa-trash-alt"></i>&nbsp;삭제
+                                    </button>
+                                </a>
                             </li>
-                                @* <li class="share">
-                        <button type="button" id="share"><i class="fa-solid fa-share-from-square"></i>공유</button>
-                        </li> *@
                             </form>
                         </ul>
                     }
