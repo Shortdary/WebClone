@@ -17,10 +17,17 @@ namespace WebApplication1.Controllers
 
         // GET: /{boardName}/{postId}
         [HttpGet("{boardName}/{postId}")]
-        public IActionResult Detail(string boardName, int postId)
+        public IActionResult Detail(string _, int postId)
         {
-            PostWithUser postDetail = _postService.GetPostDetail(postId);
-            return View(postDetail);
+            PostDetailWithUser? postDetail = _postService.GetPostDetail(postId);
+            if (postDetail is null)
+            {
+                return View("home");
+            }
+            else
+            {
+                return View(postDetail);
+            }
         }
 
         [HttpGet]
@@ -33,7 +40,7 @@ namespace WebApplication1.Controllers
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
 
@@ -47,7 +54,7 @@ namespace WebApplication1.Controllers
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
 
@@ -61,7 +68,7 @@ namespace WebApplication1.Controllers
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
 
@@ -75,7 +82,7 @@ namespace WebApplication1.Controllers
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
             return View("Index", boardWithPosts);
         }
     }

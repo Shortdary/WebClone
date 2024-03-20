@@ -6,6 +6,7 @@ namespace WebApplication1.Models;
 public class PostService
 {
     private readonly PostDao _postDao = new();
+    private readonly CommentDao _commentDao = new();
 
     // 글 쓰기
     public (int, string) CreatePost(PostInsert p)
@@ -13,16 +14,34 @@ public class PostService
         return _postDao.CreatePost(p);
     }
 
-    // 게시판ID를 통한 게시물 조회
-    public BoardInfoWithPostList GetPostsByBoadId(BoardServiceCommonParameter serviceParamter)
+    /// <summary>
+    /// 게시판 ID를 통해 게시글 리스트 조회
+    /// </summary>
+    /// <param name="serviceParamter"></param>
+    /// <returns></returns>
+    public BoardInfoWithPostList GetPostListByBoadId(BoardServiceCommonParameter serviceParamter)
     {
-        return _postDao.GetPostsByBoardId(serviceParamter);
+        return _postDao.GetPostListByBoardId(serviceParamter);
     }
 
-    // 글 내용 조회
-    public PostWithUser GetPostDetail(int postId)
+    // TODO : Post쪽으로 옮겨야겠지?
+    /// <summary>
+    /// 게시글 상세내용과 댓글 조회
+    /// </summary>
+    /// <param name="postId">게시물 ID</param>
+    /// <returns></returns>
+    public PostDetailWithUser? GetPostDetail(int postId)
     {
-        return _postDao.GetPostDetail(postId);
+        PostDetailWithUser? p = _postDao.GetPostDetail(postId);
+        if (p is null)
+        {
+            return null;
+        }
+        else
+        {
+            p.Comments = _commentDao.GetCommentListByPostId(postId);
+            return p;
+        }
     }
 
     public void EditPost(PostEdit p)

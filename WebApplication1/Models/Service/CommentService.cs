@@ -4,10 +4,10 @@ namespace WebApplication1.Models.Service
 {
     public class CommentService
     {
-        private CommentDao commentDao = new CommentDao();
-        public string GetCommentByPostId(int postId)
+        private readonly CommentDao _commentDao = new();
+        public List<Comment> GetCommentListByPostId(int postId)
         {
-            return commentDao.GetCommentByPostId(postId);
+            return _commentDao.GetCommentListByPostId(postId);
         }
     }
 }

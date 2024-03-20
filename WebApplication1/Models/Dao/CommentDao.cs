@@ -1,46 +1,42 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using System.Xml.Linq;
 using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
 {
-    public class CommentDao: DBHelper
+    public class CommentDao : DBHelper
     {
-        public string GetCommentByPostId(int postId)
+        public List<Comment> GetCommentListByPostId(int postId)
         {
-            string? rtnVal = null;
-            //using(var db = new CopycatContext())
-            using(var conn = base.GetConnection())
+            List<Comment> comments = new();
+            using (var conn = GetConnection())
             {
-                // var comments = db.Comments.ToList();
-                SqlCommand cmd = new SqlCommand("spSelectCommentsByPostId", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@post_id", postId);
-
-
+                SqlCommand cmd = new("spSelectCommentsByPostId", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.Add(new SqlParameter("@post_id", postId));
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
 
-                List<Comment> TestComment = new List<Comment>();
-                Comment? comment = null;
+                DataTable dt = new();
+                SqlDataAdapter da = new(cmd);
+                da.Fill(dt);
 
-                while(reader.Read())
-                {
-                    comment = new Comment();
-                    comment.Id = int.Parse(reader["id"].ToString()!);
-                    comment.Comment1 = reader["comment"].ToString()!;
-                    comment.LikeCount = int.Parse(reader["like_count"].ToString()!);
-                    TestComment.Add(comment);
-                }
-
-                foreach(var c in TestComment)
-                {
-                    rtnVal += $"{c.Comment1} ";
-                }
-
-                //rtnVal = returno.Value.ToString();
+                comments = dt.AsEnumerable().Select(row =>
+                   new Comment
+                   {
+                       Id = row.Field<int>("id"),
+                       PostId = row.Field<int>("post_id"),
+                       Comment1 = row.Field<string>("comment")!,
+                       LikeCount = row.Field<int>("like_count"),
+                       CreatedTime = row.Field<DateTime>("created_time"),
+                       CreatedUid = row.Field<int>("created_uid"),
+                       ParentCommentId = row.Field<int?>("parent_comment_id"),
+                       Nickname = row.Field<string>("nickname")!
+                   }).ToList();
             }
-            return rtnVal;
+            return comments;
         }
     }
 }

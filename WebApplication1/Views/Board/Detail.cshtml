@@ -1,8 +1,13 @@
 ﻿@using System.Security.Claims
-@model PostWithUser
+@model PostDetailWithUser
 @{
     ViewData["Title"] = $"{Model.Subject}";
-    int userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    int userId = 0;
+    if (ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) is not null)
+    {
+
+        userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    }
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/read.css"))" />

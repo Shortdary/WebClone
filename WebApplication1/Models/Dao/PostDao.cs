@@ -5,7 +5,7 @@ using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
 {
-    public class PostDao: DBHelper
+    public class PostDao : DBHelper
     {
         public (int, string) CreatePost(PostInsert p)
         {
@@ -57,7 +57,7 @@ namespace WebApplication1.Models.Dao
             cmd.ExecuteNonQuery();
         }
 
-        public BoardInfoWithPostList GetPostsByBoardId(BoardServiceCommonParameter p)
+        public BoardInfoWithPostList GetPostListByBoardId(BoardServiceCommonParameter p)
         {
             BoardInfoWithPostList boardWithPosts = new();
             using (var conn = GetConnection())
@@ -94,7 +94,7 @@ namespace WebApplication1.Models.Dao
                 bda.Fill(bdt);
 
                 DataRow? row = bdt.Rows.Cast<DataRow>().FirstOrDefault();
-                if(row is null)
+                if (row is null)
                 {
 
                 }
@@ -112,7 +112,7 @@ namespace WebApplication1.Models.Dao
                 }
 
                 boardWithPosts.PostList = pds.Tables[0].AsEnumerable().Select(row =>
-                    new PostWithUser
+                    new PostDetailWithUser
                     {
                         Id = row.Field<int>("id"),
                         BoardId = row.Field<int>("board_id"),
@@ -132,73 +132,48 @@ namespace WebApplication1.Models.Dao
             return boardWithPosts;
         }
 
-        public PostWithUser GetPostDetail(int postId)
+        public PostDetailWithUser? GetPostDetail(int postId)
         {
-            PostWithUser p = new();
+            PostDetailWithUser? p;
             using (var conn = GetConnection())
             using (var conn2 = GetConnection())
             {
-                SqlCommand postCmd = new("spSelectPostDetail", conn)
+                SqlCommand cmd = new("spSelectPostDetail", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                postCmd.Parameters.Add(new SqlParameter("@id", postId));
+                cmd.Parameters.Add(new SqlParameter("@id", postId));
                 conn.Open();
 
-                SqlCommand commentCmd = new("spSelectCommentsByPostId", conn2)
+                DataTable dt = new();
+                SqlDataAdapter da = new(cmd);
+                da.Fill(dt);
+
+                DataRow? row = dt.Rows.Cast<DataRow>().FirstOrDefault();
+                if (row is null)
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
-                commentCmd.Parameters.Add(new SqlParameter("@post_id", postId));
-                conn2.Open();
-
-                List<Comment> comments = new();
-
-                DataTable pdt = new();
-                SqlDataAdapter pda = new(postCmd);
-                pda.Fill(pdt);
-
-                DataTable cdt = new();
-                SqlDataAdapter cda = new(commentCmd);
-                cda.Fill(cdt);
-
-                comments = cdt.AsEnumerable().Select(row =>
-                    new Comment
+                    p = null;
+                }
+                else
+                {
+                    p = new()
                     {
                         Id = row.Field<int>("id"),
-                        PostId = row.Field<int>("post_id"),
-                        Comment1 = row.Field<string>("comment")!,
+                        BoardId = row.Field<int>("board_id"),
+                        BoardName = row.Field<string>("board_name")!,
+                        BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                        Subject = row.Field<string>("subject")!,
+                        Detail = row.Field<string>("detail")!,
+                        CommentCount = row.Field<int>("comment_count"),
+                        ViewCount = row.Field<int>("view_count"),
                         LikeCount = row.Field<int>("like_count"),
                         CreatedTime = row.Field<DateTime>("created_time"),
                         CreatedUid = row.Field<int>("created_uid"),
-                        ParentCommentId = row.Field<int?>("parent_comment_id"),
                         Nickname = row.Field<string>("nickname")!
-                    }).ToList();
-
-                var postContents = pdt.AsEnumerable().Select(row =>
-                new PostWithUser
-                {
-                    Id = row.Field<int>("id"),
-                    BoardId = row.Field<int>("board_id"),
-                    BoardName = row.Field<string>("board_name")!,
-                    BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
-                    Subject = row.Field<string>("subject")!,
-                    Detail = row.Field<string>("detail")!,
-                    CommentCount = row.Field<int>("comment_count"),
-                    ViewCount = row.Field<int>("view_count"),
-                    LikeCount = row.Field<int>("like_count"),
-                    CreatedTime = row.Field<DateTime>("created_time"),
-                    CreatedUid = row.Field<int>("created_uid"),
-                    Nickname = row.Field<string>("nickname")!
-                }).ToList();
-                if (postContents.Count > 0) p = postContents[0];
-
-                p.Comments = comments;
+                    };
+                }
             }
-
             return p;
         }
-
-        
     }
 }

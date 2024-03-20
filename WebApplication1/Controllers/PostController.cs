@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
         public IActionResult GetEdit(int postId)
         {
             int editorUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            PostWithUser p = _postService.GetPostDetail(postId);
+            PostDetailWithUser p = _postService.GetPostDetail(postId);
 
             if (editorUid != p.CreatedUid)
             {
@@ -50,7 +50,7 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult PostEdit(PostEdit p)
         {
-            PostWithUser postDetail = _postService.GetPostDetail(p.PostId);
+            PostDetailWithUser postDetail = _postService.GetPostDetail(p.PostId);
 
             p.UpdatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             p.BoardNameEng = postDetail.BoardNameEng;

@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostsByBoadId(serviceParameter);
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
             return View(boardWithPosts);
         }
 

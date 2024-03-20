@@ -17,7 +17,7 @@ public class Board
 
 public class BoardInfoWithPostList: Board
 {
-    public List<PostWithUser> PostList { get; set; } = null!;
+    public List<PostDetailWithUser> PostList { get; set; } = null!;
 
     public int PageNumber { get; set; } = 1;
 
