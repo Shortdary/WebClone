@@ -1,7 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -9,81 +6,93 @@ namespace WebApplication1.Controllers
     public class BoardController : Controller
     {
         private readonly PostService _postService = new();
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IActionResult Index(BoardInfoWithPostList model)
+        public BoardController(IHttpContextAccessor httpContextAccessor)
         {
-            return View(model);
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        // GET: /{boardName}/{postId}
-        [HttpGet("{boardName}/{postId}")]
-        public IActionResult Detail(string _, int postId)
+        private IActionResult BoardCommonMethod(BoardServiceCommonParameter serviceParameter, int postId)
         {
-            PostDetailWithUser? postDetail = _postService.GetPostDetail(postId);
-            if (postDetail is null)
+
+            if (postId > 0)
             {
-                return View("home");
+                var request = _httpContextAccessor.HttpContext?.Request;
+                ViewBag.RequestPath = request.Path.ToString();
+                PostDetailWithUser? postDetail = _postService.GetPostDetail(postId);
+                return View("Detail", postDetail);
             }
             else
             {
-                return View(postDetail);
+                BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
+                return View("Index", boardWithPosts);
             }
         }
 
         [HttpGet]
-        [Route("best")]
-        public IActionResult Best(BoardControllerCommonParameter controllerParameter)
+        [Route("best/{postId:int?}")]
+        public IActionResult Best(BoardControllerCommonParameter controllerParameter, int postId)
         {
-            BoardServiceCommonParameter serviceParameter = new()
+            BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 24,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
-            return View("Index", boardWithPosts);
+            return BoardCommonMethod(serviceParams, postId);
         }
 
         [HttpGet]
-        [Route("notice")]
-        public IActionResult Notice(BoardControllerCommonParameter controllerParameter)
+        [Route("new/{postId:int?}")]
+        public IActionResult New(BoardControllerCommonParameter controllerParameter, int postId)
         {
-            BoardServiceCommonParameter serviceParameter = new()
+            BoardServiceCommonParameter serviceParams = new()
+            {
+                BoardId = 25,
+                PageNumber = controllerParameter.PageNumber,
+                PageSize = controllerParameter.PageSize
+            };
+            return BoardCommonMethod(serviceParams, postId);
+        }
+
+        [HttpGet]
+        [Route("notice/{postId:int?}")]
+        public IActionResult Notice(BoardControllerCommonParameter controllerParameter, int postId)
+        {
+            BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 1,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
-            return View("Index", boardWithPosts);
+            return BoardCommonMethod(serviceParams, postId);
         }
 
         [HttpGet]
-        [Route("stream_free")]
-        public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter)
+        [Route("stream_free/{postId:int?}")]
+        public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter, int postId)
         {
-            BoardServiceCommonParameter serviceParameter = new()
+            BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 2,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
-            return View("Index", boardWithPosts);
+            return BoardCommonMethod(serviceParams, postId);
         }
 
         [HttpGet]
-        [Route("stream_meme")]
-        public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter)
+        [Route("stream_meme/{postId:int?}")]
+        public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter, int postId)
         {
-            BoardServiceCommonParameter serviceParameter = new()
+            BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 3,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };
-            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
-            return View("Index", boardWithPosts);
+            return BoardCommonMethod(serviceParams, postId);
         }
     }
 }

@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -59,24 +60,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
+    name: "comment",
+    pattern: "comment/{action}",
+    defaults: new { controller = "CommentController" });
+
+app.MapControllerRoute(
     name: "home",
     pattern: "");
-
-app.MapControllerRoute(
-    name: "best",
-    pattern: "best/{postId?}");
-
-app.MapControllerRoute(
-    name: "stream_free",
-    pattern: "stream_free/{postId?}");
-
-app.MapControllerRoute(
-    name: "stream_meme",
-    pattern: "stream_meme/{postId?}");
-
-app.MapControllerRoute(
-    name: "notice",
-    pattern: "notice/{postId?}");
 
 app.UseRouting();
 

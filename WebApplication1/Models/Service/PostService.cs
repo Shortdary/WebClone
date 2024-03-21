@@ -24,7 +24,6 @@ public class PostService
         return _postDao.GetPostListByBoardId(serviceParamter);
     }
 
-    // TODO : Post쪽으로 옮겨야겠지?
     /// <summary>
     /// 게시글 상세내용과 댓글 조회
     /// </summary>

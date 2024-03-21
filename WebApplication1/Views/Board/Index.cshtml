@@ -19,7 +19,7 @@
     <section id="boardList">
         @foreach (var p in Model.PostList)
         {
-            <a class="item" asp-route=@Model.BoardNameEng asp-route-postId=@p.Id>
+            <a class="item" href='@($"/{Model.BoardNameEng}/{p.Id}")'>
                 <div class="image">
                     <img src="/asset/thumbnail.png">
                 </div>

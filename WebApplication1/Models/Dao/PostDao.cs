@@ -68,6 +68,10 @@ namespace WebApplication1.Models.Dao
                 {
                     postCmd.CommandText = "spSelectPopularPosts";
                 }
+                else if (p.BoardId == 25)
+                {
+                    postCmd.CommandText = "spSelectAllPosts";
+                }
                 else
                 {
                     postCmd.CommandText = "spSelectPostsByBoardId";

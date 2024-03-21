@@ -5,25 +5,26 @@
     int userId = 0;
     if (ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) is not null)
     {
-
         userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     }
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/read.css"))" />
-<link rel="stylesheet" href="@(Url.Content("~/css/Comment.css"))" /> /* TODO: 나중에 분리 */
+<link rel="stylesheet" href="@(Url.Content("~/css/Comment.css"))" />
 
 <article id="article">
     <div class="sub">
-        <div class="back"><a href=@("/"+Model.BoardNameEng)>@Model.BoardName &gt;</a></div>
+        <div class="back">
+            <a href=@(ViewBag.RequestPath.Contains("best") ? "/best" : $"/{Model.BoardNameEng}")>
+                @(ViewBag.RequestPath.Contains("best") ? "인기글" : $"{Model.BoardName}") &gt;
+            </a>
+        </div>
     </div>
-
-
     <div class="item">
         <div class="info">
             <div class="titleContainer">
                 <div class="category" title=@Model.BoardName>
-                    <span><a asp-route=@(Model.BoardNameEng)>@Model.BoardName</a></span>
+                    <span><a href=@("/" + Model.BoardNameEng)>@Model.BoardName</a></span>
                 </div>
                 <span><h1>@Model.Subject</h1></span>
             </div>
@@ -76,8 +77,12 @@
                 </div>
             </div>
         </div>
-        <div class="content ck-content"><figure class="image"><img src="https://resources.chimhaha.net/article/1709540184992-bboqyxi2lwi.webp"></figure><p>@Model.Detail</p></div>
-
+        <div class="content ck-content">
+            <figure class="image">
+                <img src="https://resources.chimhaha.net/article/1709540184992-bboqyxi2lwi.webp">
+            </figure>
+            <p>@Model.Detail</p>
+        </div>
         <section id="adsense" class="articleCenter"><ins class="adsbygoogle" style="display: inline-block; text-decoration: none; height: 100px; max-height: inherit; min-height: 100px; min-width: 320px; width: 100%;" data-ad-client="ca-pub-3075483251413145" data-ad-slot="2335434047" data-adsense-index="2"></ins></section>
         <div class="likeContainer">
             <button id="like" class="like">
@@ -93,7 +98,7 @@
             </div>
             <div class="center">
                 <div class="button">
-                    <a asp-route=@Model.BoardNameEng>
+                    <a href=@(ViewBag.RequestPath.Contains("best") ? "/best" : $"/{Model.BoardNameEng}")>
                         목록
                     </a>
                 </div>
