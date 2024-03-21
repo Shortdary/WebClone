@@ -1,5 +1,6 @@
 ﻿@model UserLoginCredentials
 @{
+    string? redirectUrl = ViewContext.HttpContext.Request.Query["redirect_url"];
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/loginAndJoin.css"))" />
@@ -10,11 +11,12 @@
             <h1>로그인</h1>
         </div>
         <div class="plainLogin">
-            @using (Html.BeginForm("login", "Credentials", FormMethod.Post))
+            @using (Html.BeginForm("login", "credentials", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
                 @Html.TextBoxFor(x => x.LoginId, new { @placeholder = "아이디", @type = "text" })
                 @Html.TextBoxFor(x => x.Password, new { @placeholder = "비밀번호", @type = "password" })
+                <input type="hidden" id="RedirectUrl" name="RedirectUrl" value=@redirectUrl />
                 @Html.ValidationSummary()
                 <div class="button" action="submit"><button>로그인</button></div>
             }

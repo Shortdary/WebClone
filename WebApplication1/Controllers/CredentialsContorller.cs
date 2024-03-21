@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [Route("Credentials/login")]
+        [Route("credentials/login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public IActionResult Login(UserLoginCredentials loginUser)
@@ -50,7 +50,15 @@ namespace WebApplication1.Controllers
                 };
                 Response.Cookies.Append("Authorization", $"Bearer {tokenString}", cookieOptions);
 
-                return RedirectToRoute("home");
+                if(!string.IsNullOrEmpty(loginUser.RedirectUrl))
+                {
+                    return Redirect(loginUser.RedirectUrl);
+
+                }
+                else
+                {
+                    return RedirectToRoute("home");
+                }
             }
 
             return View("Login");

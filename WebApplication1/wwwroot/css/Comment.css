@@ -327,6 +327,11 @@
     flex-direction: row
 }
 
+.commentContainer .commentInput form {
+    display: flex;
+    flex: 1;
+}
+
 .commentContainer .commentContent {
     flex: .9
 }

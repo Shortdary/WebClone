@@ -15,7 +15,6 @@ namespace WebApplication1.Controllers
 
         private IActionResult BoardCommonMethod(BoardServiceCommonParameter serviceParameter, int postId)
         {
-
             if (postId > 0)
             {
                 var request = _httpContextAccessor.HttpContext?.Request;

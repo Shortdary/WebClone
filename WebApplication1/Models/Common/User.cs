@@ -14,4 +14,6 @@ public class UserLoginCredentials
     public string? LoginId { get; set; }
 
     public string? Password { get; set; }
+
+    public string? RedirectUrl { get; set; }
 }
