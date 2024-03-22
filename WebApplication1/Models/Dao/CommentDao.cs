@@ -10,13 +10,13 @@ namespace WebApplication1.Models.Dao
         public List<Comment> GetCommentListByPostId(int postId)
         {
             List<Comment> comments = new();
-            using (var conn = GetConnection())
+            using (SqlConnection conn = GetConnection())
             {
                 SqlCommand cmd = new("spSelectCommentsByPostId", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add(new SqlParameter("@post_id", postId));
+                cmd.Parameters.AddWithValue("@post_id", postId);
                 conn.Open();
 
                 DataTable dt = new();
@@ -35,8 +35,26 @@ namespace WebApplication1.Models.Dao
                        ParentCommentId = row.Field<int?>("parent_comment_id"),
                        Nickname = row.Field<string>("nickname")!
                    }).ToList();
+                conn.Close();
             }
             return comments;
+        }
+
+        public void CreateComment(CommentAdd commentData)
+        {
+            using SqlConnection conn = GetConnection();
+            SqlCommand cmd = new("spInsertComment", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@post_id", commentData.PostId);
+            cmd.Parameters.AddWithValue("@comment", commentData.Comment1);
+            cmd.Parameters.AddWithValue("@created_uid", commentData.CreatedUid);
+            cmd.Parameters.AddWithValue("@parent_comment_id", commentData.ParentCommentId is null ? DBNull.Value : commentData.ParentCommentId);
+            
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 }

@@ -9,5 +9,10 @@ namespace WebApplication1.Models.Service
         {
             return _commentDao.GetCommentListByPostId(postId);
         }
+
+        public void CreateComment(CommentAdd commentData)
+        {
+            _commentDao.CreateComment(commentData);
+        }
     }
 }

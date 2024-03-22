@@ -15,8 +15,8 @@ namespace WebApplication1.Models.Dao
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add(new SqlParameter("@login_id", ulc.LoginId));
-                cmd.Parameters.Add(new SqlParameter("@password", ulc.Password));
+                cmd.Parameters.AddWithValue("@login_id", ulc.LoginId);
+                cmd.Parameters.AddWithValue("@password", ulc.Password);
                 conn.Open();
 
                 DataTable dt = new();

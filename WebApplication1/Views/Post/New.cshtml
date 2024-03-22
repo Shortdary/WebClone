@@ -6,8 +6,8 @@
 
 
 <article data-article-id="">
-@using (Html.BeginForm("add", "Post", FormMethod.Post))
-{
+    @using (Html.BeginRouteForm("new_post", FormMethod.Post))
+    {
         <h1>글쓰기</h1>
         <div class="subContainer">
             <div class="mainMinorSubject">

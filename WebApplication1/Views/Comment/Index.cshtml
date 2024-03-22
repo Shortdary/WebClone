@@ -1,4 +1,14 @@
-﻿@model PostDetailWithUser
+﻿@using System.Security.Claims
+@model PostDetailWithUser
+@{
+    int userId = 0;
+    if (ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) is not null)
+    {
+
+        userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    }
+}
+
 
 <link rel="stylesheet" href="@(Url.Content("~/css/Comment.css"))" />
 
@@ -20,6 +30,10 @@
                                     @if (c.CreatedUid == Model.CreatedUid)
                                     {
                                         <span class="author">글쓴이</span>
+                                    }
+                                    @if (c.CreatedUid == userId)
+                                    {
+                                        <span class="author">나</span>
                                     }
                                 </div>
                             </div>
@@ -51,11 +65,16 @@
         <div class="commentInput">
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="commentContent">
-                    <textarea name="content" placeholder="댓글을 작성해주세요" maxlength="400"></textarea>
-                    <div class="attached"></div>
-                </div>
-                <div class="submit"><button>등록</button></div>
+                <form action="/comment/add" method="post" id="commentForm">
+                    <div class="commentContent">
+                        @Html.TextArea("Comment1", "", new { @placeholder = "댓글을 작성해주세요", @maxlength = "400" })
+                        <div class="attached"></div>
+                    </div>
+                    <input type="hidden" id="PostId" name="PostId" value=@Model.Id />
+                    <input type="hidden" id="ParentCommentId" name="ParentCommentId" value=null />
+                    <div class="submit"><button>등록</button></div>
+                    @Html.AntiForgeryToken()
+                </form>
             }
             else
             {
@@ -63,8 +82,44 @@
                     <textarea disabled="" name="content" placeholder="로그인 해주세요"></textarea>
                     <div class="attached"></div>
                 </div>
-                <div class="submit"><button type="button" onclick="login(event);">로그인</button></div>
+                <div class="submit"><button type="button" onclick="redirectToLoginPage()">로그인</button></div>
             }
         </div>
     </div>
 </div>
+<script>
+    function redirectToLoginPage() {
+        window.location.href = "/login?redirect_url=" + '@ViewBag.RequestUrl';
+    }
+</script>
+<script>
+    document.getElementById('commentForm').addEventListener('submit', function () {
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    });
+
+    window.onload = function () {
+        var scrollPosition = sessionStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, scrollPosition);
+            sessionStorage.removeItem('scrollPosition');
+        }
+    };
+</script>
+@* <script>
+    function revalidateForm() {
+        var form = $('#commentForm');
+        form.removeData('validator');
+        form.removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse(form);
+    }
+
+    function partialRenderCallback() {
+        // 여기서 부분적으로 업데이트할 내용이 변경될 때 실행될 코드를 작성하세요.
+        // 예를 들어, 새로운 입력 필드가 추가되는 경우 등
+        revalidateForm();
+    }
+
+    $('#comments').on('click', function () {
+        partialRenderCallback();
+    });
+</script> *@

@@ -10,7 +10,7 @@ namespace WebApplication1.Controllers
         private readonly PostService _postService = new();
 
         [HttpGet("new_post")]
-        public IActionResult Add()
+        public IActionResult GetAdd()
         {
             return View("New");
         }
@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         [Authorize]
         [HttpPost("new_post")]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(Models.PostInsert p)
+        public IActionResult PostAdd(Models.PostInsert p)
         {
             p.CreatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             if (ModelState.IsValid)

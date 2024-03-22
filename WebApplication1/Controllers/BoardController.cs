@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("best/{postId:int?}")]
+        [Route("best/{postId:int?}", Name = "BoardBestRoute")]
         public IActionResult Best(BoardControllerCommonParameter controllerParameter, int postId)
         {
             BoardServiceCommonParameter serviceParams = new()
@@ -43,7 +43,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("new/{postId:int?}")]
+        [Route("new/{postId:int?}", Name = "BoardNewRoute")]
         public IActionResult New(BoardControllerCommonParameter controllerParameter, int postId)
         {
             BoardServiceCommonParameter serviceParams = new()
@@ -56,7 +56,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("notice/{postId:int?}")]
+        [Route("notice/{postId:int?}", Name = "BoardNoticeRoute")]
         public IActionResult Notice(BoardControllerCommonParameter controllerParameter, int postId)
         {
             BoardServiceCommonParameter serviceParams = new()
@@ -69,7 +69,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("stream_free/{postId:int?}")]
+        [Route("stream_free/{postId:int?}", Name = "BoardStreamFreeRoute")]
         public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter, int postId)
         {
             BoardServiceCommonParameter serviceParams = new()
@@ -82,7 +82,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("stream_meme/{postId:int?}")]
+        [Route("stream_meme/{postId:int?}", Name = "BoardStreamMemeRoute")]
         public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter, int postId)
         {
             BoardServiceCommonParameter serviceParams = new()

@@ -27,8 +27,7 @@ namespace WebApplication1.Controllers
             return View("Login");
         }
 
-        [HttpPost]
-        [Route("credentials/login")]
+        [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public IActionResult Login(UserLoginCredentials loginUser)
@@ -65,7 +64,7 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
-        [Route("credentials/logout")]
+        [Route("logout")]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("Authorization");

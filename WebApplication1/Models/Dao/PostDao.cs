@@ -14,10 +14,10 @@ namespace WebApplication1.Models.Dao
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.Add(new SqlParameter("@board_id", p.BoardId));
-            cmd.Parameters.Add(new SqlParameter("@subject", p.Subject));
-            cmd.Parameters.Add(new SqlParameter("@detail", p.Detail));
-            cmd.Parameters.Add(new SqlParameter("@created_uid", p.CreatedUid));
+            cmd.Parameters.AddWithValue("@board_id", p.BoardId);
+            cmd.Parameters.AddWithValue("@subject", p.Subject);
+            cmd.Parameters.AddWithValue("@detail", p.Detail);
+            cmd.Parameters.AddWithValue("@created_uid", p.CreatedUid);
 
             var returnId = cmd.Parameters.Add("@id", SqlDbType.Int);
             returnId.Direction = ParameterDirection.Output;
@@ -26,6 +26,7 @@ namespace WebApplication1.Models.Dao
 
             conn.Open();
             cmd.ExecuteNonQuery();
+            conn.Close();
             return ((int)returnId.Value, ((string)returnBoardName.Value).Trim());
         }
         public void EditPost(PostEdit p)
@@ -35,13 +36,14 @@ namespace WebApplication1.Models.Dao
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.Add(new SqlParameter("@id", p.PostId));
-            cmd.Parameters.Add(new SqlParameter("@subject", p.Subject));
-            cmd.Parameters.Add(new SqlParameter("@detail", p.Detail));
-            cmd.Parameters.Add(new SqlParameter("@updated_uid", p.UpdatedUid));
+            cmd.Parameters.AddWithValue("@id", p.PostId);
+            cmd.Parameters.AddWithValue("@subject", p.Subject);
+            cmd.Parameters.AddWithValue("@detail", p.Detail);
+            cmd.Parameters.AddWithValue("@updated_uid", p.UpdatedUid);
 
             conn.Open();
             cmd.ExecuteNonQuery();
+            conn.Close();
         }
 
         public void DeletePost(PostDelete p)
@@ -52,9 +54,10 @@ namespace WebApplication1.Models.Dao
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.Add(new SqlParameter("@id", p.PostId));
+            cmd.Parameters.AddWithValue("@id", p.PostId);
             conn.Open();
             cmd.ExecuteNonQuery();
+            conn.Close();
         }
 
         public BoardInfoWithPostList GetPostListByBoardId(BoardServiceCommonParameter p)
@@ -75,18 +78,18 @@ namespace WebApplication1.Models.Dao
                 else
                 {
                     postCmd.CommandText = "spSelectPostsByBoardId";
-                    postCmd.Parameters.Add(new SqlParameter("@board_id", p.BoardId));
+                    postCmd.Parameters.AddWithValue("@board_id", p.BoardId);
                 }
                 postCmd.CommandType = CommandType.StoredProcedure;
-                postCmd.Parameters.Add(new SqlParameter("@page_number", p.PageNumber));
-                postCmd.Parameters.Add(new SqlParameter("@page_size", p.PageSize));
+                postCmd.Parameters.AddWithValue("@page_number", p.PageNumber);
+                postCmd.Parameters.AddWithValue("@page_size", p.PageSize);
                 conn.Open();
 
                 SqlCommand boardCmd = new("spSelectBoardInfoByBoardId", conn2)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                boardCmd.Parameters.Add(new SqlParameter("@board_id", p.BoardId));
+                boardCmd.Parameters.AddWithValue("@board_id", p.BoardId);
                 conn2.Open();
 
                 DataSet pds = new();
@@ -132,6 +135,8 @@ namespace WebApplication1.Models.Dao
                     }).ToList();
 
                 boardWithPosts.TotalRowNum = pds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
+                conn.Close();
+                conn2.Close();
             }
             return boardWithPosts;
         }
@@ -146,7 +151,7 @@ namespace WebApplication1.Models.Dao
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.Add(new SqlParameter("@id", postId));
+                cmd.Parameters.AddWithValue("@id", postId);
                 conn.Open();
 
                 DataTable dt = new();
@@ -176,6 +181,7 @@ namespace WebApplication1.Models.Dao
                         Nickname = row.Field<string>("nickname")!
                     };
                 }
+                conn.Close();
             }
             return p;
         }
