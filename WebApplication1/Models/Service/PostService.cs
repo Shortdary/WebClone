@@ -29,7 +29,7 @@ public class PostService
     /// </summary>
     /// <param name="postId">게시물 ID</param>
     /// <returns></returns>
-    public PostDetailWithUser? GetPostDetail(int postId)
+    public PostDetailWithUser? GetPostDetail(int? postId)
     {
         PostDetailWithUser? p = _postDao.GetPostDetail(postId);
         if (p is null)

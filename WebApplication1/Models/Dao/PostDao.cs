@@ -141,7 +141,7 @@ namespace WebApplication1.Models.Dao
             return boardWithPosts;
         }
 
-        public PostDetailWithUser? GetPostDetail(int postId)
+        public PostDetailWithUser? GetPostDetail(int? postId)
         {
             PostDetailWithUser? p;
             using (var conn = GetConnection())

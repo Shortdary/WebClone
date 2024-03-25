@@ -33,6 +33,8 @@ public class BoardControllerCommonParameter
 
     [FromQuery(Name = "page_size")]
     public int PageSize { get; set; } = 2;
+
+    public int? Id { get; set; }
 }
 
 public class BoardServiceCommonParameter : BoardControllerCommonParameter

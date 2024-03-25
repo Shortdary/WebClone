@@ -7,6 +7,7 @@
     {
         userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     }
+    bool isBest = ViewBag.RequestPath.Contains("Best");
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/read.css"))" />
@@ -15,8 +16,8 @@
 <article id="article">
     <div class="sub">
         <div class="back">
-            <a href=@(ViewBag.RequestPath.Contains("best") ? "/best" : $"/{Model.BoardNameEng}")>
-                @(ViewBag.RequestPath.Contains("best") ? "인기글" : $"{Model.BoardName}") &gt;
+            <a asp-controller="Board" asp-action="@(isBest ? "Best" : Model.BoardNameEng)" asp-route-id="">
+                @(isBest ? "인기글" : $"{Model.BoardName}") &gt;
             </a>
         </div>
     </div>
@@ -24,7 +25,7 @@
         <div class="info">
             <div class="titleContainer">
                 <div class="category" title=@Model.BoardName>
-                    <span><a href=@("/" + Model.BoardNameEng)>@Model.BoardName</a></span>
+                    <span><a asp-controller="Board" asp-action=@Model.BoardNameEng asp-route-id="">@Model.BoardName</a></span>
                 </div>
                 <span><h1>@Model.Subject</h1></span>
             </div>
@@ -54,18 +55,18 @@
                             </svg>
                         </div>
                         <ul class="popUp">
-                            <form action='@($"/{Model.BoardNameEng}/{Model.Id}/edit")' method="get">
+                            <form action='@($"/board/{Model.BoardNameEng}/{Model.Id}/edit")' method="get">
                             <li class="edit">
-                                <a href='@($"/{Model.BoardNameEng}/{Model.Id}/edit")'>
+                                <a href='@($"/board/{Model.BoardNameEng}/{Model.Id}/edit")'>
                                     <button type="submit" name="submit" value="edit">
                                         <i class="fa-regular fa-edit"></i>&nbsp;수정
                                     </button>
                                 </a>
                             </li>
                             </form>
-                            <form action='@($"/{Model.BoardNameEng}/{Model.Id}/delete")' method="post">
+                            <form action='@($"/board/{Model.BoardNameEng}/{Model.Id}/delete")' method="post">
                             <li class="delete">
-                                <a href='@($"/{Model.BoardNameEng}/{Model.Id}/delete")'>
+                                <a href='@($"/board/{Model.BoardNameEng}/{Model.Id}/delete")'>
                                     <button type="submit" name="submit" value="delete">
                                         <i class="fa-regular fa-trash-alt"></i>&nbsp;삭제
                                     </button>
@@ -81,7 +82,7 @@
             <figure class="image">
                 <img src="https://resources.chimhaha.net/article/1709540184992-bboqyxi2lwi.webp">
             </figure>
-            <p>@Model.Detail</p>
+            <p>@Html.Raw(Model.Detail)</p>
         </div>
         <section id="adsense" class="articleCenter"><ins class="adsbygoogle" style="display: inline-block; text-decoration: none; height: 100px; max-height: inherit; min-height: 100px; min-width: 320px; width: 100%;" data-ad-client="ca-pub-3075483251413145" data-ad-slot="2335434047" data-adsense-index="2"></ins></section>
         <div class="likeContainer">
@@ -98,7 +99,7 @@
             </div>
             <div class="center">
                 <div class="button">
-                    <a href=@(ViewBag.RequestPath.Contains("best") ? "/best" : $"/{Model.BoardNameEng}")>
+                    <a asp-controller="Board" asp-action=@(isBest ? "Best" : Model.BoardNameEng) asp-route-id="">
                         목록
                     </a>
                 </div>

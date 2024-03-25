@@ -13,13 +13,13 @@ namespace WebApplication1.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private IActionResult BoardCommonMethod(BoardServiceCommonParameter serviceParameter, int postId)
+        private IActionResult BoardCommonMethod(BoardServiceCommonParameter serviceParameter)
         {
-            if (postId > 0)
+            if (serviceParameter.Id is not null)
             {
                 var request = _httpContextAccessor.HttpContext?.Request;
-                ViewBag.RequestPath = request.Path.ToString();
-                PostDetailWithUser? postDetail = _postService.GetPostDetail(postId);
+                ViewBag.RequestPath = request?.Path.ToString();
+                PostDetailWithUser? postDetail = _postService.GetPostDetail(serviceParameter.Id);
                 return View("Detail", postDetail);
             }
             else
@@ -30,68 +30,69 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        [Route("best/{postId:int?}", Name = "BoardBestRoute")]
-        public IActionResult Best(BoardControllerCommonParameter controllerParameter, int postId)
+        public IActionResult Best(BoardControllerCommonParameter controllerParameter)
         {
+            
             BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 24,
                 PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize
+                PageSize = controllerParameter.PageSize,
+                Id = controllerParameter.Id
             };
-            return BoardCommonMethod(serviceParams, postId);
+            return BoardCommonMethod(serviceParams);
         }
 
         [HttpGet]
-        [Route("new/{postId:int?}", Name = "BoardNewRoute")]
-        public IActionResult New(BoardControllerCommonParameter controllerParameter, int postId)
+        public IActionResult New(BoardControllerCommonParameter controllerParameter)
         {
             BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 25,
                 PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize
+                PageSize = controllerParameter.PageSize,
+                Id = controllerParameter.Id
             };
-            return BoardCommonMethod(serviceParams, postId);
+            return BoardCommonMethod(serviceParams);
         }
 
         [HttpGet]
-        [Route("notice/{postId:int?}", Name = "BoardNoticeRoute")]
-        public IActionResult Notice(BoardControllerCommonParameter controllerParameter, int postId)
+        public IActionResult Notice(BoardControllerCommonParameter controllerParameter)
         {
             BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 1,
                 PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize
+                PageSize = controllerParameter.PageSize,
+                Id = controllerParameter.Id
             };
-            return BoardCommonMethod(serviceParams, postId);
+            return BoardCommonMethod(serviceParams);
         }
 
         [HttpGet]
-        [Route("stream_free/{postId:int?}", Name = "BoardStreamFreeRoute")]
-        public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter, int postId)
+        public IActionResult StreamFree(BoardControllerCommonParameter controllerParameter)
         {
             BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 2,
                 PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize
+                PageSize = controllerParameter.PageSize,
+                Id = controllerParameter.Id
             };
-            return BoardCommonMethod(serviceParams, postId);
+            return BoardCommonMethod(serviceParams);
         }
 
         [HttpGet]
-        [Route("stream_meme/{postId:int?}", Name = "BoardStreamMemeRoute")]
-        public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter, int postId)
+        public IActionResult StreamMeme(BoardControllerCommonParameter controllerParameter)
         {
             BoardServiceCommonParameter serviceParams = new()
             {
                 BoardId = 3,
                 PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize
+                PageSize = controllerParameter.PageSize,
+                Id = controllerParameter.Id
             };
-            return BoardCommonMethod(serviceParams, postId);
+            return BoardCommonMethod(serviceParams);
         }
     }
 }
