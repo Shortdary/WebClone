@@ -17,9 +17,8 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
-        [HttpPost("comment/add")]
         [ValidateAntiForgeryToken]
-        public IActionResult PostAdd(CommentAdd commentData)
+        public IActionResult Add(CommentAdd commentData)
         {
             string? refererUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"];
             commentData.CreatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -35,9 +34,8 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
-        [HttpPost("{boardName}/{postId}/comment/edit")]
         [ValidateAntiForgeryToken]
-        public IActionResult PostEdit()
+        public IActionResult Edit()
         {
             System.Diagnostics.Debug.WriteLine("edit");
 
@@ -45,13 +43,19 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize]
-        [HttpPost("{boardName}/{postId}/comment/delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult PostDelete()
+        public IActionResult Delete(CommentDelete commentData)
         {
-            System.Diagnostics.Debug.WriteLine("delete");
-
-            return View();
+            string? refererUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"];
+            _commentService.DeleteComment(commentData);
+            if (refererUrl is null)
+            {
+                return RedirectToRoute("home");
+            }
+            else
+            {
+                return Redirect(refererUrl);
+            }
         }
     }
 }

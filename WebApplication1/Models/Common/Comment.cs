@@ -21,6 +21,8 @@ public partial class Comment
     public int? ParentCommentId { get; set; }
 
     public string Nickname { get; set; } = null!;
+
+    public bool IsDeleted { get; set; }
 }
 
 public partial class CommentAdd
@@ -39,4 +41,15 @@ public partial class CommentAdd
     [Required]
     [Range(0, int.MaxValue)]
     public int? ParentCommentId { get; set; }
+}
+
+public partial class CommentEdit
+{
+
+}
+
+public partial class CommentDelete
+{
+    [Required]
+    public int Id { get; set; }
 }

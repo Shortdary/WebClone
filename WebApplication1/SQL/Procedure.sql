@@ -358,6 +358,7 @@ SELECT [Comment].[id]
 		,[created_uid]
 		,[parent_comment_id]
 		,[nickname]
+		,[is_deleted]
 FROM Comment
 		INNER JOIN [dbo].[User] ON Comment.created_uid=[dbo].[User].id
 WHERE post_id = 2
@@ -373,6 +374,28 @@ ORDER BY
 END
 GO
 
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-03-27
+-- Description:	delete comment
+-- =============================================
+CREATE PROCEDURE [dbo].[spDeleteComment]
+	-- Add the parameters for the stored procedure here
+	@comment_id int
+AS
+BEGIN
+	-- BEGIN NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+UPDATE [dbo].[Comment] 
+SET [is_deleted] = 'true' 
+WHERE [id] = @comment_id
+
+END
+GO
 
 
 

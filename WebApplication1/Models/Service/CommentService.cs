@@ -14,5 +14,15 @@ namespace WebApplication1.Models.Service
         {
             _commentDao.CreateComment(commentData);
         }
+
+        public void EditComment(CommentEdit commentData)
+        {
+            _commentDao.EditComment(commentData);
+        }
+
+        public void DeleteComment(CommentDelete commentData)
+        {
+            _commentDao.DeleteComment(commentData);
+        }
     }
 }

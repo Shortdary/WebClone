@@ -60,6 +60,45 @@ main {
     border-radius: 8px;
 }
 
+#popUp {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    z-index: 1;
+    display: none;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    word-break: keep-all;
+    background-color: var(--default-background-color);
+    border: 1px solid var(--alpha-5);
+    border-radius: 8px;
+}
+
+    #popUp.active {
+        display: flex;
+    }
+
+    #popUp li {
+        display: flex;
+        align-items: center;
+    }
+
+    #popUp button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: unset;
+        padding: 5px;
+        font-size: 1em;
+        color: var(--default-font-color);
+        background-color: transparent;
+        border: 0;
+        border-radius: 8px;
+    }
+
 #socialAuth .naver {
     background-color: var(--naver-color);
 }

@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using System.Xml.Linq;
 using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
@@ -33,7 +32,8 @@ namespace WebApplication1.Models.Dao
                        CreatedTime = row.Field<DateTime>("created_time"),
                        CreatedUid = row.Field<int>("created_uid"),
                        ParentCommentId = row.Field<int?>("parent_comment_id"),
-                       Nickname = row.Field<string>("nickname")!
+                       Nickname = row.Field<string>("nickname")!,
+                       IsDeleted = row.Field<bool>("is_deleted")
                    }).ToList();
                 conn.Close();
             }
@@ -51,6 +51,33 @@ namespace WebApplication1.Models.Dao
             cmd.Parameters.AddWithValue("@comment", commentData.Comment1);
             cmd.Parameters.AddWithValue("@created_uid", commentData.CreatedUid);
             cmd.Parameters.AddWithValue("@parent_comment_id", commentData.ParentCommentId is null ? DBNull.Value : commentData.ParentCommentId);
+            
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void EditComment(CommentEdit commentData)
+        {
+            using SqlConnection conn = GetConnection();
+            SqlCommand cmd = new("spUpdateComment", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void DeleteComment(CommentDelete commentData)
+        {
+            using SqlConnection conn = GetConnection();
+            SqlCommand cmd = new("spDeleteComment", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@comment_id", commentData.Id);
             
             conn.Open();
             cmd.ExecuteNonQuery();

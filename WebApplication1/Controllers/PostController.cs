@@ -24,7 +24,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 (int newPostId, string newPostBoardName) = _postService.CreatePost(p);
-                return RedirectToRoute(newPostBoardName, new { postId = newPostId });
+                return RedirectToAction(newPostBoardName, "Board", new { Id = newPostId });
             }
 
             return View("New");

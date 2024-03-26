@@ -49,9 +49,37 @@
                                 }
                             </div>
                         </div>
+                        <div class="right">
+                            <div class="commentReply"><button id="commentReply">댓글</button></div>
+                            <div class="likeBtn">
+                                <div class="commentLike"><button id="commentLike">침하하😂</button></div>
+                            </div>
+                            <span class="popUpBtn" name="popUpBtn">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </span>
+                            <ul id="popUp" name="popUp">
+                                @if (c.CreatedUid == userId)
+                                {
+                                    <li class="commentEdit"><button id="commentEdit"><i class="fa-regular fa-edit"></i>&nbsp;수정</button></li>
+
+                                    @using (Html.BeginForm("Delete", "Comment", FormMethod.Post, new { @name = "commentForm" }))
+                                    {
+                                        <input type="hidden" id="Id" name="Id" value="@c.Id" />
+                                        <li class="commentDelete">
+                                            <button id="commentDelete" type="submit">
+                                                <i class="fa-regular fa-trash-alt"></i>&nbsp;삭제
+                                            </button>
+                                        </li>
+                                        @Html.AntiForgeryToken();
+                                    }
+                                }
+                                <li class="report"><button type="button"><i class="fa-regular fa-flag"></i>&nbsp;신고</button></li>
+                                <li class="block"><button type="button"><i class="fa-solid fa-ban"></i>&nbsp;차단</button></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="commentContent" id="commentContent">
-                        <div>@c.Comment1</div>
+                        <div style="color: @(c.IsDeleted ? "grey" : "")">@(c.IsDeleted ? "[삭제 된 댓글입니다.]" : c.Comment1)</div>
                     </div>
                     <div class="commentContainer" id="commentEtc"></div>
                 </div>
@@ -65,7 +93,8 @@
         <div class="commentInput">
             @if (User.Identity.IsAuthenticated)
             {
-                <form action="/comment/add" method="post" id="commentForm">
+                @using (Html.BeginForm("Add", "Comment", FormMethod.Post, new { @name = "commentForm" }))
+                {
                     <div class="commentContent">
                         @Html.TextArea("Comment1", "", new { @placeholder = "댓글을 작성해주세요", @maxlength = "400" })
                         <div class="attached"></div>
@@ -74,7 +103,7 @@
                     <input type="hidden" id="ParentCommentId" name="ParentCommentId" value=null />
                     <div class="submit"><button>등록</button></div>
                     @Html.AntiForgeryToken()
-                </form>
+                }
             }
             else
             {
@@ -93,10 +122,27 @@
     }
 </script>
 <script>
-    document.getElementById('commentForm').addEventListener('submit', function () {
-        sessionStorage.setItem('scrollPosition', window.scrollY);
-    });
-
+    const popUpBtns = document.getElementsByName('popUpBtn');
+    for (const btn of popUpBtns) {
+        btn.addEventListener('click', (e) => {
+            const siblings = e.currentTarget.parentElement.children;
+            const popUp = siblings.popUp;
+            if (window.getComputedStyle(popUp).display == 'none') {
+                popUp.classList.add('active');
+            } else {
+                popUp.classList.remove('active');
+            }
+        });
+    }
+</script>
+<script>
+    const commentForms = document.getElementsByName('commentForm')
+    for (const form of commentForms) {
+        form.addEventListener('submit', function () {
+            sessionStorage.setItem('scrollPosition', window.scrollY);
+        });
+    }
+    
     window.onload = function () {
         var scrollPosition = sessionStorage.getItem('scrollPosition');
         if (scrollPosition) {
@@ -105,21 +151,3 @@
         }
     };
 </script>
-@* <script>
-    function revalidateForm() {
-        var form = $('#commentForm');
-        form.removeData('validator');
-        form.removeData('unobtrusiveValidation');
-        $.validator.unobtrusive.parse(form);
-    }
-
-    function partialRenderCallback() {
-        // 여기서 부분적으로 업데이트할 내용이 변경될 때 실행될 코드를 작성하세요.
-        // 예를 들어, 새로운 입력 필드가 추가되는 경우 등
-        revalidateForm();
-    }
-
-    $('#comments').on('click', function () {
-        partialRenderCallback();
-    });
-</script> *@
