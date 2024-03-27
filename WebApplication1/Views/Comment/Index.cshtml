@@ -70,7 +70,7 @@
                                                 <i class="fa-regular fa-trash-alt"></i>&nbsp;삭제
                                             </button>
                                         </li>
-                                        @Html.AntiForgeryToken();
+                                        @Html.AntiForgeryToken()
                                     }
                                 }
                                 <li class="report"><button type="button"><i class="fa-regular fa-flag"></i>&nbsp;신고</button></li>
@@ -118,7 +118,8 @@
 </div>
 <script>
     function redirectToLoginPage() {
-        window.location.href = "/login?redirect_url=" + '@ViewBag.RequestUrl';
+        var currentUrl = window.location.href;
+        window.location.href = "/Credentials/Login?ReturnUrl=" + encodeURIComponent(currentUrl);
     }
 </script>
 <script>
@@ -142,7 +143,7 @@
             sessionStorage.setItem('scrollPosition', window.scrollY);
         });
     }
-    
+
     window.onload = function () {
         var scrollPosition = sessionStorage.getItem('scrollPosition');
         if (scrollPosition) {

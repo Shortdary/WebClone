@@ -14,7 +14,7 @@ BEGIN
 	id,
 	nickname
 
-	FROM [dbo].[User] 
+	FROM [dbo].[ApplicationUser] 
 	WHERE login_id=@login_id AND password=@password
 END
 GO
@@ -94,13 +94,13 @@ BEGIN
 			  ,[like_count]
 			  ,[created_time]
 			  ,[created_uid]
-			  ,[User].[nickname]
+			  ,[ApplicationUser].[nickname]
 			  ,[Board].[board_name]
 			  ,[Board].[board_name_eng]
 			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
 		  FROM [dbo].[Post]
 		  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-		  INNER JOIN [dbo].[User] ON Post.created_uid=[dbo].[User].id
+		  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
 		  WHERE [Post].[is_deleted] = 0
 	) AS Sub
 	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
@@ -138,13 +138,13 @@ BEGIN
 			  ,[like_count]
 			  ,[created_time]
 			  ,[created_uid]
-			  ,[User].[nickname]
+			  ,[ApplicationUser].[nickname]
 			  ,[Board].[board_name]
 			  ,[Board].[board_name_eng]
 			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
 		  FROM [dbo].[Post]
 		  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-		  INNER JOIN [dbo].[User] ON Post.created_uid=[dbo].[User].id
+		  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
 		  WHERE [like_count] >= 5 AND [Post].[is_deleted] = 0
 	) AS Sub
 	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
@@ -180,12 +180,12 @@ BEGIN
 		  ,[like_count]
 		  ,[created_time]
 		  ,[created_uid]
-		  ,[User].[nickname]
+		  ,[ApplicationUser].[nickname]
 		  ,[Board].[board_name]
 		  ,[Board].[board_name_eng]
 	  FROM [dbo].[Post]
 	  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-	  INNER JOIN [dbo].[User] ON Post.created_uid=[dbo].[User].id
+	  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
 	  WHERE [Post].[id] = @id
 END
 GO
@@ -218,13 +218,13 @@ BEGIN
 			  ,[like_count]
 			  ,[created_time]
 			  ,[created_uid]
-			  ,[User].[nickname]
+			  ,[ApplicationUser].[nickname]
 			  ,[Board].[board_name]
 			  ,[Board].[board_name_eng]
 			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
 			  FROM [dbo].[Post]
 			  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-			  INNER JOIN [dbo].[User] ON Post.created_uid=[dbo].[User].id
+			  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
 			  WHERE board_id = @board_id AND [Post].[is_deleted] = 0
 	) AS Sub
 	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
@@ -360,8 +360,8 @@ SELECT [Comment].[id]
 		,[nickname]
 		,[is_deleted]
 FROM Comment
-		INNER JOIN [dbo].[User] ON Comment.created_uid=[dbo].[User].id
-WHERE post_id = 2
+		INNER JOIN [dbo].[ApplicationUser] ON Comment.created_uid=[dbo].[ApplicationUser].id
+WHERE post_id = @post_id
 ORDER BY
 		CASE WHEN parent_comment_id IS NULL 
 			THEN created_time 
@@ -380,7 +380,7 @@ GO
 -- Create date: 2024-03-27
 -- Description:	delete comment
 -- =============================================
-CREATE PROCEDURE [dbo].[spDeleteComment]
+ALTER PROCEDURE [dbo].[spDeleteComment]
 	-- Add the parameters for the stored procedure here
 	@comment_id int
 AS

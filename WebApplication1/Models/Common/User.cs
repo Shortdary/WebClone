@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Diagnostics.CodeAnalysis;
 
 namespace WebApplication1.Models;
 
-public class User
+public class User: IdentityUser
 {
     public int UserId { get; set; }
     public string? Nickname { get; set; }
@@ -15,5 +16,10 @@ public class UserLoginCredentials
 
     public string? Password { get; set; }
 
-    public string? RedirectUrl { get; set; }
+    public string? ReturnUrl { get; set; } = null;
+}
+
+public class Role: IdentityRole
+{
+    public int RoleId { get; set; }
 }

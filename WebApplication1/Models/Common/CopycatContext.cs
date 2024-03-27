@@ -14,6 +14,7 @@ public partial class CopycatContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<User> ApplicationUsers { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
 
@@ -24,6 +25,16 @@ public partial class CopycatContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("ApplicationUser");
+
+            entity.Property(e => e.UserId).HasColumnName("id");
+            entity.Property(e => e.Nickname).HasColumnName("nickname");
+        });
+
         modelBuilder.Entity<Comment>(entity =>
         {
             entity

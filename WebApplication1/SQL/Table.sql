@@ -68,7 +68,7 @@ GO
 
 
 
-CREATE TABLE [dbo].[User](
+CREATE TABLE [dbo].[ApplicationUser](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[login_id] [nchar](20) NOT NULL,
 	[password] [nchar](100) NULL,

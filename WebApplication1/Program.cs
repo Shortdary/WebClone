@@ -1,13 +1,27 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApplication1.JWT;
+using WebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDbContext<CopycatContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("DefaultConnectionString")));
+builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<CopycatContext>();
+builder.Services.AddScoped<RoleManager<Role>>();
+builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
+{
+    options.Conventions.AuthorizeAreaFolder("Identity", "/Account");
+    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "/Shared/Login");
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -43,6 +57,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+//builder.Services.AddDistributedMemoryCache();
+
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromSeconds(10);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -53,29 +76,20 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseMiddleware<AddHeaderMiddleware>();
-//app.UseStatusCodePagesWithRedirects("/login");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
-    name: "comment",
-    pattern: "comment/{action}",
-    defaults: new { controller = "CommentController" });
-
-app.MapControllerRoute(
     name: "home",
     pattern: "");
+app.MapRazorPages();
 
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+//app.UseSession();
 
 app.Run();

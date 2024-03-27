@@ -24,7 +24,7 @@ namespace WebApplication1.JWT
         public string GenerateJWTToken(User userInfo)
         {
             SymmetricSecurityKey _jwtSecretKey = new(Encoding.UTF8.GetBytes(_config.GetValue<string>("Jwt:SecretKey")));
-            var tokenDescriptor = new SecurityTokenDescriptor
+            SecurityTokenDescriptor tokenDescriptor = new()
             {
                 Subject = new ClaimsIdentity(new Claim[]
                         {
@@ -35,13 +35,13 @@ namespace WebApplication1.JWT
 
                 Issuer = _config.GetValue<string>("Jwt:Issuer"),
                 Audience = _config.GetValue<string>("Jwt:Audience"),
-                Expires = DateTime.UtcNow.AddHours(12), // 토큰 만료 시간 설정
+                Expires = DateTime.UtcNow.AddMinutes(5), // 토큰 만료 시간 설정
                 SigningCredentials = new(_jwtSecretKey, SecurityAlgorithms.HmacSha256Signature)
 
             };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            string tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
 

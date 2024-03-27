@@ -30,10 +30,10 @@
                         <li class="nav-item">
                             @if (string.IsNullOrEmpty(this.ViewContext.HttpContext.Request.Cookies["Authorization"]))
                             {
-                                <a class="nav-link text-dark" href="/login">로그인</a>
+                                <a class="nav-link text-dark" id="loginLink" asp-controller="Credentials" asp-action="Login">로그인</a>
                             } else
                             {
-                                <a class="nav-link text-dark" href="/logout">로그아웃</a>
+                                <a class="nav-link text-dark" asp-controller="Credentials" asp-action="Logout">로그아웃</a>
                             }
                         </li>
                         <li class="nav-item">
@@ -382,6 +382,13 @@
         tinymce.init({
             selector: 'textarea#detail'
         });
+    </script>
+    <script>
+        var currentUrl = window.location.href;
+
+        if (document.getElementById("loginLink")) {
+            document.getElementById("loginLink").href += "?ReturnUrl=" + encodeURIComponent(currentUrl);
+        }
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
