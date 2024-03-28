@@ -13,15 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<CopycatContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("DefaultConnectionString")));
-builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CopycatContext>();
-builder.Services.AddScoped<RoleManager<Role>>();
-builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
-{
-    options.Conventions.AuthorizeAreaFolder("Identity", "/Account");
-    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "/Shared/Login");
-});
+builder.Services.AddDbContext<CopycatContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetValue<string>("DefatulConnectionString")));
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -36,6 +30,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
     options.Events = new JwtBearerEvents
     {
+        // 403 에러 
+        OnForbidden = context =>
+        {
+            return new JwtEventsHandler().OnForbidden(context);
+        },
+        // 401 에러 발생시
         OnChallenge = context =>
         {
             return new JwtEventsHandler().OnChallenge(context);
@@ -56,6 +56,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         }
     };
 });
+
+//builder.Services.AddDbContext<CopycatContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("DefaultConnectionString")));
+//builder.Services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<CopycatContext>();
+//builder.Services.AddScoped<RoleManager<Role>>();
+//builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
+//{
+//    options.Conventions.AuthorizeAreaFolder("Identity", "/Account");
+//    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "/Shared/Login");
+//});
 
 //builder.Services.AddDistributedMemoryCache();
 
@@ -84,7 +94,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "home",
     pattern: "");
-app.MapRazorPages();
+//app.MapRazorPages();
 
 app.UseRouting();
 

@@ -1,0 +1,124 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#list .searchAndWrite {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0
+}
+
+    #list .searchAndWrite > div {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center
+    }
+
+    #list .searchAndWrite form {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        width: 440px;
+        height: 40px
+    }
+
+    #list .searchAndWrite .search {
+        display: flex;
+    }
+
+        #list .searchAndWrite .search select, #list .categories .sort select {
+            box-sizing: border-box;
+            height: 40px;
+            padding: 0 20px;
+            font-size: 1em;
+            color: var(--default-anchor-color);
+            cursor: pointer;
+            background-color: var(--sercondary-background-color);
+            border: 1px;
+            border-style: solid;
+            border-color: black;
+            border-radius: 8px;
+            appearance: none;
+            margin-right: 10px;
+        }
+        #list .searchAndWrite .search input {
+            margin-right: 10px;
+            border-radius: 8px;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 32px 0
+        }
+
+    .pagination a {
+        color: var(--default-anchor-color);
+        text-decoration: none
+    }
+
+    .pagination .prev, .pagination .next {
+        box-sizing: border-box;
+        width: 50px;
+        height: 30px
+    }
+
+        .pagination .prev a, .pagination .next a {
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%
+        }
+
+        .pagination .prev .notSelected, .pagination .next .notSelected {
+            background-color: var(--alpha-5)
+        }
+
+    .pagination .number {
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+
+        .pagination .number a {
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+            background-color: var(--alpha-20);
+            border-right: 0;
+            border-radius: 4px
+        }
+
+        .pagination .number .selected {
+            color: var(--point-color);
+            background-color: var(--point-background-color)
+        }
+
+        .pagination .number .notSelected {
+            background-color: var(--alpha-5)
+        }

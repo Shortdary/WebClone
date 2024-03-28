@@ -57,6 +57,7 @@ namespace WebApplication1.Models.Dao
             conn.Close();
         }
 
+        // TODO
         public void EditComment(CommentEdit commentData)
         {
             using SqlConnection conn = GetConnection();

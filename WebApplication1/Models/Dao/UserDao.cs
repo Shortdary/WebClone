@@ -6,10 +6,12 @@ namespace WebApplication1.Models.Dao
 {
     public class UserDao: DBHelper
     {
+        private readonly CopycatContext _dbContext = new();
+
         public User? GetUserByLoginCredentials(UserLoginCredentials ulc)
         {
             User? user;
-            using var conn = GetConnection();
+            using SqlConnection conn = GetConnection();
             {
                 SqlCommand cmd = new("spSelectUserByLoginCredentials", conn)
                 {
@@ -39,6 +41,57 @@ namespace WebApplication1.Models.Dao
 
             }
             return user;
+        }
+
+        public (List<UserForAdmin>, int) GetUserList(AdminUserListQuery q)
+        {
+            List<UserForAdmin> userList;
+            int totalRowNum;
+
+            IQueryable<ApplicationUser> query = _dbContext.ApplicationUsers;
+
+            if (!string.IsNullOrEmpty(q.SearchKeyword) && !string.IsNullOrEmpty(q.SearchTarget))
+            {
+                if (q.SearchTarget == "id")
+                {
+                    query = query.Where(u => u.Id == int.Parse(q.SearchKeyword));
+                }
+                else if (q.SearchTarget == "nickname")
+                {
+                    query = query.Where(u => u.Nickname.Contains(q.SearchKeyword));
+                }
+            }
+
+            userList = query.Select(row =>
+                    new UserForAdmin
+                    {
+                        UserId = row.Id,
+                        Nickname = row.Nickname,
+                    }).OrderBy(u => u.UserId).ToList();
+
+            using SqlConnection conn = GetConnection();
+            SqlCommand cmd = new("spSelectAllUsers", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@page_number", q.PageNumber);
+            cmd.Parameters.AddWithValue("@page_size", q.PageSize);
+            cmd.Parameters.AddWithValue("@search_target", q.SearchTarget ?? "");
+            cmd.Parameters.AddWithValue("@search_keyword", q.SearchKeyword ?? "");
+            conn.Open();
+
+            DataSet ds = new();
+            SqlDataAdapter da = new(cmd);
+            da.Fill(ds);
+
+            //userList = ds.Tables[0].AsEnumerable().Select(row =>
+            //        new UserForAdmin
+            //        {
+            //            UserId = row.Field<int>("id"),
+            //            Nickname = row.Field<string>("nickname"),
+            //        }).ToList();
+            totalRowNum = ds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
+            return (userList, totalRowNum);
         }
     }
 }

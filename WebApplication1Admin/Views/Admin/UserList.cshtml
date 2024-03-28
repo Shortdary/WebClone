@@ -1,0 +1,95 @@
+﻿@model AdminUserListModel
+@{
+    int pageIndex = (Model.PageNumber - 1) / 5;
+    int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
+}
+
+<style>
+    .someFunction {
+        width: 100px;
+    }
+</style>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">닉네임</th>
+            <th scope="col" class="someFunction">뭔가기능1</th>
+            <th scope="col" class="someFunction">뭔가기능2</th>
+        </tr>
+    </thead>
+    <tbody class="table table-striped">
+        @foreach (UserForAdmin user in Model.UserList)
+        {
+            <tr onclick="onClickRow(@user.UserId)">
+                <th scope="row">@user.UserId</th>
+                <td>@user.Nickname</td>
+                <td>
+                    <button class="btn btn-outline-primary stop">작동안함</button>
+                </td>
+                <td>
+                    <button class="btn btn-outline-primary stop">작동안함</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<section class="pagination">
+    <div class="prev">
+        @{
+            if (pageIndex > 0)
+            {
+                <a asp-controller="Admin" asp-action="UserList" asp-route-page_number=@(pageIndex * 5)>이전</a>
+            }
+        }
+    </div>
+    <div class="number">
+        @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
+        {
+            <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-controller="Admin" asp-action="UserList" asp-route-page_number=@pageNumber>@pageNumber</a>
+        }
+    </div>
+    <div class="next">
+        @{
+            if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
+            {
+                <a asp-controller="Admin" asp-action="UserList" asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
+            }
+        }
+    </div>
+</section>
+<article id="list">
+    <div class="searchAndWrite">
+        <div>
+            @using (Html.BeginForm("UserList", "Admin", FormMethod.Get))
+            {
+                <div class="search">
+                    @Html.DropDownList("search_target",
+                             new List<SelectListItem>()
+                {
+                new SelectListItem("사용자ID", "id")
+                ,new SelectListItem("닉네임", "nickname")
+                })
+                    @Html.TextBox("search_keyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    <button type="submit">검색</button>
+                </div>
+            }
+        </div>
+    </div>
+</article>
+
+<script>
+    function onClickRow(userId) {
+        window.location.href = '/Admin/UserList/' + userId + '/Posts';
+    }
+
+    const btns = document.getElementsByClassName("stop");
+    for (const btn of btns) {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            console.log("not working");
+        })
+    }
+
+</script>

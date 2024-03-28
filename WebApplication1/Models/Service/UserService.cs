@@ -29,4 +29,18 @@ public class UserService
             return user;
         }
     }
+
+    public AdminUserListModel PopulateUserListModel(AdminUserListQuery q)
+    {
+        AdminUserListModel adminUserListModel = new()
+        {
+            PageNumber = q.PageNumber,
+            PageSize = q.PageNumber,
+            SearchKeyword = q.SearchKeyword,
+            SearchTarget = q.SearchTarget,
+        };
+        (adminUserListModel.UserList, adminUserListModel.TotalRowNum) = _userDao.GetUserList(q);
+
+        return adminUserListModel;
+    }
 }

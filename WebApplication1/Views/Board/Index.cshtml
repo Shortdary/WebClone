@@ -71,18 +71,17 @@
     <div class="searchAndWrite">
         <div></div>
         <div>
-            <form action="/stream_fanart">
+            @using (Html.BeginForm(Model.BoardNameEng, "Board"))
+            {
                 <div class="search">
-                    <select name="searchType">
-                        <option value="title">제목</option>
-                        <option value="titleAndContent">제목 + 내용</option>
-
-                        <option value="nickName">글쓴이</option>
+                    <select name="SearchTarget">
+                        <option value="id">사용자ID</option>
+                        <option value="nickname">닉네임</option>
                     </select>
-                    <input type="text" name="keyword" maxlength="50" value="">
+                    <input type="text" name="SearchKeyword" maxlength="50" value="">
                     <button>검색</button>
                 </div>
-            </form>
+            }
         </div>
         <div class="write">
             @if (User.Identity.IsAuthenticated)

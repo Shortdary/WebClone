@@ -11,25 +11,22 @@ namespace WebApplication1.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<User> _userManager;
         private readonly UserService _userService = new();
 
         public CredentialsController(
             IConfiguration config, 
-            IHttpContextAccessor httpContextAccessor, 
-            UserManager<User> userManager
+            IHttpContextAccessor httpContextAccessor 
             )
         {
             _config = config;
             _httpContextAccessor = httpContextAccessor;
-            _userManager = userManager;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = _httpContextAccessor.HttpContext.Request.Headers["Referer"];
+            ViewBag.ReturnUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"];
 
             return View("Login");
         }
@@ -57,7 +54,6 @@ namespace WebApplication1.Controllers
                 };
                 Response.Cookies.Append("Authorization", $"Bearer {tokenString}", cookieOptions);
                 
-                _userManager.AddToRoleAsync(authUser, "Member");
                 
                 if(!string.IsNullOrEmpty(loginUser.ReturnUrl))
                 {
@@ -71,7 +67,6 @@ namespace WebApplication1.Controllers
             return View("Login");
         }
 
-        [Route("Credentials/Logout")]
         [Authorize]
         public IActionResult Logout()
         {

@@ -4,18 +4,18 @@ namespace WebApplication1.Models.Common
 {
     public class DBHelper
     {
-        private static string SERVER = "DESKTOP-AEPN1UJ";
-        private static string DATABASE = "Copycat";
+        private readonly static string SERVER = "DESKTOP-AEPN1UJ";
+        private readonly static string DATABASE = "Copycat";
 
-        private string CONNECTIONSTRING = $"Data Source={SERVER};Initial Catalog={DATABASE};Integrated Security = true";
+        private readonly  string CONNECTIONSTRING = $"Data Source={SERVER};Initial Catalog={DATABASE};Integrated Security = true";
 
-        private SqlConnection? connection { get; set; }
+        private SqlConnection? Connection { get; set; }
 
         public SqlConnection GetConnection()
         {
-            if (connection != null)
+            if (Connection != null)
             {
-                return connection;
+                return Connection;
             }
             else
             {

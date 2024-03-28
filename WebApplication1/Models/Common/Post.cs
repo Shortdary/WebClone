@@ -26,6 +26,12 @@ public partial class Post
     public DateTime CreatedTime { get; set; }
 
     public int CreatedUid { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTime UpdatedTime { get; set; }
+
+    public int UpdatedUid { get; set; }
 }
 
 public partial class PostDetailWithUser : Post

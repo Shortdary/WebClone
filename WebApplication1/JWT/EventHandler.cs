@@ -10,10 +10,17 @@ namespace WebApplication1.JWT
             {
                 context.HandleResponse();
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                context.Response.Redirect("/login");
+                context.Response.Redirect($"/Credentials/Login?ReturnUrl={context.Request.Headers["Referer"]}");
                 await Task.CompletedTask;
             }
             await base.OnChallenge(context);
+        }
+
+        public new async Task OnForbidden(ForbiddenContext context)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.Redirect(context.Request.Headers["Referer"]);
+            await Task.CompletedTask;
         }
     }
 }

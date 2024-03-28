@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -8,23 +6,15 @@ namespace WebApplication1.Controllers
     public class BoardController : Controller
     {
         private readonly PostService _postService = new();
-        private readonly UserManager<User> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BoardController(IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+        public BoardController(IHttpContextAccessor httpContextAccessor)
         {
-            _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
         private async Task<IActionResult> BoardCommonMethod(BoardServiceCommonParameter serviceParameter)
         {
-            User user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
-            if (user is not null)
-            {
-                IList<string> a = await _userManager.GetRolesAsync(user);
-                System.Diagnostics.Debug.WriteLine(a);
-            }
             if (serviceParameter.Id is not null)
             {
                 HttpRequest? request = _httpContextAccessor.HttpContext?.Request;
@@ -53,7 +43,6 @@ namespace WebApplication1.Controllers
             return await Task.Run(() => BoardCommonMethod(serviceParams));
         }
 
-        [Authorize(Roles = "Member")]
         [HttpGet]
         public async Task<IActionResult> New(BoardControllerCommonParameter controllerParameter)
         {
@@ -67,7 +56,6 @@ namespace WebApplication1.Controllers
             return await Task.Run(() => BoardCommonMethod(serviceParams));
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Notice(BoardControllerCommonParameter controllerParameter)
         {

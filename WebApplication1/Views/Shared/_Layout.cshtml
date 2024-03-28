@@ -31,7 +31,8 @@
                             @if (string.IsNullOrEmpty(this.ViewContext.HttpContext.Request.Cookies["Authorization"]))
                             {
                                 <a class="nav-link text-dark" id="loginLink" asp-controller="Credentials" asp-action="Login">로그인</a>
-                            } else
+                            }
+                            else
                             {
                                 <a class="nav-link text-dark" asp-controller="Credentials" asp-action="Logout">로그아웃</a>
                             }
@@ -353,11 +354,11 @@
         </li>
         </ul>
         </li>
-        </ul> *@
+        </ul>
         </nav>
         </div>
         <div class="navBackground"></div>
-        </section>
+        </section> *@
     </header>
     <div class="container" style="width: 950px">
         <main role="main" class="pb-3">

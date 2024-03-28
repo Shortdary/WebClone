@@ -30,6 +30,7 @@ namespace WebApplication1.JWT
                         {
                             new(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
                             new(ClaimTypes.Name, userInfo.Nickname),
+                            new(ClaimTypes.Role, "Member")
                             // 필요한 경우에 사용자 클레임 추가
                         }),
 
