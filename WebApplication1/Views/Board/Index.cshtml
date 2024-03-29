@@ -1,5 +1,6 @@
 ﻿@model BoardInfoWithPostList
 @{
+    bool isBest = ViewBag.RequestPath is null ? true : ViewBag.RequestPath.Contains("Best");
     ViewData["Title"] = $"{Model.BoardName}";
     string currentUrl = Url.ActionContext.HttpContext.Request.Path;
     int pageIndex = (Model.PageNumber - 1) / 5;
@@ -71,15 +72,17 @@
     <div class="searchAndWrite">
         <div></div>
         <div>
-            @using (Html.BeginForm(Model.BoardNameEng, "Board"))
+            @using (Html.BeginForm(isBest ? "Best" : Model.BoardNameEng, "Board", FormMethod.Get))
             {
                 <div class="search">
-                    <select name="SearchTarget">
-                        <option value="id">사용자ID</option>
-                        <option value="nickname">닉네임</option>
-                    </select>
-                    <input type="text" name="SearchKeyword" maxlength="50" value="">
-                    <button>검색</button>
+                    @Html.DropDownList("search_target",
+                             new List<SelectListItem>()
+                {
+                new SelectListItem("사용자ID", "id")
+                ,new SelectListItem("닉네임", "nickname")
+                })
+                    @Html.TextBox("search_keyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    <button type="submit">검색</button>
                 </div>
             }
         </div>

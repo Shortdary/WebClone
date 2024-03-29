@@ -83,6 +83,8 @@ namespace WebApplication1.Models.Dao
                 postCmd.CommandType = CommandType.StoredProcedure;
                 postCmd.Parameters.AddWithValue("@page_number", p.PageNumber);
                 postCmd.Parameters.AddWithValue("@page_size", p.PageSize);
+                postCmd.Parameters.AddWithValue("@search_target", p.SearchTarget ?? "");
+                postCmd.Parameters.AddWithValue("@search_keyword", p.SearchKeyword ?? "");
                 conn.Open();
 
                 SqlCommand boardCmd = new("spSelectBoardInfoByBoardId", conn2)

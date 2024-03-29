@@ -20,6 +20,57 @@ END
 GO
 
 
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-03-29
+-- Description:	get user list
+-- =============================================
+ALTER PROCEDURE [dbo].[spSelectAllUsers] 
+	@page_number int = 1
+	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX);
+
+	SET @count_query = 'SELECT COUNT(*) AS total_row_count FROM [dbo].[ApplicationUser] WHERE 1=1'
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND id = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND id = TRY_CONVERT(INT, @search_keyword);';
+    END
+
+	IF @search_target = 'nickname' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND nickname LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND nickname LIKE ''%' + @search_keyword + '%'';';
+    END
+
+	SET @main_query = 
+	'
+	SELECT * FROM (
+		SELECT
+		id,
+		nickname
+		,ROW_NUMBER() OVER (ORDER BY [ApplicationUser].[id] ASC) AS row_num
+		FROM [dbo].[ApplicationUser]
+		WHERE  1=1 ' + @main_query_filter + '
+	) AS Sub
+	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
+	'
+
+	EXEC sp_executesql @main_query, N'@page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@search_target nvarchar(20), @search_keyword nvarchar(50)', @search_target, @search_keyword;
+END
+GO
+
+
+
 
 
 
@@ -77,13 +128,41 @@ ALTER PROCEDURE [dbo].[spSelectAllPosts]
 	-- Add the parameters for the stored procedure here
 	@page_number int = 1
 	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
 AS	
 BEGIN
 	-- BEGIN NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
+
     -- Insert statements for procedure here
+	SET @count_query = 
+	'
+	SELECT COUNT(*) AS total_row_count 
+	FROM [dbo].[Post]
+	INNER JOIN [dbo].[ApplicationUser] ON [Post].[created_uid]=[dbo].[ApplicationUser].[id]
+	WHERE [Post].[is_deleted] = 0
+	';
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = + ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword);';
+    END;
+
+	IF @search_target = 'nickname' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND nickname LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND nickname LIKE ''%' + @search_keyword + '%'';';
+    END;
+
+	SET @main_query =
+	'
 	SELECT * FROM
 	(
 		SELECT [Post].[id]
@@ -99,15 +178,16 @@ BEGIN
 			  ,[Board].[board_name_eng]
 			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
 		  FROM [dbo].[Post]
-		  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-		  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
-		  WHERE [Post].[is_deleted] = 0
+		  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].[id]
+		  INNER JOIN [dbo].[ApplicationUser] ON [Post].[created_uid]=[dbo].[ApplicationUser].[id]
+		  WHERE [Post].[is_deleted] = 0' + @main_query_filter + '
 	) AS Sub
 	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
+	';
 
-	  
-	 SELECT COUNT(*) AS total_row_count FROM [dbo].[Post]
-	 WHERE [Post].[is_deleted] = 0;
+	EXEC sp_executesql @main_query, N'@page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@search_target nvarchar(20), @search_keyword nvarchar(50)', @search_target, @search_keyword;
+
 END
 GO
 
@@ -120,38 +200,65 @@ GO
 ALTER PROCEDURE [dbo].[spSelectPopularPosts] 
 	-- Add the parameters for the stored procedure here
 	@page_number int = 1
-	,@page_size int = 1
+	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
 AS	
 BEGIN
 	-- BEGIN NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-
+	
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
     -- Insert statements for procedure here
+	SET @count_query = 
+	'
+	SELECT COUNT(*) AS total_row_count 
+	FROM [dbo].[Post]
+	INNER JOIN [dbo].[ApplicationUser] ON [Post].[created_uid]=[dbo].[ApplicationUser].[id]
+	WHERE [like_count] >= 5 AND [Post].[is_deleted] = 0
+	'
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+    END
+
+	IF @search_target = 'nickname' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND nickname LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND nickname LIKE ''%' + @search_keyword + '%''';
+    END
+
+	SET @main_query =
+	'
 	SELECT * FROM
 	(
 		SELECT [Post].[id]
-			  ,[board_id]
-			  ,[subject]
-			  ,[comment_count]
-			  ,[view_count]
-			  ,[like_count]
-			  ,[created_time]
-			  ,[created_uid]
+			  ,[Post].[board_id]
+			  ,[Post].[subject]
+			  ,[Post].[comment_count]
+			  ,[Post].[view_count]
+			  ,[Post].[like_count]
+			  ,[Post].[created_time]
+			  ,[Post].[created_uid]
 			  ,[ApplicationUser].[nickname]
 			  ,[Board].[board_name]
 			  ,[Board].[board_name_eng]
 			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
 		  FROM [dbo].[Post]
-		  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
-		  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
-		  WHERE [like_count] >= 5 AND [Post].[is_deleted] = 0
+		  INNER JOIN [dbo].[Board] ON [Post].[board_id]=[dbo].[Board].[id]
+		  INNER JOIN [dbo].[ApplicationUser] ON [Post].[created_uid]=[dbo].[ApplicationUser].[id]
+		  WHERE [like_count] >= 5 AND [Post].[is_deleted] = 0' + @main_query_filter +'
 	) AS Sub
-	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
+	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size
+	'
 
-	  
-	 SELECT COUNT(*) AS total_row_count FROM [dbo].[Post]
-	 WHERE [like_count] >= 5 AND [Post].[is_deleted] = 0;
+	EXEC sp_executesql @main_query, N'@page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@search_target nvarchar(20), @search_keyword nvarchar(50)', @search_target, @search_keyword;
 END
 GO
 
@@ -171,6 +278,7 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
+
 	SELECT [Post].[id]
 		  ,[board_id]
 		  ,[subject]
@@ -200,14 +308,42 @@ ALTER PROCEDURE [dbo].[spSelectPostsByBoardId]
 	-- Add the parameters for the stored procedure here
 	@board_id int
 	,@page_number int = 1
-	,@page_size int = 1
+	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
 AS
 BEGIN
 	-- BEGIN NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
+	
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
+
+	SET @count_query = 
+	'
+	SELECT COUNT(*) AS total_row_count 
+	FROM [dbo].[Post]
+	INNER JOIN [dbo].[ApplicationUser] ON [Post].[created_uid]=[dbo].[ApplicationUser].[id]
+	WHERE board_id = @board_id AND [Post].[is_deleted] = 0
+	'
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+    END
+
+	IF @search_target = 'nickname' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND [ApplicationUser].[nickname] LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND [ApplicationUser].[nickname] LIKE ''%' + @search_keyword + '%''';
+    END
 
     -- Insert statements for procedure here
+	SET @main_query =
+	'
 	SELECT * FROM
 	(
 		SELECT [Post].[id]
@@ -225,12 +361,13 @@ BEGIN
 			  FROM [dbo].[Post]
 			  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
 			  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
-			  WHERE board_id = @board_id AND [Post].[is_deleted] = 0
+			  WHERE [board_id] = @board_id AND [Post].[is_deleted] = 0' + @main_query_filter + '
 	) AS Sub
-	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
+	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size
+	'
 
-	SELECT COUNT(*) AS total_row_count FROM [dbo].[Post]
-	WHERE board_id = @board_id AND [Post].[is_deleted] = 0;
+	EXEC sp_executesql @main_query, N'@board_id int, @page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @board_id, @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@board_id int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @board_id, @search_target, @search_keyword;
 	  
 END
 GO

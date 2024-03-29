@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace WebApplication1.Models;
@@ -23,6 +24,14 @@ public class BoardInfoWithPostList: Board
 
     public int PageSize { get; set; } = 1;
 
+    [Display(Name = "search_target")]
+    [FromQuery(Name = "search_target")]
+    public string SearchTarget { get; set; } = null!;
+
+    [Display(Name = "search_keyword")]
+    [FromQuery(Name = "search_keyword")]
+    public string SearchKeyword { get; set; } = null!;
+
     public int TotalRowNum { get; set; } = 0;
 }
 
@@ -33,6 +42,14 @@ public class BoardControllerCommonParameter
 
     [FromQuery(Name = "page_size")]
     public int PageSize { get; set; } = 2;
+
+    [Display(Name = "search_target")]
+    [FromQuery(Name = "search_target")]
+    public string SearchTarget { get; set; } = null!;
+
+    [Display(Name = "search_keyword")]
+    [FromQuery(Name = "search_keyword")]
+    public string SearchKeyword { get; set; } = null!;
 
     public int? Id { get; set; }
 }

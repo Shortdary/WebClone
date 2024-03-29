@@ -15,10 +15,10 @@ namespace WebApplication1.Controllers
 
         private async Task<IActionResult> BoardCommonMethod(BoardServiceCommonParameter serviceParameter)
         {
+            HttpRequest? request = _httpContextAccessor.HttpContext?.Request;
+            ViewBag.RequestPath = request?.Path.ToString();
             if (serviceParameter.Id is not null)
             {
-                HttpRequest? request = _httpContextAccessor.HttpContext?.Request;
-                ViewBag.RequestPath = request?.Path.ToString();
                 PostDetailWithUser? postDetail = _postService.GetPostDetail(serviceParameter.Id);
                 return await Task.Run(() => View("Detail", postDetail));
             }
@@ -38,6 +38,8 @@ namespace WebApplication1.Controllers
                 BoardId = 24,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize,
+                SearchTarget = controllerParameter.SearchTarget,
+                SearchKeyword = controllerParameter.SearchKeyword,
                 Id = controllerParameter.Id
             };
             return await Task.Run(() => BoardCommonMethod(serviceParams));
@@ -51,6 +53,8 @@ namespace WebApplication1.Controllers
                 BoardId = 25,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize,
+                SearchTarget = controllerParameter.SearchTarget,
+                SearchKeyword = controllerParameter.SearchKeyword,
                 Id = controllerParameter.Id
             };
             return await Task.Run(() => BoardCommonMethod(serviceParams));
@@ -64,6 +68,8 @@ namespace WebApplication1.Controllers
                 BoardId = 1,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize,
+                SearchTarget = controllerParameter.SearchTarget,
+                SearchKeyword = controllerParameter.SearchKeyword,
                 Id = controllerParameter.Id
             };
             return await Task.Run(() => BoardCommonMethod(serviceParams));
@@ -77,6 +83,8 @@ namespace WebApplication1.Controllers
                 BoardId = 2,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize,
+                SearchTarget = controllerParameter.SearchTarget,
+                SearchKeyword = controllerParameter.SearchKeyword,
                 Id = controllerParameter.Id
             };
             return await Task.Run(() => BoardCommonMethod(serviceParams));
@@ -90,6 +98,8 @@ namespace WebApplication1.Controllers
                 BoardId = 3,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize,
+                SearchTarget = controllerParameter.SearchTarget,
+                SearchKeyword = controllerParameter.SearchKeyword,
                 Id = controllerParameter.Id
             };
             return await Task.Run(() => BoardCommonMethod(serviceParams));

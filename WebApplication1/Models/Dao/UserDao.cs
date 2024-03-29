@@ -48,27 +48,6 @@ namespace WebApplication1.Models.Dao
             List<UserForAdmin> userList;
             int totalRowNum;
 
-            IQueryable<ApplicationUser> query = _dbContext.ApplicationUsers;
-
-            if (!string.IsNullOrEmpty(q.SearchKeyword) && !string.IsNullOrEmpty(q.SearchTarget))
-            {
-                if (q.SearchTarget == "id")
-                {
-                    query = query.Where(u => u.Id == int.Parse(q.SearchKeyword));
-                }
-                else if (q.SearchTarget == "nickname")
-                {
-                    query = query.Where(u => u.Nickname.Contains(q.SearchKeyword));
-                }
-            }
-
-            userList = query.Select(row =>
-                    new UserForAdmin
-                    {
-                        UserId = row.Id,
-                        Nickname = row.Nickname,
-                    }).OrderBy(u => u.UserId).ToList();
-
             using SqlConnection conn = GetConnection();
             SqlCommand cmd = new("spSelectAllUsers", conn)
             {
@@ -84,12 +63,12 @@ namespace WebApplication1.Models.Dao
             SqlDataAdapter da = new(cmd);
             da.Fill(ds);
 
-            //userList = ds.Tables[0].AsEnumerable().Select(row =>
-            //        new UserForAdmin
-            //        {
-            //            UserId = row.Field<int>("id"),
-            //            Nickname = row.Field<string>("nickname"),
-            //        }).ToList();
+            userList = ds.Tables[0].AsEnumerable().Select(row =>
+                    new UserForAdmin
+                    {
+                        UserId = row.Field<int>("id"),
+                        Nickname = row.Field<string>("nickname"),
+                    }).ToList();
             totalRowNum = ds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
             return (userList, totalRowNum);
         }
