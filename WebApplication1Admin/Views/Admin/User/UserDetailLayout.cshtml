@@ -1,0 +1,35 @@
+﻿@model AdminUserDetailModel
+
+@{
+}
+
+<style>
+    .nav-item a.active {
+        font-weight: bold;
+    }
+</style>
+
+<nav class="navbar navbar-default">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="@($"nav-link text-dark {(Model.DetailType == "Post" ? "active" : "")}")" aria-current="page" href="@($"/Admin/UserList/{Model.Id}/Posts")">작성한 게시글</a>
+        </li>
+        <li class="nav-item">
+            <a class="@($"nav-link text-dark {(Model.DetailType == "Comment" ? "active" : "")}")" href="@($"/Admin/UserList/{Model.Id}/Comments")">작성한 댓글</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Admin/UserList">&lt; 유저목록으로</a>
+        </li>
+    </ul>
+</nav>
+
+@if (Model.DetailType == "Post")
+{
+    @await Html.PartialAsync("./UserDetailPost.cshtml", Model)
+}
+else if (Model.DetailType == "Comment")
+{
+    @await Html.PartialAsync("./UserDetailComment.cshtml", Model)
+}

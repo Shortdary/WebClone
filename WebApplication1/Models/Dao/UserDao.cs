@@ -4,7 +4,7 @@ using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
 {
-    public class UserDao: DBHelper
+    public class UserDao : DBHelper
     {
         private readonly CopycatContext _dbContext = new();
 
@@ -17,8 +17,8 @@ namespace WebApplication1.Models.Dao
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue("@login_id", ulc.LoginId);
-                cmd.Parameters.AddWithValue("@password", ulc.Password);
+                cmd.Parameters.AddWithValue("@login_id", string.IsNullOrEmpty(ulc.LoginId) ? DBNull.Value : ulc.LoginId);
+                cmd.Parameters.AddWithValue("@password", string.IsNullOrEmpty(ulc.Password) ? DBNull.Value : ulc.Password);
                 conn.Open();
 
                 DataTable dt = new();
@@ -56,7 +56,7 @@ namespace WebApplication1.Models.Dao
             cmd.Parameters.AddWithValue("@page_number", q.PageNumber);
             cmd.Parameters.AddWithValue("@page_size", q.PageSize);
             cmd.Parameters.AddWithValue("@search_target", q.SearchTarget ?? "");
-            cmd.Parameters.AddWithValue("@search_keyword", q.SearchKeyword ?? "");
+            cmd.Parameters.AddWithValue("@search_keyword", q.SearchKeyword is null ? DBNull.Value : q.SearchKeyword);
             conn.Open();
 
             DataSet ds = new();

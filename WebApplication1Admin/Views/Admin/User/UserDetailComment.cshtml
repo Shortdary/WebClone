@@ -1,0 +1,82 @@
+﻿@model AdminUserDetailModel
+
+@{
+    int pageIndex = (Model.PageNumber - 1) / 5;
+    int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
+}
+
+<style>
+    .selected {
+        font-weight: bold;
+        text-decoration: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: auto;
+    }
+</style>
+
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">게시물번호</th>
+                <th scope="col">댓글내용</th>
+                <th scope="col">생성시간</th>
+            </tr>
+        </thead>
+        <tbody class="table table-striped">
+            @foreach (Comment comment in Model.CommentList)
+            {
+                <tr>
+                    <th scope="row">@comment.Id</th>
+                    <td>@comment.PostId</td>
+                    <td>@comment.Comment1</td>
+                    <td>@comment.CreatedTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<section class="pagination">
+    <div class="prev">
+        @{
+            if (pageIndex > 0)
+            {
+                <a href="@($"/Admin/UserList/{Model.Id}/Comments?page_number={pageIndex * 5}")">이전</a>
+            }
+        }
+    </div>
+    <div class="number">
+        @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
+        {
+            <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" href="@($"/Admin/UserList/{Model.Id}/Comments?page_number={pageNumber}")">@pageNumber</a>
+        }
+    </div>
+    <div class="next">
+        @{
+            if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
+            {
+                <a href="@($"/Admin/UserList/{Model.Id}/Comments?page_number={pageIndex * 5 + 6}")">다음</a>
+            }
+        }
+    </div>
+</section>
+<article id="list">
+    <div class="searchAndWrite">
+        <div>
+            @using (Html.BeginRouteForm("UserDetailComment", FormMethod.Get))
+            {
+                <div class="search">
+                    @Html.DropDownList("search_target",
+                             new List<SelectListItem>()
+                {
+                new SelectListItem("댓글ID", "id")
+                ,new SelectListItem("댓글내용", "comment")
+                })
+                    @Html.TextBox("search_keyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    <button type="submit">검색</button>
+                </div>
+            }
+        </div>
+    </div>
+</article>

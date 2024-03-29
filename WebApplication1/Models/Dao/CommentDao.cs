@@ -40,6 +40,49 @@ namespace WebApplication1.Models.Dao
             return comments;
         }
 
+        public (List<Comment>, int) GetCommentListByUserId(AdminUserDetailQuery q)
+        {
+            List<Comment> commentList = new();
+            int totalRowNum;
+
+            using (SqlConnection conn = GetConnection())
+            {
+                SqlCommand cmd = new("spSelectCommentListByUserId", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                }; 
+                cmd.Parameters.AddWithValue("@user_id", q.Id);
+                cmd.Parameters.AddWithValue("@page_number", q.PageNumber);
+                cmd.Parameters.AddWithValue("@page_size", q.PageSize);
+                cmd.Parameters.AddWithValue("@search_target", q.SearchTarget ?? "");
+                cmd.Parameters.AddWithValue("@search_keyword", q.SearchKeyword is null ? DBNull.Value : q.SearchKeyword);
+
+                conn.Open();
+
+                DataSet ds = new();
+                SqlDataAdapter da = new(cmd);
+                da.Fill(ds);
+
+                commentList = ds.Tables[0].AsEnumerable().Select(row =>
+                   new Comment
+                   {
+                       Id = row.Field<int>("id"),
+                       PostId = row.Field<int>("post_id"),
+                       Comment1 = row.Field<string>("comment")!,
+                       LikeCount = row.Field<int>("like_count"),
+                       CreatedTime = row.Field<DateTime>("created_time"),
+                       CreatedUid = row.Field<int>("created_uid"),
+                       ParentCommentId = row.Field<int?>("parent_comment_id"),
+                       Nickname = row.Field<string>("nickname")!,
+                       IsDeleted = row.Field<bool>("is_deleted")
+                   }).ToList();
+
+                totalRowNum = ds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
+                conn.Close();
+            }
+            return (commentList, totalRowNum);
+        }
+
         public void CreateComment(CommentAdd commentData)
         {
             using SqlConnection conn = GetConnection();

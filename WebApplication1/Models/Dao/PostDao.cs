@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using Microsoft.Extensions.Hosting;
 using WebApplication1.Models.Common;
 
 namespace WebApplication1.Models.Dao
@@ -60,6 +59,54 @@ namespace WebApplication1.Models.Dao
             conn.Close();
         }
 
+        public (List<PostDetailWithUser>, int) GetPostListByUserId(AdminUserDetailQuery q)
+        {
+            List<PostDetailWithUser> postList = new();
+            int totalRowNum;
+            using var conn = GetConnection();
+            SqlCommand cmd = new(string.Empty, conn);
+            if (q.DetailType == "Post")
+            {
+                cmd.CommandText = "spSelectPostsByUserId";
+            }
+            else if (q.DetailType == "Comment")
+            {
+                cmd.CommandText = "spSelectCommentsByUserId";
+            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@user_id", q.Id);
+            cmd.Parameters.AddWithValue("@page_number", q.PageNumber);
+            cmd.Parameters.AddWithValue("@page_size", q.PageSize);
+            cmd.Parameters.AddWithValue("@search_target", q.SearchTarget ?? "");
+            cmd.Parameters.AddWithValue("@search_keyword", q.SearchKeyword is null ? DBNull.Value : q.SearchKeyword);
+            conn.Open();
+
+            DataSet ds = new();
+            SqlDataAdapter da = new(cmd);
+            da.Fill(ds);
+
+            postList = ds.Tables[0].AsEnumerable().Select(row =>
+                new PostDetailWithUser
+                {
+                    Id = row.Field<int>("id"),
+                    BoardId = row.Field<int>("board_id"),
+                    BoardName = row.Field<string>("board_name")!,
+                    BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                    Subject = row.Field<string>("subject")!,
+                    CommentCount = row.Field<int>("comment_count"),
+                    ViewCount = row.Field<int>("view_count"),
+                    LikeCount = row.Field<int>("like_count"),
+                    CreatedTime = row.Field<DateTime>("created_time"),
+                    CreatedUid = row.Field<int>("created_uid"),
+                    Nickname = row.Field<string>("nickname")!
+                }).ToList();
+
+            totalRowNum = ds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
+            conn.Close();
+
+            return (postList, totalRowNum);
+        }
+
         public BoardInfoWithPostList GetPostListByBoardId(BoardServiceCommonParameter p)
         {
             BoardInfoWithPostList boardWithPosts = new();
@@ -84,7 +131,7 @@ namespace WebApplication1.Models.Dao
                 postCmd.Parameters.AddWithValue("@page_number", p.PageNumber);
                 postCmd.Parameters.AddWithValue("@page_size", p.PageSize);
                 postCmd.Parameters.AddWithValue("@search_target", p.SearchTarget ?? "");
-                postCmd.Parameters.AddWithValue("@search_keyword", p.SearchKeyword ?? "");
+                postCmd.Parameters.AddWithValue("@search_keyword", p.SearchKeyword is null ? DBNull.Value : p.SearchKeyword);
                 conn.Open();
 
                 SqlCommand boardCmd = new("spSelectBoardInfoByBoardId", conn2)

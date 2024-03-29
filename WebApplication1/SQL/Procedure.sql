@@ -35,7 +35,7 @@ BEGIN
 	SET NOCOUNT ON;
 	DECLARE @main_query NVARCHAR(MAX);
 	DECLARE @count_query NVARCHAR(MAX);
-	DECLARE @main_query_filter NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
 
 	SET @count_query = 'SELECT COUNT(*) AS total_row_count FROM [dbo].[ApplicationUser] WHERE 1=1'
 
@@ -372,6 +372,90 @@ BEGIN
 END
 GO
 
+USE [Copycat]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spSelectPostsByBoardId]    Script Date: 2024-03-30 ¿ÀÀü 1:42:59 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-03-30
+-- Description:	select all posts by user id
+-- =============================================
+ALTER PROCEDURE [dbo].[spSelectPostsByUserId]
+	-- Add the parameters for the stored procedure here
+	@user_id int
+	,@page_number int = 1
+	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
+AS
+BEGIN
+	-- BEGIN NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
+
+	SET @count_query = 
+	'
+	SELECT COUNT(*) AS total_row_count 
+	FROM [dbo].[Post]
+	WHERE created_uid = @user_id 
+	'
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND [Post].[id] = TRY_CONVERT(INT, @search_keyword)';
+    END
+
+	IF @search_target = 'subject' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND subject LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND subject LIKE ''%' + @search_keyword + '%''';
+    END
+
+    -- Insert statements for procedure here
+	SET @main_query =
+	'
+	SELECT * FROM
+	(
+		SELECT [Post].[id]
+			  ,[board_id]
+			  ,[subject]
+			  ,[comment_count]
+			  ,[view_count]
+			  ,[like_count]
+			  ,[created_time]
+			  ,[created_uid]
+			  ,[ApplicationUser].[nickname]
+			  ,[Board].[board_name]
+			  ,[Board].[board_name_eng]
+			  ,ROW_NUMBER() OVER (ORDER BY [Post].[id] DESC) AS row_num
+			  FROM [dbo].[Post]
+			  INNER JOIN [dbo].[Board] ON Post.board_id=[dbo].[Board].id
+			  INNER JOIN [dbo].[ApplicationUser] ON Post.created_uid=[dbo].[ApplicationUser].id
+			  WHERE [created_uid] = @user_id' + @main_query_filter + '
+	) AS Sub
+	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size
+	'
+
+	EXEC sp_executesql @main_query, N'@user_id int, @page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @user_id, @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@user_id int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @user_id, @search_target, @search_keyword;
+	  
+END
+GO
+
+
 
 -- =============================================
 -- Author:		kkh
@@ -508,6 +592,74 @@ ORDER BY
 			END ASC,
 		CASE WHEN parent_comment_id IS NULL THEN NULL ELSE created_time END ASC;
 
+END
+GO
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-03-30
+-- Description:	select all comments by user id
+-- =============================================
+ALTER PROCEDURE [dbo].[spSelectCommentListByUserId] 
+	-- Add the parameters for the stored procedure here
+	@user_id int
+	,@page_number int = 1
+	,@page_size int = 2
+	,@search_target nvarchar(20)
+	,@search_keyword nvarchar(50)
+AS
+BEGIN
+	-- BEGIN NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @main_query NVARCHAR(MAX);
+	DECLARE @count_query NVARCHAR(MAX);
+	DECLARE @main_query_filter NVARCHAR(MAX) = '';
+
+	SET @count_query = 
+	'
+	SELECT COUNT(*) AS total_row_count FROM Comment WHERE created_uid = @user_id
+	'
+
+	IF @search_target = 'id' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND [Comment].[id] = TRY_CONVERT(INT, @search_keyword)';
+        SET @count_query = @count_query + ' AND [Comment].[id] = TRY_CONVERT(INT, @search_keyword)';
+    END
+
+	IF @search_target = 'comment' AND @search_keyword IS NOT NULL
+    BEGIN
+        SET @main_query_filter = ' AND comment LIKE ''%' + @search_keyword + '%''';
+        SET @count_query = @count_query + ' AND comment LIKE ''%' + @search_keyword + '%''';
+    END
+
+    -- Insert statements for procedure here
+	SET @main_query =
+	'
+	SELECT * FROM
+	(
+		SELECT [Comment].[id]
+				,[post_id]
+				,[comment]
+				,[like_count]
+				,[created_time]
+				,[created_uid]
+				,[parent_comment_id]
+				,[nickname]
+				,[is_deleted]
+			    ,ROW_NUMBER() OVER (ORDER BY [Comment].[id] DESC) AS row_num
+		FROM Comment
+				INNER JOIN [dbo].[ApplicationUser] ON Comment.created_uid=[dbo].[ApplicationUser].id
+		WHERE created_uid = @user_id' + @main_query_filter +' 
+	) AS Sub
+	WHERE row_num BETWEEN (@page_number - 1) * @page_size + 1 AND @page_number * @page_size;
+	'
+	
+	EXEC sp_executesql @main_query, N'@user_id int, @page_number int, @page_size int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @user_id, @page_number, @page_size, @search_target, @search_keyword;
+	EXEC sp_executesql @count_query, N'@user_id int, @search_target nvarchar(20), @search_keyword nvarchar(50)', @user_id, @search_target, @search_keyword;
 END
 GO
 

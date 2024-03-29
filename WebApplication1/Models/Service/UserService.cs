@@ -7,6 +7,8 @@ namespace WebApplication1.Models;
 public class UserService
 {
     private readonly UserDao _userDao = new();
+    private readonly PostDao _postDao = new();
+    private readonly CommentDao _commentDao = new();
 
     /// <summary>
     /// ID와 PWD를 받아 유저를 검증하는 함수
@@ -35,12 +37,36 @@ public class UserService
         AdminUserListModel adminUserListModel = new()
         {
             PageNumber = q.PageNumber,
-            PageSize = q.PageNumber,
+            PageSize = q.PageSize,
             SearchKeyword = q.SearchKeyword,
             SearchTarget = q.SearchTarget,
         };
         (adminUserListModel.UserList, adminUserListModel.TotalRowNum) = _userDao.GetUserList(q);
 
         return adminUserListModel;
+    }
+
+    public AdminUserDetailModel PopulateUserDetailModel(AdminUserDetailQuery q)
+    {
+        AdminUserDetailModel adminUserDetailModel = new()
+        {
+            PageNumber = q.PageNumber,
+            PageSize = q.PageSize,
+            SearchKeyword = q.SearchKeyword,
+            SearchTarget = q.SearchTarget,
+            DetailType = q.DetailType,
+            Id = q.Id
+        };
+
+        if(q.DetailType == "Post")
+        {
+            (adminUserDetailModel.PostList, adminUserDetailModel.TotalRowNum) = _postDao.GetPostListByUserId(q);
+        }
+        else if (q.DetailType == "Comment")
+        {
+            (adminUserDetailModel.CommentList, adminUserDetailModel.TotalRowNum) = _commentDao.GetCommentListByUserId(q);
+        }
+
+        return adminUserDetailModel;
     }
 }
