@@ -107,7 +107,9 @@
             <div class="right">
             </div>
         </div>
-        @await Html.PartialAsync("../Comment/Index.cshtml")
+        <div id="commentPartialContainer">
+            @await Html.PartialAsync("../Comment/Index.cshtml", Model.CommentPartialViewModel)
+        </div>
         <div class="listAndEdit">
             <div class="left">
                 <div class="button">

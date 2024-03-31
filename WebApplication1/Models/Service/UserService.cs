@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
-using System.Runtime.InteropServices;
-using WebApplication1.Models.Dao;
+﻿using WebApplication1.Models.Dao;
+using System.Text.Json;
 
 namespace WebApplication1.Models;
 
@@ -44,17 +42,17 @@ public class UserService
             PageSize = q.PageSize,
             FormId = "user-list-table-form"
         };
+        List<SelectListItemModel> a = new()
+            {
+                new() { Text = "사용자ID", Value = "id" },
+                new() { Text = "닉네임", Value = "nickname" }
+            };
         SearchModel search = new()
         {
             SearchTarget = q.SearchTarget,
             SearchKeyword = q.SearchKeyword,
-            FormId = "user-list-table-form22",
-
-        };
-        search.SelectListItemList = new()
-        {
-            "id", "사용자ID",
-            "nickname", "닉네임"
+            FormId = "user-list-table-form",
+            StringifiedSelectListItemList = JsonSerializer.Serialize(a)
         };
         (_, pagination.TotalRowNum) = _userDao.GetUserList(q);
         adminUserListModel.Pagination = pagination;

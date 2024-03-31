@@ -31,18 +31,18 @@
 </section>
 
 <script>
+    var form = $("#" + "@Model.FormId");
+    var paginationForm = $("#pagination-form");
+
+    function SubmitForms(pageNumber) {
+        form.find("#PageNumber").val(pageNumber);
+        paginationForm.find("#PageNumber").val(pageNumber);
+
+        form.submit();
+        paginationForm.submit();
+    }
+
     $(document).ready(function () {
-        var form = $("#" + "@Model.FormId");
-        var paginationForm = $("#pagination-form");
-
-        function SubmitForms(pageNumber) {
-            form.find("#PageNumber").val(pageNumber);
-            paginationForm.find("#PageNumber").val(pageNumber);
-
-            form.submit();
-            paginationForm.submit();
-        }
-
         $("#prev").click(function (e) {
             e.preventDefault();
             var pageNumber = (@pageIndex * 5);

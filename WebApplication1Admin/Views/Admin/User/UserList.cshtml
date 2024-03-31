@@ -35,10 +35,10 @@
 </form>
 
 <div id="search-container"></div>
-<form asp-action="GetSearch" asp-controller="Utility" method="get" id="search-form" enctype="application/x-www-form-urlencoded">
+<form asp-action="GetSearch" asp-controller="Utility" method="get" id="search-form">
     @Html.Hidden("SearchTarget")
     @Html.Hidden("SearchKeyword")
-    @Html.Hidden("SelectListItemList", Model.Search.SelectListItemList)
+    @Html.Hidden("StringifiedSelectListItemList", Model.Search.StringifiedSelectListItemList)
     @Html.Hidden("FormId", Model.Search.FormId)
 </form>
 @* <article id="list">

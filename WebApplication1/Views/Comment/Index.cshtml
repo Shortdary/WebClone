@@ -1,10 +1,9 @@
 ﻿@using System.Security.Claims
-@model PostDetailWithUser
+@model CommentPartialViewModel
 @{
     int userId = 0;
     if (ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) is not null)
     {
-
         userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     }
 }
@@ -16,7 +15,7 @@
 <div class="comments" id="comments">
     <div class="best">
     </div>
-    @foreach (var c in Model.Comments)
+    @foreach (var c in Model.CommentList)
     {
         <div class="comment" id=@("comment" + c.Id) aid=@c.PostId uid=@c.CreatedUid pid=@c.ParentCommentId gid=@c.Id>
             <div class="main @(@c.ParentCommentId is null? string.Empty : "isReply")">
@@ -27,7 +26,7 @@
                             <div class="nickName">
                                 <div class="text">
                                     <span>@c.Nickname</span>
-                                    @if (c.CreatedUid == Model.CreatedUid)
+                                    @if (c.CreatedUid == Model.PostCreatedId)
                                     {
                                         <span class="author">글쓴이</span>
                                     }
@@ -93,17 +92,22 @@
         <div class="commentInput">
             @if (User.Identity.IsAuthenticated)
             {
-                @using (Html.BeginForm("Add", "Comment", FormMethod.Post, new { @name = "commentForm" }))
-                {
+                @* @using (Html.BeginForm("Add", "Comment", FormMethod.Post, new { @name = "commentForm" }))
+            { *@
+                
+                <form asp-action="Add" asp-controller="Comment" id="commentForm" name="commentForm" data-ajax="true" data-ajax-method="POST" data-ajax-update="#commentPartialContainer">
                     <div class="commentContent">
                         @Html.TextArea("Comment1", "", new { @placeholder = "댓글을 작성해주세요", @maxlength = "400" })
                         <div class="attached"></div>
                     </div>
-                    <input type="hidden" id="PostId" name="PostId" value=@Model.Id />
+                    <input type="hidden" id="PostId" name="PostId" value=@Model.PostId />
                     <input type="hidden" id="ParentCommentId" name="ParentCommentId" value=null />
-                    <div class="submit"><button>등록</button></div>
+                    <div class="submit">
+                        <button type="submit">등록</button>
+                    </div>
                     @Html.AntiForgeryToken()
-                }
+                </form>
+                @* } *@
             }
             else
             {
@@ -135,20 +139,4 @@
             }
         });
     }
-</script>
-<script>
-    const commentForms = document.getElementsByName('commentForm')
-    for (const form of commentForms) {
-        form.addEventListener('submit', function () {
-            sessionStorage.setItem('scrollPosition', window.scrollY);
-        });
-    }
-
-    window.onload = function () {
-        var scrollPosition = sessionStorage.getItem('scrollPosition');
-        if (scrollPosition) {
-            window.scrollTo(0, scrollPosition);
-            sessionStorage.removeItem('scrollPosition');
-        }
-    };
 </script>

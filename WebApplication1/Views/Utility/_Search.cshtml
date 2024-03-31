@@ -1,0 +1,59 @@
+﻿@model SearchModel
+@using System.Text.Json
+
+@{
+    List<SelectListItemModel> a = JsonSerializer.Deserialize<List<SelectListItemModel>>(Model.StringifiedSelectListItemList);
+}
+
+<article id="list">
+    <div class="searchAndWrite">
+        <div>
+            <div class="search">
+                <form asp-action="GetUserListTable" asp-controller="Admin" method="get" id="search-user-list-table-form">
+                    <select id="SearchTarget" name="SearchTarget">
+                        @foreach (SelectListItemModel item in a)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    @Html.TextBox("SearchKeyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    @Html.Hidden("PageNumber", 1)
+                    <button type="submit">검색</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</article>
+
+<script>
+    var form = $("#" + "@Model.FormId");
+    var paginationForm = $("#pagination-form");
+
+    $(document).ready(function () {
+        $("#search-user-list-table-form").submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var $this = $(this);
+            var pageNumber = $this.find("#PageNumber").val()
+            var searchTarget = $this.find("#SearchTarget").val()
+            var searchKeyword = $this.find("#SearchKeyword").val()
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    form.find("#PageNumber").val(pageNumber);
+                    form.find("#SearchTarget").val(searchTarget);
+                    form.find("#SearchKeyword").val(searchKeyword);
+                    paginationForm.find("#PageNumber").val(pageNumber);
+                    form.submit();
+                    paginationForm.submit();
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    })
+</script>
