@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models;
 
-public class Board
+public partial class Board
 {
     public int Id { get; set; }
 
@@ -51,7 +51,7 @@ public class BoardControllerCommonParameter
     [FromQuery(Name = "search_keyword")]
     public string SearchKeyword { get; set; } = null!;
 
-    public int? Id { get; set; }
+    public int Id { get; set; }
 }
 
 public class BoardServiceCommonParameter : BoardControllerCommonParameter

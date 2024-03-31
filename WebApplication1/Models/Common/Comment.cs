@@ -25,6 +25,15 @@ public partial class Comment
     public bool IsDeleted { get; set; }
 }
 
+public partial class CommentPartialViewModel
+{
+    public List<Comment> CommentList { get; set; } = null!;
+
+    public int PostId { get; set; }
+
+    public int PostCreatedId { get; set; }
+}
+
 public partial class CommentAdd
 {
     [Required]

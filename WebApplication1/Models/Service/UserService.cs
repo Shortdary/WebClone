@@ -1,4 +1,6 @@
-﻿using Microsoft.Identity.Client;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
+using System.Runtime.InteropServices;
 using WebApplication1.Models.Dao;
 
 namespace WebApplication1.Models;
@@ -32,18 +34,40 @@ public class UserService
         }
     }
 
+
     public AdminUserListModel PopulateUserListModel(AdminUserListQuery q)
     {
-        AdminUserListModel adminUserListModel = new()
+        AdminUserListModel adminUserListModel = new();
+        PaginationModel pagination = new()
         {
             PageNumber = q.PageNumber,
             PageSize = q.PageSize,
-            SearchKeyword = q.SearchKeyword,
-            SearchTarget = q.SearchTarget,
+            FormId = "user-list-table-form"
         };
-        (adminUserListModel.UserList, adminUserListModel.TotalRowNum) = _userDao.GetUserList(q);
+        SearchModel search = new()
+        {
+            SearchTarget = q.SearchTarget,
+            SearchKeyword = q.SearchKeyword,
+            FormId = "user-list-table-form22",
+
+        };
+        search.SelectListItemList = new()
+        {
+            "id", "사용자ID",
+            "nickname", "닉네임"
+        };
+        (_, pagination.TotalRowNum) = _userDao.GetUserList(q);
+        adminUserListModel.Pagination = pagination;
+        adminUserListModel.Search = search;
 
         return adminUserListModel;
+    }
+
+    public List<UserForAdmin> GetAdminUserList(AdminUserListQuery q)
+    {
+        List<UserForAdmin> userList;
+        (userList, _) = _userDao.GetUserList(q);
+        return userList;
     }
 
     public AdminUserDetailModel PopulateUserDetailModel(AdminUserDetailQuery q)
@@ -58,7 +82,7 @@ public class UserService
             Id = q.Id
         };
 
-        if(q.DetailType == "Post")
+        if (q.DetailType == "Post")
         {
             (adminUserDetailModel.PostList, adminUserDetailModel.TotalRowNum) = _postDao.GetPostListByUserId(q);
         }

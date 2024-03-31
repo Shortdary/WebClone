@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
         {
             HttpRequest? request = _httpContextAccessor.HttpContext?.Request;
             ViewBag.RequestPath = request?.Path.ToString();
-            if (serviceParameter.Id is not null)
+            if (serviceParameter.Id > 0)
             {
                 PostDetailWithUser? postDetail = _postService.GetPostDetail(serviceParameter.Id);
                 return await Task.Run(() => View("Detail", postDetail));

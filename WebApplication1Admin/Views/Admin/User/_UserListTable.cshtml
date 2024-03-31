@@ -1,0 +1,18 @@
+﻿@model List<UserForAdmin>
+@{
+}
+
+
+@foreach (UserForAdmin user in Model)
+{
+    <tr onclick="onClickRow(@user.UserId)">
+        <th scope="row">@user.UserId</th>
+        <td>@user.Nickname</td>
+        <td>
+            <button class="btn btn-outline-primary stop">작동안함</button>
+        </td>
+        <td>
+            <button class="btn btn-outline-primary stop">작동안함</button>
+        </td>
+    </tr>
+}

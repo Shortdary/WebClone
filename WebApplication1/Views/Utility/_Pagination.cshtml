@@ -1,0 +1,71 @@
+﻿@model PaginationModel
+
+@{
+    int pageIndex = (Model.PageNumber - 1) / 5;
+    int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
+}
+
+<section class="pagination">
+    <div class="prev">
+        @{
+            if (pageIndex > 0)
+            {
+                <a id="prev">이전</a>
+            }
+        }
+    </div>
+    <div class="number">
+        @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
+        {
+            <a class=" @(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" name="number-anchor">@pageNumber</a>
+        }
+    </div>
+    <div class="next">
+        @{
+            if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
+            {
+                <a id="next">다음</a>
+            }
+        }
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        var form = $("#" + "@Model.FormId");
+        var paginationForm = $("#pagination-form");
+
+        function SubmitForms(pageNumber) {
+            form.find("#PageNumber").val(pageNumber);
+            paginationForm.find("#PageNumber").val(pageNumber);
+
+            form.submit();
+            paginationForm.submit();
+        }
+
+        $("#prev").click(function (e) {
+            e.preventDefault();
+            var pageNumber = (@pageIndex * 5);
+            SubmitForms(pageNumber);
+        });
+
+        var numbers = document.getElementsByName("number-anchor");
+
+        for (var i = 0; i < numbers.length; i++) {
+            (function (number) {
+                number.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    var pageNumber = number.innerHTML;
+                    SubmitForms(pageNumber);
+                })
+
+            })(numbers[i]);
+        }
+
+        $("#next").click(function (e) {
+            e.preventDefault();
+            var pageNumber = @pageIndex * 5 + 6;
+            SubmitForms(pageNumber);
+        });
+    })
+</script>

@@ -24,12 +24,13 @@ public class PostService
         return _postDao.GetPostListByBoardId(serviceParamter);
     }
 
+
     /// <summary>
     /// 게시글 상세내용과 댓글 조회
     /// </summary>
     /// <param name="postId">게시물 ID</param>
     /// <returns></returns>
-    public PostDetailWithUser? GetPostDetail(int? postId)
+    public PostDetailWithUser? GetPostDetail(int postId)
     {
         PostDetailWithUser? p = _postDao.GetPostDetail(postId);
         if (p is null)
@@ -38,7 +39,10 @@ public class PostService
         }
         else
         {
-            p.Comments = _commentDao.GetCommentListByPostId(postId);
+            CommentPartialViewModel commentPartialViewModel = new();
+            commentPartialViewModel.CommentList = _commentDao.GetCommentListByPostId(postId);
+            commentPartialViewModel.PostId = postId;
+            p.CommentPartialViewModel = commentPartialViewModel;
             return p;
         }
     }

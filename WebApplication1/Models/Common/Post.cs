@@ -42,7 +42,7 @@ public partial class PostDetailWithUser : Post
 
     public string? BoardNameEng { get; set; }
 
-    public List<Comment>? Comments { get; set; }
+    public CommentPartialViewModel CommentPartialViewModel { get; set; } = null!;
 }
 
 public partial class PostInsert

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebApplication1.Models;
 
 namespace WebApplication1Admin.Controllers
@@ -17,6 +18,13 @@ namespace WebApplication1Admin.Controllers
 
             AdminUserListModel adminUserListModel = _userService.PopulateUserListModel(q);
             return await Task.Run(() => View("~/Views/Admin/User/UserList.cshtml", adminUserListModel));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserListTable(AdminUserListQuery q)
+        {
+            List<UserForAdmin> adminUserList = _userService.GetAdminUserList(q);
+            return await Task.Run(() => PartialView("~/Views/Admin/User/_UserListTable.cshtml", adminUserList));
         }
 
         [HttpGet]

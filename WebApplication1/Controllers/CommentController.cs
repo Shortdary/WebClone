@@ -29,7 +29,10 @@ namespace WebApplication1.Controllers
                 return RedirectToRoute("home");
             } else
             {
-                return Redirect(refererUrl);
+                CommentPartialViewModel commentPartialViewModel = new();
+                commentPartialViewModel.CommentList = _commentService.GetCommentListByPostId(commentData.PostId);
+                commentPartialViewModel.PostId = commentData.PostId;
+                return PartialView("index", commentPartialViewModel);
             }
         }
 

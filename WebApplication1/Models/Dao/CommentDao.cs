@@ -6,7 +6,7 @@ namespace WebApplication1.Models.Dao
 {
     public class CommentDao : DBHelper
     {
-        public List<Comment> GetCommentListByPostId(int? postId)
+        public List<Comment> GetCommentListByPostId(int postId)
         {
             List<Comment> comments = new();
             using (SqlConnection conn = GetConnection())
