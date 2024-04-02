@@ -30,21 +30,17 @@ public class PostService
     /// </summary>
     /// <param name="postId">게시물 ID</param>
     /// <returns></returns>
-    public PostDetailWithUser? GetPostDetail(int postId)
+    public PostDetailWithUser GetPostDetail(int postId)
     {
-        PostDetailWithUser? p = _postDao.GetPostDetail(postId);
-        if (p is null)
+        PostDetailWithUser p = _postDao.GetPostDetail(postId);
+
+        CommentPartialViewModel commentPartialViewModel = new()
         {
-            return null;
-        }
-        else
-        {
-            CommentPartialViewModel commentPartialViewModel = new();
-            commentPartialViewModel.CommentList = _commentDao.GetCommentListByPostId(postId);
-            commentPartialViewModel.PostId = postId;
-            p.CommentPartialViewModel = commentPartialViewModel;
-            return p;
-        }
+            CommentList = _commentDao.GetCommentListByPostId(postId),
+            PostId = postId
+        };
+        p.CommentPartialViewModel = commentPartialViewModel;
+        return p;
     }
 
     public void EditPost(PostEdit p)

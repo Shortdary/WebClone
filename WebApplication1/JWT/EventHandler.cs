@@ -19,7 +19,14 @@ namespace WebApplication1.JWT
         public new async Task OnForbidden(ForbiddenContext context)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            context.Response.Redirect(context.Request.Headers["Referer"]);
+            if (!string.IsNullOrEmpty(context.Request.Headers["Referer"]))
+            {
+                context.Response.Redirect(context.Request.Headers["Referer"]);
+            }
+            else
+            {
+                context.Response.Redirect(context.Request.Headers["Origin"]);
+            }
             await Task.CompletedTask;
         }
     }

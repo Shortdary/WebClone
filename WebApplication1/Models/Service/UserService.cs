@@ -40,7 +40,7 @@ public class UserService
         {
             PageNumber = q.PageNumber,
             PageSize = q.PageSize,
-            FormId = "user-list-table-form"
+            FormId = "admin-user-page-form"
         };
         List<SelectListItemModel> a = new()
             {
@@ -51,7 +51,7 @@ public class UserService
         {
             SearchTarget = q.SearchTarget,
             SearchKeyword = q.SearchKeyword,
-            FormId = "user-list-table-form",
+            FormId = "admin-user-page-form",
             StringifiedSelectListItemList = JsonSerializer.Serialize(a)
         };
         (_, pagination.TotalRowNum) = _userDao.GetUserList(q);

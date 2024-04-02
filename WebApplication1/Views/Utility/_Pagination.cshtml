@@ -31,24 +31,22 @@
 </section>
 
 <script>
-    var form = $("#" + "@Model.FormId");
-    var paginationForm = $("#pagination-form");
+    var mainForm = $("#" + "@Model.FormId");
 
     function SubmitForms(pageNumber) {
-        form.find("#PageNumber").val(pageNumber);
-        paginationForm.find("#PageNumber").val(pageNumber);
-
-        form.submit();
-        paginationForm.submit();
+        mainForm.find("#PageNumber").val(pageNumber);
+        mainForm.submit();
     }
 
     $(document).ready(function () {
+        // 이전 버튼 클릭시 행동
         $("#prev").click(function (e) {
             e.preventDefault();
             var pageNumber = (@pageIndex * 5);
             SubmitForms(pageNumber);
         });
 
+        // 이전 버튼 클릭시 행동
         var numbers = document.getElementsByName("number-anchor");
 
         for (var i = 0; i < numbers.length; i++) {
@@ -62,6 +60,7 @@
             })(numbers[i]);
         }
 
+        // 다음 버튼 클릭시 행동
         $("#next").click(function (e) {
             e.preventDefault();
             var pageNumber = @pageIndex * 5 + 6;

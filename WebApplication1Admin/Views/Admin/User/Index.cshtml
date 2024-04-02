@@ -1,0 +1,56 @@
+﻿@model AdminUserListModel
+@{
+}
+
+<style>
+    .someFunction {
+        width: 100px;
+    }
+</style>
+
+<div id="admin-user-page-container"></div>
+
+<form asp-action="UpdateUserList" asp-controller="Admin" method="get" id="admin-user-page-form">
+    @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
+    @Html.Hidden("PageSize", Model.Pagination.PageSize)
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+</form>
+
+<script>
+    var adminUserPageForm = $("#admin-user-page-form"); 
+
+    // 행 클릭시 유저 상세정보로
+    function onClickRow(userId) {
+        window.location.href = '/Admin/UserList/' + userId + '/Posts';
+    }
+    
+    // 행에 있는 버튼 클릭 시 event 제한
+    const btns = document.getElementsByClassName("stop");
+    for (const btn of btns) {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            console.log("not working");
+        })
+    }
+
+    $(document).ready(function () {
+        adminUserPageForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#admin-user-page-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        adminUserPageForm.submit(); 
+    })
+</script>

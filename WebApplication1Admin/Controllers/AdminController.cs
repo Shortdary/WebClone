@@ -17,7 +17,14 @@ namespace WebApplication1Admin.Controllers
             }
 
             AdminUserListModel adminUserListModel = _userService.PopulateUserListModel(q);
-            return await Task.Run(() => View("~/Views/Admin/User/UserList.cshtml", adminUserListModel));
+            return await Task.Run(() => View("~/Views/Admin/User/Index.cshtml", adminUserListModel));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateUserList(AdminUserListQuery q)
+        {
+            AdminUserListModel adminUserListModel = _userService.PopulateUserListModel(q);
+            return await Task.Run(() => PartialView("~/Views/Admin/User/_UserList.cshtml", adminUserListModel));
         }
 
         [HttpGet]
