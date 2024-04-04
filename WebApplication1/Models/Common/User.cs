@@ -19,6 +19,8 @@ public class User
 {
     public int UserId { get; set; }
 
+    public string Password { get; set; } = null!;
+
     public string Nickname { get; set; } = null!;
 
     public string Role { get; set; } = null!;
@@ -31,8 +33,6 @@ public class UserAddParamter
 
     [Required(ErrorMessage = "비밀번호를 입력해주세요")]
     public string Password { get; set; } = null!;
-
-    public string? PasswordSalt { get; set; } = null!;
 
     [Required(ErrorMessage = "닉네임을 입력해주세요")]
     public string Nickname { get; set; } = null!;
@@ -47,13 +47,20 @@ public class UserAddParamter
 
 public class UserLoginCredentials
 {
-    [Required(AllowEmptyStrings = false)]
+    [Required]
     public string? LoginId { get; set; }
 
-    [Required(AllowEmptyStrings = false)]
-    public string? Password { get; set; }
+    [Required]
+    public string Password { get; set; } = null!;
 
     public string? ReturnUrl { get; set; } = null;
+}
+
+public partial class UserLoginResponseModel
+{
+    public User? User1 { get; set; }
+
+    public string ErrorMessage { get; set; } = null!;
 }
 
 public class UserForAdmin

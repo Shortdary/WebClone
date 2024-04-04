@@ -17,7 +17,6 @@ namespace WebApplication1.Models.Dao
                     CommandType = CommandType.StoredProcedure
                 };
                 cmd.Parameters.AddWithValue("@login_id", string.IsNullOrEmpty(ulc.LoginId) ? DBNull.Value : ulc.LoginId);
-                cmd.Parameters.AddWithValue("@password", string.IsNullOrEmpty(ulc.Password) ? DBNull.Value : ulc.Password);
                 conn.Open();
 
                 DataTable dt = new();
@@ -34,6 +33,7 @@ namespace WebApplication1.Models.Dao
                     user = new User()
                     {
                         UserId = row.Field<int>("id"),
+                        Password = row.Field<string>("password")!,
                         Nickname = row.Field<string>("nickname")!
                     };
                 }
@@ -85,7 +85,6 @@ namespace WebApplication1.Models.Dao
                 };
                 cmd.Parameters.AddWithValue("@login_id", p.LoginId);
                 cmd.Parameters.AddWithValue("@password", p.Password);
-                cmd.Parameters.AddWithValue("@password_salt", p.PasswordSalt);
                 cmd.Parameters.AddWithValue("@nickname", p.Nickname);
 
                 conn.Open();

@@ -4,10 +4,10 @@ namespace WebApplication1.Utility.Encryption
 {
     public class UserEncryption
     {
-        public (string, string?) EncryptUserPassword(string password)
+        public string EncryptUserPassword(string password)
         {
             if(string.IsNullOrEmpty(password)) {
-                return (string.Empty, string.Empty);
+                return string.Empty;
             }
 
             byte[] salt;
@@ -17,7 +17,7 @@ namespace WebApplication1.Utility.Encryption
             byte[] hashBytes = new byte[36];
             Array.Copy(salt, 0, hashBytes, 0, 16);
             Array.Copy(hash, 0, hashBytes, 16, 20);
-            return (Convert.ToBase64String(hashBytes), salt.ToString());
+            return Convert.ToBase64String(hashBytes);
 
         }
 

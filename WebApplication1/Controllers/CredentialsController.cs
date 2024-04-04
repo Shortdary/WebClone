@@ -36,12 +36,11 @@ namespace WebApplication1.Controllers
         public IActionResult Login(UserLoginCredentials loginUser)
         {
             TokenManager _tm = new(_config);
-            User? authUser = _userService.VerifyUser(loginUser);
+            CommonResponseModel<UserLoginResponseModel> result = _userService.VerifyUser(loginUser);
 
-            if (authUser != null)
+            if (result.StatusCode == 200)
             {
-                string tokenString = _tm.GenerateJWTToken(authUser);
-
+                string tokenString = _tm.GenerateJWTToken(result.Data.User1);
                 CookieOptions cookieOptions = new()
                 {
                     Expires = DateTime.UtcNow.AddHours(12),
@@ -52,7 +51,6 @@ namespace WebApplication1.Controllers
                 };
                 Response.Cookies.Append("Authorization", $"Bearer {tokenString}", cookieOptions);
                 
-                
                 if(!string.IsNullOrEmpty(loginUser.ReturnUrl))
                 {
                     return Redirect(loginUser.ReturnUrl);
@@ -62,7 +60,11 @@ namespace WebApplication1.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            return View("Login");
+            else
+            {
+                ViewBag.ErrorMessage = result.Data.ErrorMessage;
+                return View();
+            }
         }
 
         [Authorize]

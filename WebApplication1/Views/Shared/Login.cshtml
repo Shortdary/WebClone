@@ -1,6 +1,10 @@
 ﻿@model UserLoginCredentials
 @{
-    string? returnUrl = ViewContext.HttpContext.Request.Query["ReturnUrl"];
+    string? returnUrl = null;
+    if (ViewContext.HttpContext.Request.Query.ContainsKey("ReturnUrl"))
+    {
+        returnUrl = ViewContext.HttpContext.Request.Query["ReturnUrl"];
+    }
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/loginAndJoin.css"))" />
@@ -39,5 +43,13 @@
             </form>
         </div>
     </main>
-
 </div>
+
+<script>
+    var errorMessage = @Html.Raw(Json.Serialize(@ViewBag.ErrorMessage));
+
+    if (errorMessage) {
+        alert(errorMessage)
+    }
+
+</script>

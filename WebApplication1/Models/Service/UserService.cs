@@ -20,18 +20,33 @@ public class UserService
     /// 일치하는 유저가 있을경우 User 인스턴스
     /// 없을 시 null
     /// </returns>
-    public User? VerifyUser(UserLoginCredentials ulc)
+    public CommonResponseModel<UserLoginResponseModel> VerifyUser(UserLoginCredentials ulc)
     {
-        User? user = _userDao.GetUserByLoginCredentials(ulc); ;
+        CommonResponseModel<UserLoginResponseModel> result = new();
+        User? user = _userDao.GetUserByLoginCredentials(ulc);
+        UserLoginResponseModel userLoginResponseModel = new()
+        {
+            User1 = user
+        };
+        result.Data = userLoginResponseModel;
 
+        // Sql에서 User를 얻어오지 못함.
         if (user is null)
         {
-            return null;
+            result.StatusCode = 400;
+            result.Data.ErrorMessage = "잘못된 정보를 입력하였거나 가입되지 않은 사용자입니다.";
+            return result;
         }
-        else
+
+        // User를 얻어왔으나 비밀번호가 틀렸을 때
+        user = _userEncryption.VerifyUserPassword(ulc.Password, user.Password) ? user : null;
+        if(user is null)
         {
-            return user;
+            result.StatusCode = 400;
+            result.Data.ErrorMessage = "비밀번호를 확인해주세요.";
         }
+
+        return result;
     }
 
 
@@ -104,7 +119,7 @@ public class UserService
                 Data = "입력하지 않은 정보가 있습니다."
             };
         }
-        (p.Password, p.PasswordSalt) = _userEncryption.EncryptUserPassword(p.Password);
+        p.Password = _userEncryption.EncryptUserPassword(p.Password);
         return _userDao.CreateUser(p);
     }
 }

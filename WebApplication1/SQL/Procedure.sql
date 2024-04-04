@@ -4,18 +4,18 @@
 -- Description:	get user by login credentials
 -- =============================================
 ALTER PROCEDURE [dbo].[spSelectUserByLoginCredentials] 
-	@login_id nchar(20),
-	@password nchar(20)
+	@login_id nchar(20)
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	SELECT
-	id,
-	nickname
+	[id],
+	[password],
+	[nickname]
 
 	FROM [dbo].[ApplicationUser] 
-	WHERE login_id=@login_id AND password=@password
+	WHERE login_id=@login_id
 END
 GO
 
@@ -718,7 +718,6 @@ GO
 ALTER PROCEDURE [dbo].[spInsertUser] 
 	@login_id nchar(20),
 	@password nvarchar(50),
-	@password_salt nvarchar(50),
 	@nickname nchar(20)
 AS
 BEGIN
@@ -726,31 +725,38 @@ BEGIN
 	DECLARE @new_user_id int;
 	DECLARE @new_role_id int; 
 
-	INSERT INTO [dbo].[ApplicationUser]
-			([login_id]
-			 ,[password]
-			 ,[password_salt]
-			 ,[nickname]
-			)
-    VALUES
-           (@login_id
-			,@password
-			,@password_salt
-			,@nickname)
+	BEGIN TRANSACTION;
 
-	SET @new_user_id = SCOPE_IDENTITY();
+	BEGIN TRY
+		INSERT INTO [dbo].[ApplicationUser]
+				([login_id]
+				 ,[password]
+				 ,[nickname]
+				)
+		VALUES
+			   (@login_id
+				,@password
+				,@nickname)
 
-	INSERT INTO [dbo].[Role]
-		([role_name])
-	VALUES 
-		('Member');
+		SET @new_user_id = SCOPE_IDENTITY();
 
-	SET @new_user_id = SCOPE_IDENTITY();
+		INSERT INTO [dbo].[Role]
+			([role_name])
+		VALUES 
+			('Member');
+
+		SET @new_role_id = SCOPE_IDENTITY();
 
 
-	INSERT INTO [dbo].[ApplicationUser_Role]
-		([user_id], [role_id])
-	VALUES 
-		(@new_user_id, @new_role_id);
+		INSERT INTO [dbo].[ApplicationUser_Role]
+			([user_id], [role_id])
+		VALUES 
+			(@new_user_id, @new_role_id);
+		COMMIT TRANSACTION;
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION;
+		THROW;
+	END CATCH;
 END
 GO
