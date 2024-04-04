@@ -22,7 +22,7 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
             ViewBag.ReturnUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"];
 
@@ -67,7 +67,6 @@ namespace WebApplication1.Controllers
             }
         }
 
-        [Authorize]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("Authorization");
