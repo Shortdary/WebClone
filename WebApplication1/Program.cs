@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using WebApplication1.JWT;
-using WebApplication1.Models;
+using WebApplication1.Utility.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddDbContext<CopycatContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetValue<string>("DefatulConnectionString")));
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

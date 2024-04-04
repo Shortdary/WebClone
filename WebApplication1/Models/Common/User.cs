@@ -9,7 +9,7 @@ public partial class ApplicationUser
 
     public string LoginId { get; set; } = null!;
 
-    public string? Password { get; set; }
+    public string Password { get; set; } = null!;
 
     public string Nickname { get; set; } = null!;
 }
@@ -18,8 +18,31 @@ public partial class ApplicationUser
 public class User
 {
     public int UserId { get; set; }
+
     public string Nickname { get; set; } = null!;
 
+    public string Role { get; set; } = null!;
+}
+
+public class UserAddParamter
+{
+    [Required(ErrorMessage = "아이디를 입력해주세요")]
+    public string LoginId { get; set; } = null!;
+
+    [Required(ErrorMessage = "비밀번호를 입력해주세요")]
+    public string Password { get; set; } = null!;
+
+    public string? PasswordSalt { get; set; } = null!;
+
+    [Required(ErrorMessage = "닉네임을 입력해주세요")]
+    public string Nickname { get; set; } = null!;
+
+    public string Role { get; set; } = null!; 
+    
+    public bool IsEmpty()
+    {
+        return string.IsNullOrEmpty(LoginId) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Nickname);
+    }
 }
 
 public class UserLoginCredentials

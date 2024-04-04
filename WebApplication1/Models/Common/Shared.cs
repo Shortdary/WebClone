@@ -14,6 +14,19 @@ public partial class CommonQueryFilter
     public string SearchKeyword { get; set; } = null!;
 }
 
+public partial class CommonResponseModel<T>
+{
+    public int StatusCode { get; set; } = 200;
+
+    public T? Data { get; set; }
+
+    public CommonResponseModel()
+    {
+        Data = default;
+    }
+}
+
+
 public partial class PaginationModel
 {
     public string FormId { get; set; } = null!;
@@ -38,8 +51,6 @@ public partial class SearchModel
     public string SearchTarget { get; set; } = null!;
 
     public string SearchKeyword { get; set; } = null!;
-
-    public int TotalRowNum { get; set; }
 
     public string StringifiedSelectListItemList { get; set; } = null!;
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication1.JWT
+namespace WebApplication1.Utility.JWT
 {
     public class AddHeaderMiddleware : Controller
     {
@@ -16,6 +16,8 @@ namespace WebApplication1.JWT
         {
             // 인증을 위해 쿠키에 있는 Authorization을 Request.Header로 옮겨담음
             context.Request.Headers.Add("Authorization", context.Request.Cookies["Authorization"]);
+            // context.Session.SetString("PreviousUrl", context.Request.Headers["Referer"].ToString());
+            // System.Diagnostics.Debug.WriteLine(context.Session);
             await _next(context);
         }
     }

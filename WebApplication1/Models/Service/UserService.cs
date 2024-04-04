@@ -1,5 +1,6 @@
 ﻿using WebApplication1.Models.Dao;
 using System.Text.Json;
+using WebApplication1.Utility.Encryption;
 
 namespace WebApplication1.Models;
 
@@ -9,6 +10,7 @@ public class UserService
     private readonly UserDao _userDao = new();
     private readonly PostDao _postDao = new();
     private readonly CommentDao _commentDao = new();
+    private readonly UserEncryption _userEncryption = new();
 
     /// <summary>
     /// ID와 PWD를 받아 유저를 검증하는 함수
@@ -90,5 +92,19 @@ public class UserService
         }
 
         return adminUserDetailModel;
+    }
+
+    public CommonResponseModel<string> CreateUser(UserAddParamter p)
+    {
+        if(p.IsEmpty())
+        {
+            return new CommonResponseModel<string>()
+            {
+                StatusCode = 400,
+                Data = "입력하지 않은 정보가 있습니다."
+            };
+        }
+        (p.Password, p.PasswordSalt) = _userEncryption.EncryptUserPassword(p.Password);
+        return _userDao.CreateUser(p);
     }
 }

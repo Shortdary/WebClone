@@ -3,18 +3,18 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class UtilityController: Controller
+    public class SharedController: Controller
     {
         [HttpGet]
         public async Task<IActionResult> GetPagination(PaginationModel pm)
         {
-            return await Task.Run(() => PartialView("~/Views/Utility/_Pagination.cshtml", pm));
+            return await Task.Run(() => PartialView("~/Views/Shared/_Pagination.cshtml", pm));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetSearch(SearchModel sm)
         {
-            return await Task.Run(() => PartialView("~/Views/Utility/_Search.cshtml", sm));
+            return await Task.Run(() => PartialView("~/Views/Shared/_Search.cshtml", sm));
         }
     }
     

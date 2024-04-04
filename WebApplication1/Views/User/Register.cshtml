@@ -1,0 +1,86 @@
+﻿@model UserAddParamter
+@{
+}
+
+<style>
+    .smallWrap {
+        display: flex;
+        align-self: center;
+        margin-bottom: 20px;
+    }
+
+    .plainLogin form {
+        text-align: center;
+    }
+
+    .validation-message {
+        margin-bottom: 10px;
+        text-align: left;
+        padding-left: 100px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: row;
+        width: 300px;
+        margin-bottom: 3px;
+    }
+
+        .form-group label {
+            width: 100px;
+            text-align: left;
+            padding-right: 10px;
+        }
+
+        .form-group input {
+            width: calc(100% - 100px);
+            margin-right: 10px;
+        }
+</style>
+
+<div>
+    <main style="flex-direction: column">
+        <div class="smallWrap">
+            <h1>회원가입</h1>
+        </div>
+
+        <div class="plainLogin">
+            @using (@Html.BeginForm("Register", "User", FormMethod.Post))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(x => x.LoginId, "아이디")
+                    @Html.TextBoxFor(x => x.LoginId)
+
+                </div>
+                <div class="validation-message">
+                    @Html.ValidationMessageFor(x => x.LoginId)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Password, "비밀번호")
+                    @Html.TextBoxFor(x => x.Password, new { @type = "password" })
+                </div>
+                <div class="validation-message">
+                    @Html.ValidationMessageFor(x => x.Password)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Nickname, "닉네임")
+                    @Html.TextBoxFor(x => x.Nickname)
+                </div>
+                <div class="validation-message">
+                    @Html.ValidationMessageFor(x => x.Nickname)
+                </div>
+
+                <button type="submit">회원가입</button>
+            }
+        </div>
+    </main>
+</div>
+
+<script>
+    var errorMessage = @Html.Raw(Json.Serialize(@ViewBag.ErrorMessage));
+
+    if (errorMessage) {
+        alert(errorMessage)
+    }
+
+</script>

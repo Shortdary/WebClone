@@ -707,3 +707,50 @@ BEGIN
 	SELECT * FROM Board WHERE id = @board_id
 END
 GO
+
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-04-04
+-- Description:	insert user
+-- =============================================
+ALTER PROCEDURE [dbo].[spInsertUser] 
+	@login_id nchar(20),
+	@password nvarchar(50),
+	@password_salt nvarchar(50),
+	@nickname nchar(20)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @new_user_id int;
+	DECLARE @new_role_id int; 
+
+	INSERT INTO [dbo].[ApplicationUser]
+			([login_id]
+			 ,[password]
+			 ,[password_salt]
+			 ,[nickname]
+			)
+    VALUES
+           (@login_id
+			,@password
+			,@password_salt
+			,@nickname)
+
+	SET @new_user_id = SCOPE_IDENTITY();
+
+	INSERT INTO [dbo].[Role]
+		([role_name])
+	VALUES 
+		('Member');
+
+	SET @new_user_id = SCOPE_IDENTITY();
+
+
+	INSERT INTO [dbo].[ApplicationUser_Role]
+		([user_id], [role_id])
+	VALUES 
+		(@new_user_id, @new_role_id);
+END
+GO

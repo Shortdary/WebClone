@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using WebApplication1.Models;
 
-namespace WebApplication1.JWT
+namespace WebApplication1.Utility.JWT
 {
     /// <summary>
     /// JWT 토큰을 관리하는 class

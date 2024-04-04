@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace WebApplication1.JWT
+namespace WebApplication1.Utility.JWT
 {
     public class JwtEventsHandler : JwtBearerEvents
     {

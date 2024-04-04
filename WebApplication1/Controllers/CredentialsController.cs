@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
-using WebApplication1.JWT;
-using Microsoft.AspNetCore.Identity;
-
+using WebApplication1.Utility.JWT;
 
 namespace WebApplication1.Controllers
 {
