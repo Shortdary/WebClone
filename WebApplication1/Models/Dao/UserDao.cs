@@ -34,7 +34,8 @@ namespace WebApplication1.Models.Dao
                     {
                         UserId = row.Field<int>("id"),
                         Password = row.Field<string>("password")!,
-                        Nickname = row.Field<string>("nickname")!
+                        Nickname = row.Field<string>("nickname")!,
+                        Roles = row.Field<string>("roles")!
                     };
                 }
 

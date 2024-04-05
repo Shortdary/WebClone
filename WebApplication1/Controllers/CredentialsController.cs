@@ -24,9 +24,12 @@ namespace WebApplication1.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
-            ViewBag.ReturnUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"];
+            UserLoginCredentials userloginCredentials = new()
+            {
+                ReturnUrl = _httpContextAccessor.HttpContext?.Request.Headers["Referer"]
+            };
 
-            return View("Login");
+            return View("Login", userloginCredentials);
         }
 
 

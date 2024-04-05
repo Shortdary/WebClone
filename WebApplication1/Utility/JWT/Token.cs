@@ -29,17 +29,18 @@ namespace WebApplication1.Utility.JWT
                 Subject = new ClaimsIdentity(new Claim[]
                         {
                             new(ClaimTypes.NameIdentifier, userInfo.UserId.ToString()),
-                            new(ClaimTypes.Name, userInfo.Nickname),
-                            new(ClaimTypes.Role, "Member")
-                            // 필요한 경우에 사용자 클레임 추가
+                            new(ClaimTypes.Name, userInfo.Nickname)
                         }),
 
                 Issuer = _config.GetValue<string>("Jwt:Issuer"),
                 Audience = _config.GetValue<string>("Jwt:Audience"),
                 Expires = DateTime.UtcNow.AddMinutes(5), // 토큰 만료 시간 설정
                 SigningCredentials = new(_jwtSecretKey, SecurityAlgorithms.HmacSha256Signature)
-
             };
+            foreach (string role in userInfo.Roles.Split(","))
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             string tokenString = tokenHandler.WriteToken(token);

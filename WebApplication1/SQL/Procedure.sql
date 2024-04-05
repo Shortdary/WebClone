@@ -10,12 +10,16 @@ BEGIN
 	SET NOCOUNT ON;
 
 	SELECT
-	[id],
+	A.[id],
 	[password],
-	[nickname]
+	[nickname],
+	STRING_AGG(C.role_name, ',') as roles
 
-	FROM [dbo].[ApplicationUser] 
+	FROM [dbo].[ApplicationUser] A
+	INNER JOIN [dbo].[ApplicationUser_Role] B ON A.[id] = B.[user_id]
+	INNER JOIN [dbo].[Role] C ON B.[role_id] = C.[id]
 	WHERE login_id=@login_id
+	GROUP BY @login_id
 END
 GO
 
@@ -723,7 +727,6 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	DECLARE @new_user_id int;
-	DECLARE @new_role_id int; 
 
 	BEGIN TRANSACTION;
 
@@ -745,13 +748,10 @@ BEGIN
 		VALUES 
 			('Member');
 
-		SET @new_role_id = SCOPE_IDENTITY();
-
-
 		INSERT INTO [dbo].[ApplicationUser_Role]
 			([user_id], [role_id])
-		VALUES 
-			(@new_user_id, @new_role_id);
+		SELECT @new_user_id, id FROM [dbo].[Role] WHERE role_name = 'Member';
+			
 		COMMIT TRANSACTION;
 	END TRY
 	BEGIN CATCH

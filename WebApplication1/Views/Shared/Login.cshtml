@@ -1,10 +1,5 @@
 ﻿@model UserLoginCredentials
 @{
-    string? returnUrl = null;
-    if (ViewContext.HttpContext.Request.Query.ContainsKey("ReturnUrl"))
-    {
-        returnUrl = ViewContext.HttpContext.Request.Query["ReturnUrl"];
-    }
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/loginAndJoin.css"))" />
@@ -20,7 +15,7 @@
                 @Html.AntiForgeryToken()
                 @Html.TextBoxFor(x => x.LoginId, new { @placeholder = "아이디", @type = "text" })
                 @Html.TextBoxFor(x => x.Password, new { @placeholder = "비밀번호", @type = "password" })
-                <input type="hidden" id="ReturnUrl" name="ReturnUrl" value=@ViewBag.ReturnUrl />
+                <input type="hidden" id="ReturnUrl" name="ReturnUrl" value=@Model.ReturnUrl />
                 @Html.ValidationSummary()
                 <div class="button" action="submit"><button>로그인</button></div>
             }
