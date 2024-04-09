@@ -18,8 +18,27 @@ BEGIN
 	FROM [dbo].[ApplicationUser] A
 	INNER JOIN [dbo].[ApplicationUser_Role] B ON A.[id] = B.[user_id]
 	INNER JOIN [dbo].[Role] C ON B.[role_id] = C.[id]
-	WHERE login_id=@login_id
-	GROUP BY @login_id
+	WHERE A.login_id=@login_id
+	GROUP BY A.id, [password], [nickname]
+END
+GO
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-04-09
+-- Description:	suspend user
+-- =============================================
+CREATE PROCEDURE [dbo].[spSuspendUser] 
+	@user_id int,
+	@suspension_time datetime2
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE [dbo].[ApplicationUser]
+	SET	suspension_time = @suspension_time
+	WHERE id = @user_id
 END
 GO
 
@@ -60,8 +79,9 @@ BEGIN
 	SELECT * FROM (
 		SELECT
 		id,
-		nickname
-		,ROW_NUMBER() OVER (ORDER BY [ApplicationUser].[id] ASC) AS row_num
+		nickname,
+		suspension_time,
+		ROW_NUMBER() OVER (ORDER BY [ApplicationUser].[id] ASC) AS row_num
 		FROM [dbo].[ApplicationUser]
 		WHERE  1=1 ' + @main_query_filter + '
 	) AS Sub

@@ -122,4 +122,11 @@ public class UserService
         p.Password = _userEncryption.EncryptUserPassword(p.Password);
         return _userDao.CreateUser(p);
     }
+
+    public string SuspendUser(UserSuspendParameter p)
+    {
+        CommonResponseModel<string> result = _userDao.SuspendUser(p);
+        string jsonSerializedResult = JsonSerializer.Serialize(result);
+        return jsonSerializedResult;
+    }
 }

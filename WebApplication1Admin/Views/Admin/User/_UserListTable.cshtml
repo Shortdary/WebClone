@@ -1,18 +1,47 @@
 ﻿@model List<UserForAdmin>
 @{
+
 }
 
 
 @foreach (UserForAdmin user in Model)
 {
+    DateTime koreanTime = new();
+    if(user.SuspensionTime is not null)
+    {
+        koreanTime = (DateTime)user.SuspensionTime;
+        koreanTime = koreanTime.AddHours(9);
+    }
     <tr onclick="onClickRow(@user.UserId)">
         <th scope="row">@user.UserId</th>
         <td>@user.Nickname</td>
+        <td>@(koreanTime < DateTime.Now ? "" : koreanTime)</td>
         <td>
-            <button class="btn btn-outline-primary stop">작동안함</button>
+            <button type="button" user-id=@user.UserId class="btn btn-outline-primary stop edit" data-bs-toggle="modal" data-bs-target="#exampleModal">임차</button>
         </td>
         <td>
-            <button class="btn btn-outline-primary stop">작동안함</button>
+            <button class="btn btn-outline-primary stop delete">작동안함</button>
         </td>
     </tr>
 }
+
+<script>
+    $(document).ready(function () {
+        // 행에 있는 버튼 클릭 시 event 제한
+        const btns = document.getElementsByClassName("stop");
+        for (const btn of btns) {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+            })
+        }
+    })
+    
+    // 모달을 열 때마다 해당 버튼의 데이터를 모달에 전달
+    var myModal = document.getElementById('exampleModal');
+    myModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var recipient = button.getAttribute('user-id')
+        var modalDataElement = myModal.querySelector('#UserId'); // 모달 내의 요소
+        modalDataElement.value = recipient; // 모달 내의 요소에 데이터 표시
+    });
+</script>

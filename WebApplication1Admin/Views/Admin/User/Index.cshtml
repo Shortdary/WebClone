@@ -24,15 +24,6 @@
     function onClickRow(userId) {
         window.location.href = '/Admin/UserList/' + userId + '/Posts';
     }
-    
-    // 행에 있는 버튼 클릭 시 event 제한
-    const btns = document.getElementsByClassName("stop");
-    for (const btn of btns) {
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            console.log("not working");
-        })
-    }
 
     $(document).ready(function () {
         adminUserPageForm.submit(function (e) {

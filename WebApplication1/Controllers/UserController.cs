@@ -28,16 +28,25 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpPost]
         public IActionResult ResetPassword()
         {
             return View();
         }
 
-        public IActionResult SuspendUser()
+        [HttpPost]
+        public JsonResult SuspendUser(UserSuspendParameter p)
+        {
+            return new JsonResult(_userService.SuspendUser(p));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateUserRole()
         {
             return View();
         }
 
+        [HttpPost]
         public IActionResult DeleteUser()
         {
             return View();

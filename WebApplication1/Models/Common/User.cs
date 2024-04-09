@@ -45,6 +45,14 @@ public class UserAddParamter
     }
 }
 
+public class UserSuspendParameter
+{
+    [Required]
+    public int UserId { get; set; }
+
+    public string SuspensionTime { get; set; } = null!;
+}
+
 public class UserLoginCredentials
 {
     [Required]
@@ -66,7 +74,10 @@ public partial class UserLoginResponseModel
 public class UserForAdmin
 {
     public int UserId { get; set; }
+
     public string Nickname { get; set; } = null!;
+
+    public DateTime? SuspensionTime { get; set; }
 }
 
 public class AdminUserListQuery : CommonQueryFilter

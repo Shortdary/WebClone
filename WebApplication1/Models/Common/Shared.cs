@@ -7,7 +7,7 @@ public partial class CommonQueryFilter
 {
     public int PageNumber { get; set; } = 1;
 
-    public int PageSize { get; set; } = 1;
+    public int PageSize { get; set; } = 2;
 
     public string SearchTarget { get; set; } = null!;
 

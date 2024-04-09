@@ -7,7 +7,8 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">닉네임</th>
-            <th scope="col" class="someFunction">뭔가기능1</th>
+            <th scope="col">정지기간</th>
+            <th scope="col" class="someFunction">정지</th>
             <th scope="col" class="someFunction">뭔가기능2</th>
         </tr>
     </thead>
@@ -21,7 +22,7 @@
 </form>
 
 <div id="pagination-container"></div>
-<form asp-action="GetPagination" asp-controller="Utility" method="get" id="pagination-form">
+<form asp-action="GetPagination" asp-controller="Shared" method="get" id="pagination-form">
     @Html.Hidden("PageNumber")
     @Html.Hidden("PageSize")
     @Html.Hidden("ToTalRowNum", Model.Pagination.TotalRowNum)
@@ -29,17 +30,68 @@
 </form>
 
 <div id="search-container"></div>
-<form asp-action="GetSearch" asp-controller="Utility" method="get" id="search-form">
+<form asp-action="GetSearch" asp-controller="Shared" method="get" id="search-form">
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
     @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
     @Html.Hidden("StringifiedSelectListItemList", Model.Search.StringifiedSelectListItemList)
     @Html.Hidden("FormId", Model.Search.FormId)
 </form>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">임차</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalData"></p>
+                <form asp-action="SuspendUser" asp-controller="User" method="post" id="user-suspend-form">
+                    @Html.Hidden("UserId")
+                    @Html.DropDownList("SuspensionTime", new List<SelectListItem>() {
+                        new SelectListItem("1일", DateTime.UtcNow.AddDays(1).ToString()),
+                        new SelectListItem("3일", DateTime.UtcNow.AddDays(3).ToString()),
+                        new SelectListItem("7일", DateTime.UtcNow.AddDays(7).ToString()),
+                        new SelectListItem("무기한", new DateTime(9999,12,31).ToString()),
+                    })
+                    <button type="submit">정지</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var userListTableForm = $("#user-list-table-form");
     var paginationForm = $("#pagination-form");
     var searchForm = $("#search-form");
+    var userSuspendForm = $("#user-suspend-form");
+
+    $("#exampleModal").ready(function () {
+        userSuspendForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    var d = JSON.parse(data);
+                    if (d.StatusCode == "200") {
+                        $("#exampleModal").modal('hide')
+                        userListTableForm.submit()
+                    }
+                    else {
+                        alert("no")
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            })
+        })
+    })
 
     $(document).ready(function () {
         userListTableForm.submit(function (e) {

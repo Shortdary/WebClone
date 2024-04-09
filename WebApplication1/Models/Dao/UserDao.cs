@@ -1,7 +1,7 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using WebApplication1.Models.Common;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace WebApplication1.Models.Dao
 {
@@ -68,6 +68,7 @@ namespace WebApplication1.Models.Dao
                     {
                         UserId = row.Field<int>("id"),
                         Nickname = row.Field<string>("nickname"),
+                        SuspensionTime = row.Field<DateTime?>("suspension_time"),
                     }).ToList();
             totalRowNum = ds.Tables[1].Select().FirstOrDefault()!.Field<int>("total_row_count");
             return (userList, totalRowNum);
@@ -89,8 +90,8 @@ namespace WebApplication1.Models.Dao
                 cmd.Parameters.AddWithValue("@nickname", p.Nickname);
 
                 conn.Open();
-                int rowsAffected = cmd.ExecuteNonQuery();
-
+                cmd.ExecuteNonQuery();
+                conn.Close();
             }
             catch (SqlException ex)
             {
@@ -120,5 +121,35 @@ namespace WebApplication1.Models.Dao
         {
             return "";
         }
+
+        public CommonResponseModel<string> SuspendUser(UserSuspendParameter p)
+        {
+            CommonResponseModel<string> result = new();
+            try
+            {
+                using SqlConnection conn = GetConnection();
+                SqlCommand cmd = new("spSuspendUser", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@user_id", p.UserId);
+                cmd.Parameters.AddWithValue("@suspension_time", DateTime.Parse(p.SuspensionTime));
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch(SqlException ex)
+            {
+                switch (ex.Number)
+                {
+                    default:
+                        result.StatusCode = 500;
+                        result.Data = "에러 발생";
+                        break;
+                }
+            }
+            return result;
+        }
     }
+    
 }
