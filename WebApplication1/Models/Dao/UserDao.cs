@@ -35,7 +35,8 @@ namespace WebApplication1.Models.Dao
                         UserId = row.Field<int>("id"),
                         Password = row.Field<string>("password")!,
                         Nickname = row.Field<string>("nickname")!,
-                        Roles = row.Field<string>("roles")!
+                        Roles = row.Field<string>("roles")!,
+                        SuspensionTime = row.Field<DateTime>("suspension_time")
                     };
                 }
 

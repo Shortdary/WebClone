@@ -44,7 +44,16 @@ public class UserService
         {
             result.StatusCode = 400;
             result.Data.ErrorMessage = "비밀번호를 확인해주세요.";
-        }
+        } 
+        else
+        {
+            if (user.SuspensionTime is not null && user.SuspensionTime > DateTime.UtcNow)
+            {
+                DateTime suspensionTime = (DateTime)user.SuspensionTime;
+                result.StatusCode = 400;
+                result.Data.ErrorMessage = $"{suspensionTime.AddHours(9)}까지 정지당했습니다.";
+            }
+        }  
 
         return result;
     }

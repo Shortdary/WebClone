@@ -24,6 +24,8 @@ public class User
     public string Nickname { get; set; } = null!;
 
     public string Roles { get; set; } = null!;
+
+    public DateTime? SuspensionTime { get; set; } = null!;
 }
 
 public class UserAddParamter

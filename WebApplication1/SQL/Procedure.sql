@@ -13,13 +13,14 @@ BEGIN
 	A.[id],
 	[password],
 	[nickname],
+	[suspension_time],
 	STRING_AGG(C.role_name, ',') as roles
 
 	FROM [dbo].[ApplicationUser] A
 	INNER JOIN [dbo].[ApplicationUser_Role] B ON A.[id] = B.[user_id]
 	INNER JOIN [dbo].[Role] C ON B.[role_id] = C.[id]
 	WHERE A.login_id=@login_id
-	GROUP BY A.id, [password], [nickname]
+	GROUP BY A.id, [password], [nickname], [suspension_time]
 END
 GO
 

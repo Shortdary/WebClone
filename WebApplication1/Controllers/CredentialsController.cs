@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using WebApplication1.Models;
 using WebApplication1.Utility.JWT;
 
@@ -47,7 +48,6 @@ namespace WebApplication1.Controllers
                 CookieOptions cookieOptions = new()
                 {
                     Expires = DateTime.UtcNow.AddHours(12),
-                    //Domain = Request.Path.Value,
                     Path = "/",
                     HttpOnly = true,
                     SameSite = SameSiteMode.Strict
@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers
             else
             {
                 ViewBag.ErrorMessage = result.Data.ErrorMessage;
-                return View();
+                return View("Login", loginUser);
             }
         }
 
