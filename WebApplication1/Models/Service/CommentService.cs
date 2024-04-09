@@ -1,6 +1,6 @@
 ﻿using WebApplication1.Models.Dao;
 
-namespace WebApplication1.Models.Service
+namespace WebApplication1.Models
 {
     public class CommentService
     {
@@ -23,6 +23,13 @@ namespace WebApplication1.Models.Service
         public void DeleteComment(CommentDelete commentData)
         {
             _commentDao.DeleteComment(commentData);
+        }
+
+        public List<Comment> GetAdminDetailCommentList(AdminUserDetailQuery q)
+        {
+            List<Comment> commentList;
+            (commentList, _) = _commentDao.GetCommentListByUserId(q);
+            return commentList;
         }
     }
 }

@@ -58,7 +58,6 @@ public class UserService
         return result;
     }
 
-
     public AdminUserListModel PopulateUserListModel(AdminUserListQuery q)
     {
         AdminUserListModel adminUserListModel = new();
@@ -94,30 +93,6 @@ public class UserService
         return userList;
     }
 
-    public AdminUserDetailModel PopulateUserDetailModel(AdminUserDetailQuery q)
-    {
-        AdminUserDetailModel adminUserDetailModel = new()
-        {
-            PageNumber = q.PageNumber,
-            PageSize = q.PageSize,
-            SearchKeyword = q.SearchKeyword,
-            SearchTarget = q.SearchTarget,
-            DetailType = q.DetailType,
-            Id = q.Id
-        };
-
-        if (q.DetailType == "Post")
-        {
-            (adminUserDetailModel.PostList, adminUserDetailModel.TotalRowNum) = _postDao.GetPostListByUserId(q);
-        }
-        else if (q.DetailType == "Comment")
-        {
-            (adminUserDetailModel.CommentList, adminUserDetailModel.TotalRowNum) = _commentDao.GetCommentListByUserId(q);
-        }
-
-        return adminUserDetailModel;
-    }
-
     public CommonResponseModel<string> CreateUser(UserAddParamter p)
     {
         if(p.IsEmpty())
@@ -138,4 +113,52 @@ public class UserService
         string jsonSerializedResult = JsonSerializer.Serialize(result);
         return jsonSerializedResult;
     }
+
+    public AdminUserDetailModel PopulateUserDetailModel(AdminUserDetailQuery q)
+    {
+        AdminUserDetailModel adminUserDetailModel = new()
+        {
+            DetailType = q.DetailType,
+            Id = q.Id
+        };
+        PaginationModel pagination = new()
+        {
+            PageNumber = q.PageNumber,
+            PageSize = q.PageSize,
+            FormId = "admin-user-detail-page-form"
+        };
+        List<SelectListItemModel> selectListItemList = new();
+        if (q.DetailType == "Post")
+        {
+            selectListItemList.Add(new() { Text = "게시물ID", Value = "id" });
+            selectListItemList.Add(new() { Text = "제목", Value = "subject" });
+        }
+        else if (q.DetailType == "Comment")
+        {
+            selectListItemList.Add(new() { Text = "댓글ID", Value = "id" });
+            selectListItemList.Add(new() { Text = "댓글내용", Value = "comment" });
+        }
+
+        SearchModel search = new()
+        {
+            SearchTarget = q.SearchTarget,
+            SearchKeyword = q.SearchKeyword,
+            FormId = "admin-user-detail-page-form",
+            StringifiedSelectListItemList = JsonSerializer.Serialize(selectListItemList)
+        };
+        adminUserDetailModel.Pagination = pagination;
+        adminUserDetailModel.Search = search;
+
+        if (q.DetailType == "Post")
+        {
+            (adminUserDetailModel.PostList, pagination.TotalRowNum) = _postDao.GetPostListByUserId(q);
+        }
+        else if (q.DetailType == "Comment")
+        {
+            (adminUserDetailModel.CommentList, pagination.TotalRowNum) = _commentDao.GetCommentListByUserId(q);
+        }
+
+        return adminUserDetailModel;
+    }
+
 }

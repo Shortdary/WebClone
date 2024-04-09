@@ -25,11 +25,36 @@
     </ul>
 </nav>
 
-@if (Model.DetailType == "Post")
-{
-    @await Html.PartialAsync("./UserDetailPost.cshtml", Model)
-}
-else if (Model.DetailType == "Comment")
-{
-    @await Html.PartialAsync("./UserDetailComment.cshtml", Model)
-}
+<div id="admin-user-detail-page-container"></div>
+<form asp-action="UpdateUserDetailPage" asp-controller="Admin" method="get" id="admin-user-detail-page-form">
+    @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
+    @Html.Hidden("PageSize", Model.Pagination.PageSize)
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+    @Html.Hidden("DetailType", Model.DetailType)
+    @Html.Hidden("Id", Model.Id)
+</form>
+
+<script>
+    var adminUserDetailPageForm = $("#admin-user-detail-page-form")
+
+    $(document).ready(function () {
+        adminUserDetailPageForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#admin-user-detail-page-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        adminUserDetailPageForm.submit();
+    })
+</script>

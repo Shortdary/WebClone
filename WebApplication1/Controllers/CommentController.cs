@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebApplication1.Models;
-using WebApplication1.Models.Service;
 
 namespace WebApplication1.Controllers
 {

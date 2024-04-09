@@ -69,10 +69,6 @@ namespace WebApplication1.Models.Dao
             {
                 cmd.CommandText = "spSelectPostsByUserId";
             }
-            else if (q.DetailType == "Comment")
-            {
-                cmd.CommandText = "spSelectCommentsByUserId";
-            }
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@user_id", q.Id);
             cmd.Parameters.AddWithValue("@page_number", q.PageNumber);

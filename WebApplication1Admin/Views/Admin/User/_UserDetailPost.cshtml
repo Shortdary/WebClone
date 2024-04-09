@@ -1,0 +1,113 @@
+﻿@model AdminUserDetailModel
+@{
+}
+
+<style>
+    .selected {
+        font-weight: bold;
+        text-decoration: underline;
+        text-decoration-style: solid;
+        text-decoration-thickness: auto;
+    }
+</style>
+
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">게시판</th>
+                <th scope="col">제목</th>
+                <th scope="col">생성시간</th>
+            </tr>
+        </thead>
+        <tbody class="table table-striped" id="user-detail-post-table-container"></tbody>
+    </table>
+</div>
+<form asp-action="GetUserDetailPostTable" asp-controller="Admin" method="get" id="user-detail-post-table-form">
+    @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
+    @Html.Hidden("PageSize", Model.Pagination.PageSize)
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+    @Html.Hidden("DetailType", Model.DetailType)
+    @Html.Hidden("Id", Model.Id)
+</form>
+
+<div id="pagination-container"></div>
+<form asp-action="GetPagination" asp-controller="Shared" method="get" id="pagination-form">
+    @Html.Hidden("PageNumber")
+    @Html.Hidden("PageSize")
+    @Html.Hidden("ToTalRowNum", Model.Pagination.TotalRowNum)
+    @Html.Hidden("FormId", Model.Pagination.FormId)
+</form>
+
+<div id="search-container"></div>
+<form asp-action="GetSearch" asp-controller="Shared" method="get" id="search-form">
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+    @Html.Hidden("StringifiedSelectListItemList", Model.Search.StringifiedSelectListItemList)
+    @Html.Hidden("FormId", Model.Search.FormId)
+</form>
+
+<script>
+    var userDetailPostListTableForm = $("#user-detail-post-table-form");
+    var paginationForm = $("#pagination-form");
+    var searchForm = $("#search-form");
+
+    $(document).ready(function () {
+        userDetailPostListTableForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#user-detail-post-table-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        paginationForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#pagination-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        searchForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#search-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        userDetailPostListTableForm.submit();
+        paginationForm.submit();
+        searchForm.submit();
+    })
+</script>

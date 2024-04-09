@@ -52,4 +52,11 @@ public class PostService
     {
         _postDao.DeletePost(p);
     }
+
+    public List<PostDetailWithUser> GetAdminDetailPostList(AdminUserDetailQuery q)
+    {
+        List<PostDetailWithUser> postList;
+        (postList, _) = _postDao.GetPostListByUserId(q);
+        return postList;
+    }
 }

@@ -1,0 +1,13 @@
+﻿@model List<Comment>
+@{
+}
+
+@foreach (Comment comment in Model)
+{
+    <tr>
+        <th scope="row">@comment.Id</th>
+        <td>@comment.PostId</td>
+        <td>@comment.Comment1</td>
+        <td>@comment.CreatedTime</td>
+    </tr>
+}

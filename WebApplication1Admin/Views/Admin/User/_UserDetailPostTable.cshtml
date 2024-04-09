@@ -1,0 +1,16 @@
+﻿@model List<PostDetailWithUser>
+@{
+}
+
+@foreach (PostDetailWithUser post in Model)
+{
+    <tr>
+        <th scope="row">@post.Id</th>
+        <td>@post.BoardName</td>
+        <td>@post.Subject</td>
+        <td>@post.CreatedTime</td>
+        <td>
+            <button class="btn btn-outline-primary stop delete">삭제</button>
+        </td>
+    </tr>
+}
