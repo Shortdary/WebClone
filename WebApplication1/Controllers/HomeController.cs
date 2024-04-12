@@ -11,9 +11,9 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index(BoardControllerCommonParameter controllerParameter)
         {
-            BoardServiceCommonParameter serviceParameter = new()
+            BoardControllerCommonParameter serviceParameter = new()
             {
-                BoardId = 24,
+                BoardId = 28,
                 PageNumber = controllerParameter.PageNumber,
                 PageSize = controllerParameter.PageSize
             };

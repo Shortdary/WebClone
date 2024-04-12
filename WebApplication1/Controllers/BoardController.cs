@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using System.Text.Json;
 
 namespace WebApplication1.Controllers
 {
@@ -13,96 +14,30 @@ namespace WebApplication1.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private async Task<IActionResult> BoardCommonMethod(BoardServiceCommonParameter serviceParameter)
+        [HttpGet]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> PostList(BoardControllerCommonParameter controllerParameter)
         {
-            HttpRequest? request = _httpContextAccessor.HttpContext?.Request;
-            ViewBag.RequestPath = request?.Path.ToString();
-            if (serviceParameter.Id > 0)
+            System.Diagnostics.Debug.WriteLine(controllerParameter.BoardId);
+            if (!(controllerParameter.Id > 0))
             {
-                PostDetailWithUser? postDetail = _postService.GetPostDetail(serviceParameter.Id);
+                System.Diagnostics.Debug.WriteLine("TEEELSKJSEIJOI");
+                _httpContextAccessor.HttpContext.Session.SetString("QueryParams", JsonSerializer.Serialize<BoardControllerCommonParameter>(controllerParameter));
+                System.Diagnostics.Debug.WriteLine(_httpContextAccessor.HttpContext.Session.GetString("QueryParams"));
+            }
+
+            if (controllerParameter.Id > 0)
+            {
+                PostDetailWithUser? postDetail = _postService.GetPostDetail(controllerParameter.Id);
+                postDetail.Parameters = controllerParameter;
                 return await Task.Run(() => View("Detail", postDetail));
             }
             else
             {
-                BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(serviceParameter);
+                BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(controllerParameter);
+                boardWithPosts.Parameters = controllerParameter;
                 return await Task.Run(() => View("Index", boardWithPosts));
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Best(BoardControllerCommonParameter controllerParameter)
-        {
-            
-            BoardServiceCommonParameter serviceParams = new()
-            {
-                BoardId = 24,
-                PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize,
-                SearchTarget = controllerParameter.SearchTarget,
-                SearchKeyword = controllerParameter.SearchKeyword,
-                Id = controllerParameter.Id
-            };
-            return await Task.Run(() => BoardCommonMethod(serviceParams));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> New(BoardControllerCommonParameter controllerParameter)
-        {
-            BoardServiceCommonParameter serviceParams = new()
-            {
-                BoardId = 25,
-                PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize,
-                SearchTarget = controllerParameter.SearchTarget,
-                SearchKeyword = controllerParameter.SearchKeyword,
-                Id = controllerParameter.Id
-            };
-            return await Task.Run(() => BoardCommonMethod(serviceParams));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Notice(BoardControllerCommonParameter controllerParameter)
-        {
-            BoardServiceCommonParameter serviceParams = new()
-            {
-                BoardId = 1,
-                PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize,
-                SearchTarget = controllerParameter.SearchTarget,
-                SearchKeyword = controllerParameter.SearchKeyword,
-                Id = controllerParameter.Id
-            };
-            return await Task.Run(() => BoardCommonMethod(serviceParams));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> StreamFree(BoardControllerCommonParameter controllerParameter)
-        {
-            BoardServiceCommonParameter serviceParams = new()
-            {
-                BoardId = 2,
-                PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize,
-                SearchTarget = controllerParameter.SearchTarget,
-                SearchKeyword = controllerParameter.SearchKeyword,
-                Id = controllerParameter.Id
-            };
-            return await Task.Run(() => BoardCommonMethod(serviceParams));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> StreamMeme(BoardControllerCommonParameter controllerParameter)
-        {
-            BoardServiceCommonParameter serviceParams = new()
-            {
-                BoardId = 3,
-                PageNumber = controllerParameter.PageNumber,
-                PageSize = controllerParameter.PageSize,
-                SearchTarget = controllerParameter.SearchTarget,
-                SearchKeyword = controllerParameter.SearchKeyword,
-                Id = controllerParameter.Id
-            };
-            return await Task.Run(() => BoardCommonMethod(serviceParams));
         }
     }
 }

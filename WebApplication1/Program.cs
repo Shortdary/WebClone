@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebApplication1.Models;
 using WebApplication1.Utility.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
-
-
+builder.Services.AddTransient<BoardService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -63,12 +63,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 //builder.Services.AddDistributedMemoryCache();
 
-//builder.Services.AddSession(options =>
-//{
-//    options.IdleTimeout = TimeSpan.FromSeconds(10);
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.IsEssential = true;
-//});
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -94,6 +93,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseSession();
+app.UseSession();
 
 app.Run();

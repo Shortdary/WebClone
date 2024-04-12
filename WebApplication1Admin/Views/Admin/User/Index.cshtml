@@ -9,7 +9,7 @@
 </style>
 
 <div id="admin-user-page-container"></div>
-<form asp-action="UpdateUserPage" asp-controller="Admin" method="get" id="admin-user-page-form">
+<form asp-action="UpdateUserPage" asp-controller="AdminUser" method="get" id="admin-user-page-form">
     @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
     @Html.Hidden("PageSize", Model.Pagination.PageSize)
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)

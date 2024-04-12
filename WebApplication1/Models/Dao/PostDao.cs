@@ -103,14 +103,14 @@ namespace WebApplication1.Models.Dao
             return (postList, totalRowNum);
         }
 
-        public BoardInfoWithPostList GetPostListByBoardId(BoardServiceCommonParameter p)
+        public BoardInfoWithPostList GetPostListByBoardId(BoardControllerCommonParameter p)
         {
             BoardInfoWithPostList boardWithPosts = new();
             using (var conn = GetConnection())
             using (var conn2 = GetConnection())
             {
                 SqlCommand postCmd = new(string.Empty, conn);
-                if (p.BoardId == 24)
+                if (p.BoardId == 28)
                 {
                     postCmd.CommandText = "spSelectPopularPosts";
                 }

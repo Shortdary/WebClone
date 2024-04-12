@@ -3,7 +3,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1Admin.Controllers
 {
-    public class AdminController : Controller
+    public class AdminUserController : Controller
     {
         private readonly UserService _userService = new();
         private readonly PostService _postService = new();

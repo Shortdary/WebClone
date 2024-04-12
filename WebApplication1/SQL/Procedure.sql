@@ -30,7 +30,7 @@ GO
 -- Create date: 2024-04-09
 -- Description:	suspend user
 -- =============================================
-CREATE PROCEDURE [dbo].[spSuspendUser] 
+ALTER PROCEDURE [dbo].[spSuspendUser] 
 	@user_id int,
 	@suspension_time datetime2
 AS
@@ -40,6 +40,33 @@ BEGIN
 	UPDATE [dbo].[ApplicationUser]
 	SET	suspension_time = @suspension_time
 	WHERE id = @user_id
+END
+GO
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-04-12
+-- Description:	get board list
+-- =============================================
+CREATE PROCEDURE [dbo].[spSelectBoards] 
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT * 
+	FROM [dbo].[Board]
+	WHERE is_deleted = 'false'
+	ORDER BY
+		CASE WHEN parent_board_id IS NULL 
+			THEN priority 
+			ELSE (SELECT priority
+					FROM Board b2 
+					WHERE b2.id = Board.parent_board_id) 
+			END ASC,
+		CASE WHEN parent_board_id IS NULL THEN NULL ELSE priority END ASC
+	;
+
 END
 GO
 

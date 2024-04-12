@@ -1,0 +1,89 @@
+#boards #page {
+    padding: 0 10px 10px
+}
+
+#boards #search {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px 10px
+}
+
+    #boards #search label {
+        font-size: 1.2em;
+        font-weight: 700
+    }
+
+    #boards #search input {
+        width: 200px;
+        height: 35px;
+        background-color: unset;
+        border: 2px solid var(--point-background-color);
+        border-radius: 12px
+    }
+
+#boardList {
+    margin: 0 auto
+}
+
+    #boardList table {
+        align-self: start;
+        width: 175px;
+        margin-bottom: 10px;
+        font-size: 1.1em
+    }
+
+    #boardList thead {
+        font-weight: 700;
+        color: var(--point-color);
+        background-color: var(--point-background-color)
+    }
+
+    #boardList tbody {
+        background-color: var(--alpha-5)
+    }
+
+    #boardList table th, #boardList table td {
+        padding: 3px
+    }
+
+    #boardList tbody tr:nth-child(5n):not(:last-child) td::after {
+        display: block;
+        height: 1px;
+        padding: 0;
+        margin-top: 10px;
+        margin-bottom: 4px;
+        content: "";
+        background-color: var(--alpha-20);
+        border: none
+    }
+
+    #boardList .favorite {
+        color: var(--point-background-color)
+    }
+
+.awesomplete {
+    width: 200px
+}
+
+    .awesomplete li {
+        color: #000 !important
+    }
+
+@media(max-width:950px) {
+    #boards #search {
+        width: 100%
+    }
+
+        #boards #search input {
+            width: 100%
+        }
+
+    #boardList table {
+        width: 160px
+    }
+
+    .awesomplete {
+        width: 100%
+    }
+}

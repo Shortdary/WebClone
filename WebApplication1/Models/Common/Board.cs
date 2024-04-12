@@ -14,6 +14,12 @@ public partial class Board
 
     public string Description { get; set; } = null!;
 
+    public int? ParentBoardId { get; set; }
+
+    public int? Priority { get; set; }
+
+    public bool IsDeleted { get; set; }
+
 }
 
 public class BoardInfoWithPostList: Board
@@ -33,28 +39,22 @@ public class BoardInfoWithPostList: Board
     public string SearchKeyword { get; set; } = null!;
 
     public int TotalRowNum { get; set; } = 0;
+
+    public BoardControllerCommonParameter? Parameters { get; set; } = new();
 }
 
 public class BoardControllerCommonParameter
 {
-    [FromQuery(Name ="page_number")]
     public int PageNumber { get; set; } = 1;
 
-    [FromQuery(Name = "page_size")]
     public int PageSize { get; set; } = 2;
 
-    [Display(Name = "search_target")]
-    [FromQuery(Name = "search_target")]
     public string SearchTarget { get; set; } = null!;
 
-    [Display(Name = "search_keyword")]
-    [FromQuery(Name = "search_keyword")]
     public string SearchKeyword { get; set; } = null!;
 
     public int Id { get; set; }
-}
 
-public class BoardServiceCommonParameter : BoardControllerCommonParameter
-{
     public int BoardId { get; set; }
 }
+

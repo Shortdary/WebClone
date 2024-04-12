@@ -26,7 +26,7 @@
 </nav>
 
 <div id="admin-user-detail-page-container"></div>
-<form asp-action="UpdateUserDetailPage" asp-controller="Admin" method="get" id="admin-user-detail-page-form">
+<form asp-action="UpdateUserDetailPage" asp-controller="AdminUser" method="get" id="admin-user-detail-page-form">
     @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
     @Html.Hidden("PageSize", Model.Pagination.PageSize)
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)

@@ -1,4 +1,7 @@
 ﻿@using System.Security.Claims
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @model PostDetailWithUser
 @{
     ViewData["Title"] = $"{Model.Subject}";
@@ -7,7 +10,10 @@
     {
         userId = int.Parse(ViewContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
     }
-    bool isBest = ViewBag.RequestPath.Contains("Best");
+    BoardControllerCommonParameter boardParameter = Model.Parameters;
+    boardParameter.Id = 0;
+
+    bool isBest = boardParameter.BoardId == 28;
 }
 
 <link rel="stylesheet" href="@(Url.Content("~/css/read.css"))" />
@@ -16,16 +22,14 @@
 <article id="article">
     <div class="sub">
         <div class="back">
-            <a asp-controller="Board" asp-action="@(isBest ? "Best" : Model.BoardNameEng)" asp-route-id="">
-                @(isBest ? "인기글" : $"{Model.BoardName}") &gt;
-            </a>
+            <a href="@Url.Action("PostList", "Board", boardParameter)">@(isBest ? "인기글" : $"{Model.BoardName}") &gt;</a>
         </div>
     </div>
     <div class="item">
         <div class="info">
             <div class="titleContainer">
                 <div class="category" title=@Model.BoardName>
-                    <span><a asp-controller="Board" asp-action=@Model.BoardNameEng asp-route-id="">@Model.BoardName</a></span>
+                    <span><a href="@Url.Action("PostList", "Board", new { @BoardId = Model.BoardId, @Id = 0 })">@Model.BoardName</a></span>
                 </div>
                 <span><h1>@Model.Subject</h1></span>
             </div>
@@ -99,7 +103,7 @@
             </div>
             <div class="center">
                 <div class="button">
-                    <a asp-controller="Board" asp-action=@(isBest ? "Best" : Model.BoardNameEng) asp-route-id="">
+                    <a href="@Url.Action("PostList", "Board", boardParameter)">
                         목록
                     </a>
                 </div>
@@ -113,7 +117,7 @@
         <div class="listAndEdit">
             <div class="left">
                 <div class="button">
-                    <a asp-route=@Model.BoardNameEng>
+                    <a href="@Url.Action("PostList", "Board", boardParameter)">
                         목록
                     </a>
                 </div>
@@ -123,10 +127,6 @@
         </div>
         <br>
     </div>
-
-
-
-
 </article>
 
 @section Scripts {

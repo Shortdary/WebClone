@@ -24,7 +24,7 @@
         <tbody class="table table-striped" id="user-detail-comment-table-container"></tbody>
     </table>
 </div>
-<form asp-action="GetUserDetailCommentTable" asp-controller="Admin" method="get" id="user-detail-comment-table-form">
+<form asp-action="GetUserDetailCommentTable" asp-controller="AdminUser" method="get" id="user-detail-comment-table-form">
     @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
     @Html.Hidden("PageSize", Model.Pagination.PageSize)
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)

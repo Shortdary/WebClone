@@ -43,6 +43,8 @@ public partial class PostDetailWithUser : Post
     public string? BoardNameEng { get; set; }
 
     public CommentPartialViewModel CommentPartialViewModel { get; set; } = null!;
+
+    public BoardControllerCommonParameter? Parameters { get; set; }
 }
 
 public partial class PostInsert

@@ -24,7 +24,7 @@
         <tbody class="table table-striped" id="user-detail-post-table-container"></tbody>
     </table>
 </div>
-<form asp-action="GetUserDetailPostTable" asp-controller="Admin" method="get" id="user-detail-post-table-form">
+<form asp-action="GetUserDetailPostTable" asp-controller="AdminUser" method="get" id="user-detail-post-table-form">
     @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
     @Html.Hidden("PageSize", Model.Pagination.PageSize)
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)

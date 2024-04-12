@@ -19,7 +19,7 @@ public class PostService
     /// </summary>
     /// <param name="serviceParamter"></param>
     /// <returns></returns>
-    public BoardInfoWithPostList GetPostListByBoadId(BoardServiceCommonParameter serviceParamter)
+    public BoardInfoWithPostList GetPostListByBoadId(BoardControllerCommonParameter serviceParamter)
     {
         return _postDao.GetPostListByBoardId(serviceParamter);
     }

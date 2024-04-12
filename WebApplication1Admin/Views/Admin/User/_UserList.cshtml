@@ -14,7 +14,7 @@
     </thead>
     <tbody class="table table-striped" id="user-list-table-container"></tbody>
 </table>
-<form asp-action="GetUserListTable" asp-controller="Admin" method="get" id="user-list-table-form">
+<form asp-action="GetUserListTable" asp-controller="AdminUser" method="get" id="user-list-table-form">
     @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
     @Html.Hidden("PageSize", Model.Pagination.PageSize)
     @Html.Hidden("SearchTarget", Model.Search.SearchTarget)

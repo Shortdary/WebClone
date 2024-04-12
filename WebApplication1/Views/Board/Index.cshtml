@@ -1,4 +1,6 @@
 ﻿@model BoardInfoWithPostList
+@using System.Text.Json
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     bool isBest = ViewBag.RequestPath is null ? true : ViewBag.RequestPath.Contains("Best");
     ViewData["Title"] = $"{Model.BoardName}";
@@ -20,7 +22,7 @@
     <section id="boardList">
         @foreach (var p in Model.PostList)
         {
-            <a class="item" asp-controller="Board" asp-action="@Model.BoardNameEng" asp-route-id="@p.Id">
+            <a class="item" asp-controller="Board" asp-action="PostList" asp-route-id="@p.Id" asp-route-BoardId=@Model.Parameters.BoardId>
                 <div class="image">
                     <img src="/asset/thumbnail.png">
                 </div>
@@ -50,21 +52,21 @@
             @{
                 if (pageIndex > 0)
                 {
-                    <a asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@(pageIndex * 5)>이전</a>
+                    <a asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@(pageIndex * 5)>이전</a>
                 }
             }
         </div>
         <div class="number">
             @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
             {
-                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@pageNumber>@pageNumber</a>
+                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@pageNumber>@pageNumber</a>
             }
         </div>
         <div class="next">
             @{
                 if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
                 {
-                    <a asp-route=@(currentUrl.Contains("best") ? @Model.BoardNameEng : "") asp-route-page_number=@(pageIndex * 5 + 6)>다음</a>
+                    <a asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@(pageIndex * 5 + 6)>다음</a>
                 }
             }
         </div>
@@ -72,16 +74,17 @@
     <div class="searchAndWrite">
         <div></div>
         <div>
-            @using (Html.BeginForm(isBest ? "Best" : Model.BoardNameEng, "Board", FormMethod.Get))
+            @using (Html.BeginForm("PostList", "Board", FormMethod.Get))
             {
                 <div class="search">
-                    @Html.DropDownList("search_target",
+                    @Html.DropDownList("SearchTarget",
                              new List<SelectListItem>()
                 {
                 new SelectListItem("사용자ID", "id")
                 ,new SelectListItem("닉네임", "nickname")
                 })
-                    @Html.TextBox("search_keyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    @Html.TextBox("SearchKeyword", Model.SearchKeyword, new { @maxlength = "50" })
+                    @Html.Hidden("BoardId", Model.Id)
                     <button type="submit">검색</button>
                 </div>
             }
