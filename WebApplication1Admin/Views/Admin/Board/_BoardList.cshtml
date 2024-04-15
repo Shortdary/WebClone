@@ -1,0 +1,27 @@
+﻿@model List<Board>
+@{
+    int? parentBoardId = null;
+}
+
+@foreach (Board board in Model)
+{
+    if (board.ParentBoardId is null)
+    {
+        parentBoardId = board.Id;
+        <table style="margin-bottom: 10px">
+            <thead class="group" style="table-layout: fixed; width: auto;">
+                <tr onclick="onClickBoardRow('@board.Id', '@board.BoardName', '@board.Description', '@board.ParentBoardId', '@board.Priority')">
+                    <th style="display: table; border: solid; border-width: 2px">@board.BoardName</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var childBoard in Model.Where(b => b.ParentBoardId == parentBoardId))
+                {
+                    <tr onclick="onClickBoardRow('@childBoard.Id', '@childBoard.BoardName', '@childBoard.Description', '@childBoard.ParentBoardId', '@childBoard.Priority')">
+                        <td>@childBoard.BoardName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

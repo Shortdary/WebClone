@@ -12,7 +12,7 @@ public partial class Board
 
     public string BoardNameEng { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string? Description { get; set; } = null!;
 
     public int? ParentBoardId { get; set; }
 
@@ -20,6 +20,32 @@ public partial class Board
 
     public bool IsDeleted { get; set; }
 
+}
+
+public partial class BoardAdd
+{
+    public string BoardName { get; set; } = null!;
+
+    public string BoardNameEng { get; set; } = null!;
+
+    public string Description { get; set; } = null!;
+
+    public int? ParentBoardId { get; set; }
+
+    public int? Priority { get; set; }
+}
+
+public partial class BoardEdit
+{
+    public int Id { get; set; }
+
+    public string BoardName { get; set; } = null!;
+
+    public string Description { get; set; } = null!;
+
+    public int? ParentBoardId { get; set; }
+
+    public int? Priority { get; set; }
 }
 
 public class BoardInfoWithPostList: Board

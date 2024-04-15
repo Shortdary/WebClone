@@ -18,12 +18,9 @@ namespace WebApplication1.Controllers
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> PostList(BoardControllerCommonParameter controllerParameter)
         {
-            System.Diagnostics.Debug.WriteLine(controllerParameter.BoardId);
             if (!(controllerParameter.Id > 0))
             {
-                System.Diagnostics.Debug.WriteLine("TEEELSKJSEIJOI");
                 _httpContextAccessor.HttpContext.Session.SetString("QueryParams", JsonSerializer.Serialize<BoardControllerCommonParameter>(controllerParameter));
-                System.Diagnostics.Debug.WriteLine(_httpContextAccessor.HttpContext.Session.GetString("QueryParams"));
             }
 
             if (controllerParameter.Id > 0)

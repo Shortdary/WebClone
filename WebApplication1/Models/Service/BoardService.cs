@@ -14,5 +14,15 @@ namespace WebApplication1.Models
         {
             return await Task.Run(() => _boardDao.GetBoardList());
         }
+
+        public CommonResponseModel<string> AddBoard(BoardAdd p)
+        {
+            return _boardDao.AddBoard(p);
+        }
+
+        public CommonResponseModel<string> EditBoard(BoardEdit p)
+        {
+            return _boardDao.EditBoard(p);
+        }
     }
 }

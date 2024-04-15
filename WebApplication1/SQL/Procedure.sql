@@ -49,7 +49,7 @@ GO
 -- Create date: 2024-04-12
 -- Description:	get board list
 -- =============================================
-CREATE PROCEDURE [dbo].[spSelectBoards] 
+ALTER PROCEDURE [dbo].[spSelectBoards] 
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -67,6 +67,86 @@ BEGIN
 		CASE WHEN parent_board_id IS NULL THEN NULL ELSE priority END ASC
 	;
 
+END
+GO
+
+
+-- =============================================
+-- Author:		kkh
+-- Create date: 2024-04-15
+-- Description:	add board
+-- =============================================
+CREATE PROCEDURE [dbo].[spInsertBoard] 
+	@board_name nvarchar(20),
+	@board_name_eng nchar(20),
+	@description nvarchar(50),
+	@parent_board_id int NULL,
+	@priority int NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @max_priority int;
+	-- 부모 게시판 추가의 경우 
+	IF @parent_board_id IS NULL
+    BEGIN
+		-- priority 지정 안해주었을때 마지막에 들어가도록
+		IF @priority IS NULL
+		BEGIN
+			SELECT @max_priority = ISNULL(MAX(priority), 0) FROM [dbo].[Board] WHERE parent_board_id IS NULL AND is_deleted = 'false';
+			SET @priority = @max_priority + 1;
+		END
+		-- priority 지정해주었을 때
+		ELSE
+		BEGIN 
+			UPDATE [dbo].[Board]
+			SET @priority = @max_priority + 1
+			WHERE priority >= @priority AND parent_board_id IS NULL AND is_deleted = 'false';
+		END
+    END
+	-- 자식 게시판 추가의 경우
+	ELSE
+	BEGIN
+		-- priority 지정 안해주었을때 마지막에 들어가도록
+		IF @priority IS NULL
+		BEGIN 
+		    SELECT @max_priority = ISNULL(MAX(priority), 0) FROM [dbo].[Board] WHERE parent_board_id = @parent_board_id AND is_deleted = 'false';
+			SET @priority = @max_priority + 1;
+		END
+	END
+
+	IF @priority > 0 AND @parent_board_id IS NULL 
+    BEGIN
+    END
+
+	-- 자식 게시판 추가의 경우 
+	 AND @parent_board_id > 0 
+    BEGIN
+        SELECT @max_priority = ISNULL(MAX(priority), 0) FROM [dbo].[Board] WHERE parent_board_id = @parent_board_id AND is_deleted = 'false';
+        SET @priority = @max_priority + 1;
+    END
+
+	-- 새로운 Board 추가
+	INSERT INTO [dbo].[Board]
+			   ([board_name]
+			   ,[board_name_eng]
+			   ,[description]
+			   ,[parent_board_id]
+			   ,[priority]
+			   ,[is_deleted])
+     VALUES
+           (@board_name
+           ,@board_name_eng
+           ,@description
+           ,@parent_board_id
+           ,@priority
+           ,'false')
+
+	-- priority 재정렬
+	DECLARE @new_priority INT = 1;
+	UPDATE [dbo].[Board]
+	SET @new_priority = priority = @new_priority + 1
+	WHERE is_deleted = 'false'
+	ORDER BY priority;
 END
 GO
 

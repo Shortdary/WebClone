@@ -1,0 +1,157 @@
+﻿@model List<Board>
+@{
+}
+
+<style>
+    #wrap {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #edit-board div {
+        margin-bottom: 10px;
+    }
+
+    #edit-board label {
+        display: block;
+    }
+
+    #edit-board input[type="text"] {
+        width: 100%;
+        box-sizing: border-box; /* 입력값에 padding과 border를 포함하여 width를 계산 */
+    }
+</style>
+
+<div id="wrap">
+    <article id="boards">
+        <section id="title">
+            <h1><div>전체 게시판</div></h1>
+        </section>
+        <section id="page">
+            <div id="board-list-container"></div>
+            <form asp-action="GetBoardListTable" asp-controller="AdminBoard" method="get" id="board-list-form">
+            </form>
+        </section>
+    </article>
+    <article id="controller">
+        <section id="title">
+            <h2><div>게시판 관리</div></h2>
+        </section>
+        <form id="edit-board" style="display: none" asp-action="EditBoard" asp-controller="AdminBoard" method="post">
+            <input type="hidden" id="Id" />
+            <div>
+                <label for="BoardName">게시판 이름:</label>
+                <input type="text" id="BoardName" name="BoardName" />
+            </div>
+            <div>
+                <label for="Description">게시판 설명:</label>
+                <input type="text" id="Description" name="Description" />
+            </div>
+            <div>
+                <input type="checkbox" id="is-child" onchange="toggleInput()" /> 자식게시판?
+            </div>
+            <div>
+                <label for="ParentBoardId">부모게시판 ID:</label>
+                <select id="ParentBoardId" name="ParentBoardId" disabled>
+                    <option value="null" selected>선택</option>
+                    @foreach (Board board in Model.Where(b => b.ParentBoardId is null))
+                    {
+                        <option value=@board.Id>@board.BoardName</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="Priority">노출순위: (공백시 마지막에 추가)</label>
+                <input type="number" id="Priority" name="Priority" />
+            </div>
+            <div>
+                <button type="submit">수정</button>
+                <button id="close-btn" onclick="closeForm()">닫기</button>
+            </div>
+        </form>
+    </article>
+</div>
+
+<script>
+    var boardListContainer = $("#board-list-container")
+    var boardListForm = $("#board-list-form");
+    var editBoardForm = $("#edit-board");
+
+    function toggleInput() {
+        var checkbox = document.getElementById("is-child");
+        var input = document.getElementById("ParentBoardId");
+
+        if (checkbox.checked) {
+            input.disabled = false;
+        } else {
+            input.disabled = true;
+            input.value = null;
+        }
+    }
+
+    $("#close-btn").click(function (event) {
+        event.preventDefault();
+        $("#edit-board").hide();
+    });
+
+    function onClickBoardRow(boardId, boardName, description, parentBoardId, priority) {
+        var form = $("#edit-board");
+        form.show();
+        form.find('#Id').val(boardId);
+        form.find('#BoardName').val(boardName);
+        form.find('#Description').val(description);
+        if (parentBoardId > 0) {
+            form.find('#is-child').prop('checked', true);
+            form.find('#ParentBoardId').prop('disabled', false)
+            form.find('#ParentBoardId').val(parentBoardId);
+        } else {
+            form.find('#is-child').prop('checked', false);
+            form.find('#ParentBoardId').prop('disabled', true)
+            form.find('#ParentBoardId').val('null');
+        }
+        form.find('#Priority').val(priority);
+    }
+
+    $(document).ready(function () {
+        boardListForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    boardListContainer.html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        editBoardForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        boardListForm.submit();
+                    } else {
+                        alert(data.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        boardListForm.submit();
+    })
+</script> 
