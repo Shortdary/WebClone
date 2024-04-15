@@ -21,15 +21,24 @@ namespace WebApplication1Admin.Controllers
             return await Task.Run(() => PartialView("~/Views/Admin/Board/_BoardList.cshtml", boardList));
         }
 
-        public async Task<IActionResult> AddBoard(BoardAdd p)
+        [HttpPost]
+        public async Task<CommonResponseModel<string>> AddBoard(BoardAdd p)
         {
             CommonResponseModel<string> result = _boardService.AddBoard(p);
-            return await Task.Run(() => View("~/Views/Admin/Board/Index.cshtml"));
+            return await Task.Run(() => result);
         }
 
+        [HttpPost]
         public async Task<CommonResponseModel<string>> EditBoard(BoardEdit p)
         {
             CommonResponseModel<string> result = _boardService.EditBoard(p);
+            return await Task.Run(() => result);
+        }
+
+        [HttpPost]
+        public async Task<CommonResponseModel<string>> DeleteBoard(BoardDelete p)
+        {
+            CommonResponseModel<string> result = _boardService.DeleteBoard(p);
             return await Task.Run(() => result);
         }
     }

@@ -85,9 +85,39 @@ namespace WebApplication1.Models.Dao
                     };
                     cmd.Parameters.AddWithValue("@id", p.Id);
                     cmd.Parameters.AddWithValue("@board_name", p.BoardName);
-                    cmd.Parameters.AddWithValue("@description", p.Description);
-                    cmd.Parameters.AddWithValue("@parent_board_id", p.ParentBoardId is null ? DBNull.Value : p.ParentBoardId);
+                    cmd.Parameters.AddWithValue("@description", string.IsNullOrEmpty(p.Description) ? DBNull.Value : p.Description );
+                    cmd.Parameters.AddWithValue("@parent_board_id", p.ParentBoardId == 0 ? DBNull.Value : p.ParentBoardId);
                     cmd.Parameters.AddWithValue("@priority", p.Priority is null ? DBNull.Value : p.Priority);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    switch (ex.Number)
+                    {
+                        default:
+                            result.StatusCode = 500;
+                            result.Data = "에러 발생";
+                            break;
+                    }
+                }
+                conn.Close();
+            }
+            return result;
+        }
+
+        public CommonResponseModel<string> DeleteBoard(BoardDelete p)
+        {
+            CommonResponseModel<string> result = new();
+            using (SqlConnection conn = GetConnection())
+            {
+                try
+                {
+                    SqlCommand cmd = new("spDeleteBoard", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+                    cmd.Parameters.AddWithValue("@id", p.Id);
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }

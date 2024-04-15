@@ -24,5 +24,10 @@ namespace WebApplication1.Models
         {
             return _boardDao.EditBoard(p);
         }
+
+        public CommonResponseModel<string> DeleteBoard(BoardDelete p)
+        {
+            return _boardDao.DeleteBoard(p);
+        }
     }
 }

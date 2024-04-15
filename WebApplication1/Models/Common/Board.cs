@@ -48,6 +48,11 @@ public partial class BoardEdit
     public int? Priority { get; set; }
 }
 
+public partial class BoardDelete
+{
+    public int Id { get; set; }
+}
+
 public class BoardInfoWithPostList: Board
 {
     public List<PostDetailWithUser> PostList { get; set; } = null!;
