@@ -24,11 +24,12 @@ public partial class Board
 
 public partial class BoardAdd
 {
+    [Required(ErrorMessage = "게시판 이름은 필수입니다.")]
     public string BoardName { get; set; } = null!;
 
-    public string BoardNameEng { get; set; } = null!;
-
-    public string Description { get; set; } = null!;
+    public string? BoardNameEng { get; set; }
+    
+    public string? Description { get; set; }
 
     public int? ParentBoardId { get; set; }
 

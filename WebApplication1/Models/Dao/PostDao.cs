@@ -156,7 +156,7 @@ namespace WebApplication1.Models.Dao
                     {
                         Id = row.Field<int>("id"),
                         BoardName = row.Field<string>("board_name")!,
-                        BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                        BoardNameEng = row.Field<string?>("board_name_eng") is not null ? row.Field<string?>("board_name_eng").Trim() : row.Field<string?>("board_name_eng"),
                         Description = row.Field<string>("description")!,
                         PageNumber = p.PageNumber,
                         PageSize = p.PageSize,

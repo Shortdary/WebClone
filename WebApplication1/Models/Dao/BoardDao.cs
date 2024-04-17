@@ -27,7 +27,7 @@ namespace WebApplication1.Models.Dao
                    {
                        Id = row.Field<int>("id")!,
                        BoardName = row.Field<string>("board_name")!,
-                       BoardNameEng = row.Field<string>("board_name_eng")!.Trim(),
+                       BoardNameEng = row.Field<string?>("board_name_eng") is not null ? row.Field<string?>("board_name_eng").Trim() : row.Field<string?>("board_name_eng"),
                        Description = row.Field<string?>("description"),
                        ParentBoardId = row.Field<int?>("parent_board_id"),
                        Priority = row.Field<int>("priority"),
@@ -50,8 +50,8 @@ namespace WebApplication1.Models.Dao
                         CommandType = CommandType.StoredProcedure
                     };
                     cmd.Parameters.AddWithValue("@board_name", p.BoardName);
-                    cmd.Parameters.AddWithValue("@board_name_eng", p.BoardNameEng);
-                    cmd.Parameters.AddWithValue("@description", p.Description);
+                    cmd.Parameters.AddWithValue("@board_name_eng", p.BoardNameEng is null ? DBNull.Value : p.BoardNameEng);
+                    cmd.Parameters.AddWithValue("@description", p.Description is null ? DBNull.Value : p.Description);
                     cmd.Parameters.AddWithValue("@parent_board_id", p.ParentBoardId is null ? DBNull.Value : p.ParentBoardId);
                     cmd.Parameters.AddWithValue("@priority", p.Priority is null ? DBNull.Value : p.Priority);
                     conn.Open();

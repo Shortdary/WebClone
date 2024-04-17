@@ -24,8 +24,27 @@ namespace WebApplication1Admin.Controllers
         [HttpPost]
         public async Task<CommonResponseModel<string>> AddBoard(BoardAdd p)
         {
-            CommonResponseModel<string> result = _boardService.AddBoard(p);
-            return await Task.Run(() => result);
+            CommonResponseModel<string> result = new();
+            if (ModelState.IsValid)
+            {
+                result = _boardService.AddBoard(p);
+                return await Task.Run(() => result);
+            }
+            else
+            {
+                result.StatusCode = 400;
+                foreach (var entry in ModelState.Values)
+                {
+                    System.Diagnostics.Debug.WriteLine(entry.RawValue.ToString());
+                    var errors = entry.Errors;
+                    if(errors.Count > 0)
+                    {
+                        result.Data += $"{errors[0].ErrorMessage}\n";
+                    }
+                }
+                return await Task.Run(() => result);
+            }
+
         }
 
         [HttpPost]

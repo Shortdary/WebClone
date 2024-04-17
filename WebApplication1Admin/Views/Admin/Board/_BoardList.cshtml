@@ -3,6 +3,12 @@
     int? parentBoardId = null;
 }
 
+<style>
+    tr:hover{
+        cursor: pointer;
+    }
+</style>
+
 @foreach (Board board in Model)
 {
     if (board.ParentBoardId is null)

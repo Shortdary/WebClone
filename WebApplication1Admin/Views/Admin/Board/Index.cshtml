@@ -43,7 +43,7 @@
         </section>
         <form id="edit-board" style="display: none" asp-action="EditBoard" asp-controller="AdminBoard" method="post">
             <div>
-                <label for="Id">게시판 이름:</label>
+                <label for="Id">게시판 ID:</label>
                 <input type="text" id="Id" name="Id" readonly />
             </div>
             <div>
@@ -75,6 +75,10 @@
                 <button type="submit">수정</button>
                 <button id="close-btn" onclick="closeForm()">닫기</button>
             </div>
+        </form>
+        <form id="delete-board-form" style="display: none" asp-action="DeleteBoard" asp-controller="AdminBoard" method="post">
+            <input type="hidden" id="Id" name="Id"></input>
+            <button type="submit">삭제</button>
         </form>
     </article>
 </div>
@@ -129,6 +133,7 @@
     var boardListForm = $("#board-list-form");
     var editBoardForm = $("#edit-board");
     var addBoardForm = $("#board-add-form");
+    var deleteBoardForm = $("#delete-board-form");
 
     function toggleInput() {
         var checkbox = document.getElementById("is-child");
@@ -157,18 +162,22 @@
     $("#close-btn").click(function (event) {
         event.preventDefault();
         $("#edit-board").hide();
+        $("#delete-board").hide();
     });
 
     $("#boardAddModal").ready(function () {
         addBoardForm.submit(function (e) {
             e.preventDefault();
             var formData = $(this).serialize();
+            if (!formData.includes("ParentBoardId")) {
+                formData += "&ParentBoardId=";
+            }
             $.ajax({
                 url: $(this).attr('action'),
                 type: $(this).attr('method'),
                 data: formData,
                 success: function (data) {
-                    if (data.StatusCode == 200) {
+                    if (data.statusCode == 200) {
                         $("#boardAddModal").modal('hide')
                         boardListForm.submit();
                     }
@@ -186,7 +195,9 @@
     function onClickBoardRow(boardId, boardName, description, parentBoardId, priority) {
         var form = $("#edit-board");
         form.show();
+        deleteBoardForm.show();
         form.find('#Id').val(boardId);
+        deleteBoardForm.find('#Id').val(boardId);
         form.find('#BoardName').val(boardName);
         form.find('#Description').val(description);
         if (parentBoardId > 0) {
@@ -234,6 +245,7 @@
                         if (data.statusCode == 200) {
                             boardListForm.submit();
                             editBoardForm.hide();
+                            deleteBoardForm.hide();
                         } else {
                             alert(data.data);
                         }
@@ -243,7 +255,30 @@
                     }
                 });
             }
-            
+        });
+
+        deleteBoardForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            if (confirm("삭제해요??")) {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: $(this).attr('method'),
+                    data: formData,
+                    success: function (data) {
+                        if (data.statusCode == 200) {
+                            boardListForm.submit();
+                            editBoardForm.hide();
+                            deleteBoardForm.hide();
+                        } else {
+                            alert(data.data);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
         });
 
         boardListForm.submit();
