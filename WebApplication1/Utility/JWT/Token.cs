@@ -34,7 +34,7 @@ namespace WebApplication1.Utility.JWT
 
                 Issuer = _config.GetValue<string>("Jwt:Issuer"),
                 Audience = _config.GetValue<string>("Jwt:Audience"),
-                Expires = DateTime.UtcNow.AddMinutes(5), // 토큰 만료 시간 설정
+                Expires = DateTime.UtcNow.AddMinutes(30), // 토큰 만료 시간 설정
                 SigningCredentials = new(_jwtSecretKey, SecurityAlgorithms.HmacSha256Signature)
             };
             foreach (string role in userInfo.Roles.Split(","))
@@ -46,26 +46,6 @@ namespace WebApplication1.Utility.JWT
             string tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
-
-
-            //        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]));
-            //        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.Sha512);
-            //        var claims = new[]
-            //        {
-            //    new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
-            //    new Claim(ClaimTypes.Role, userInfo.UserRole),
-            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            //};
-
-            //        var token = new JwtSecurityToken(
-            //            issuer: _config["Jwt:Issuer"],
-            //            audience: _config["Jwt:Audience"],
-            //            claims: claims,
-            //            expires: DateTime.Now.AddHours(1),
-            //            signingCredentials: credentials
-            //        );
-
-            //        return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public string VerifyJWTToken(string token)

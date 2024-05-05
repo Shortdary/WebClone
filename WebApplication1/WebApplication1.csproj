@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.3" />
     <PackageReference Include="TinyMCE" Version="7.0.0" />
   </ItemGroup>
 
