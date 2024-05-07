@@ -58,33 +58,17 @@ public class BoardInfoWithPostList: Board
 {
     public List<PostDetailWithUser> PostList { get; set; } = null!;
 
-    public int PageNumber { get; set; } = 1;
+    public int TotalRowNum { get; set; }
 
-    public int PageSize { get; set; } = 1;
+    public PaginationModel Pagination { get; set; } = new();
 
-    [Display(Name = "search_target")]
-    [FromQuery(Name = "search_target")]
-    public string SearchTarget { get; set; } = null!;
-
-    [Display(Name = "search_keyword")]
-    [FromQuery(Name = "search_keyword")]
-    public string SearchKeyword { get; set; } = null!;
-
-    public int TotalRowNum { get; set; } = 0;
+    public SearchModel Search { get; set; } = new();
 
     public BoardControllerCommonParameter? Parameters { get; set; } = new();
 }
 
-public class BoardControllerCommonParameter
+public class BoardControllerCommonParameter : CommonQueryFilter
 {
-    public int PageNumber { get; set; } = 1;
-
-    public int PageSize { get; set; } = 2;
-
-    public string SearchTarget { get; set; } = null!;
-
-    public string SearchKeyword { get; set; } = null!;
-
     public int Id { get; set; }
 
     public int BoardId { get; set; }

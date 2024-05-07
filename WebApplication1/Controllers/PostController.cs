@@ -23,8 +23,8 @@ namespace WebApplication1.Controllers
             p.CreatedUid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             if (ModelState.IsValid)
             {
-                (int newPostId, string newPostBoardName) = _postService.CreatePost(p);
-                return RedirectToAction(newPostBoardName, "Board", new { Id = newPostId });
+                (int newPostId, int boardId) = _postService.CreatePost(p);
+                return RedirectToAction("PostList", "Board", new { Id = newPostId, BoardId = boardId });
             }
 
             return View("New");

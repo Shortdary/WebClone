@@ -1,0 +1,30 @@
+﻿@model BoardInfoWithPostList
+@{
+}
+
+@foreach (var p in Model.PostList)
+{
+    <a class="item" asp-controller="Board" asp-action="PostList" asp-route-id="@p.Id" asp-route-BoardId=@Model.Parameters.BoardId>
+        <div class="image">
+            <img src="/asset/thumbnail.png">
+        </div>
+        <div class="info">
+            <div class="titleContainer">
+                <span class="category">@p.BoardName</span>
+                <span class="title">
+                    <span class="text">@p.Subject</span>
+                    <span class="commentCount">@p.CommentCount</span>
+                </span>
+            </div>
+            <div class="etc">
+                <div class="nickName">@p.Nickname</div>
+                <div class="dot"></div>
+                <div class="datetime">@p.CreatedTime</div>
+                <div class="dot"></div>
+                <div class="viewCount"><i class="fa-regular fa-eye"></i>@p.ViewCount</div>
+                <div class="dot"></div>
+                <div class="likeCount"><i class="fa-regular fa-thumbs-up"></i>@p.LikeCount</div>
+            </div>
+        </div>
+    </a>
+}

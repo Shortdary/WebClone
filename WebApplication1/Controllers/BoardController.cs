@@ -36,5 +36,21 @@ namespace WebApplication1.Controllers
                 return await Task.Run(() => View("Index", boardWithPosts));
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateBoardPage(BoardControllerCommonParameter controllerParameter)
+        {
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostListByBoadId(controllerParameter);
+            boardWithPosts.Parameters = controllerParameter;
+            return await Task.Run(() => PartialView("~/Views/Board/_BoardPage.cshtml", boardWithPosts));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPostList(BoardControllerCommonParameter controllerParameter)
+        {
+            BoardInfoWithPostList boardWithPosts = _postService.GetPostList(controllerParameter);
+            boardWithPosts.Parameters = controllerParameter;
+            return await Task.Run(() => PartialView("~/Views/Board/_BoardPostList.cshtml", boardWithPosts));
+        }
     }
 }

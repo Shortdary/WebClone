@@ -2,98 +2,62 @@
 @using System.Text.Json
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
-    bool isBest = ViewBag.RequestPath is null ? true : ViewBag.RequestPath.Contains("Best");
     ViewData["Title"] = $"{Model.BoardName}";
     string currentUrl = Url.ActionContext.HttpContext.Request.Path;
-    int pageIndex = (Model.PageNumber - 1) / 5;
-    int maxPageCount = Model.TotalRowNum % Model.PageSize == 0 ? Model.TotalRowNum / Model.PageSize : (Model.TotalRowNum / Model.PageSize) + 1;
 }
 
 <article id="list">
-    <section id="title">
-        <h1>
-            <div style="font-weight: 700; font-size: 21px">@Model.BoardName</div>
-            @if (currentUrl != "/")
-            {
-                <div class="description">@Model.Description</div>
-            }
-        </h1>
-    </section>
-    <section id="boardList">
-        @foreach (var p in Model.PostList)
-        {
-            <a class="item" asp-controller="Board" asp-action="PostList" asp-route-id="@p.Id" asp-route-BoardId=@Model.Parameters.BoardId>
-                <div class="image">
-                    <img src="/asset/thumbnail.png">
-                </div>
-                <div class="info">
-                    <div class="titleContainer">
-                        <span class="category">@p.BoardName</span>
-                        <span class="title">
-                            <span class="text">@p.Subject</span>
-                            <span class="commentCount">@p.CommentCount</span>
-                        </span>
-                    </div>
-                    <div class="etc">
-                        <div class="nickName">@p.Nickname</div>
-                        <div class="dot"></div>
-                        <div class="datetime">@p.CreatedTime</div>
-                        <div class="dot"></div>
-                        <div class="viewCount"><i class="fa-regular fa-eye"></i>@p.ViewCount</div>
-                        <div class="dot"></div>
-                        <div class="likeCount"><i class="fa-regular fa-thumbs-up"></i>@p.LikeCount</div>
-                    </div>
-                </div>
-            </a>
-        }
-    </section>
-    <section class="pagination">
-        <div class="prev">
-            @{
-                if (pageIndex > 0)
+    <section id="title" style="align-items: center;
+    justify-content: space-between;
+    display: flex;">
+        <span>
+            <h1>
+                <div style="font-weight: 700; font-size: 21px">@Model.BoardName</div>
+                @if (currentUrl != "/")
                 {
-                    <a asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@(pageIndex * 5)>이전</a>
+                    <div class="description">@Model.Description</div>
                 }
-            }
-        </div>
-        <div class="number">
-            @for (int pageNumber = pageIndex * 5 + 1; pageNumber <= Math.Min(maxPageCount, pageIndex * 5 + 5); pageNumber++)
-            {
-                <a class="@(@Model.PageNumber == pageNumber  ? "selected" : "notSelected")" asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@pageNumber>@pageNumber</a>
-            }
-        </div>
-        <div class="next">
-            @{
-                if (maxPageCount > 5 && maxPageCount >= pageIndex * 5 + 6)
-                {
-                    <a asp-controller="Board" asp-action="PostList" asp-route-BoardId=@Model.Id asp-route-PageNumber=@(pageIndex * 5 + 6)>다음</a>
-                }
-            }
-        </div>
-    </section>
-    <div class="searchAndWrite">
-        <div></div>
-        <div>
-            @using (Html.BeginForm("PostList", "Board", FormMethod.Get))
-            {
-                <div class="search">
-                    @Html.DropDownList("SearchTarget",
-                             new List<SelectListItem>()
-                {
-                new SelectListItem("사용자ID", "id")
-                ,new SelectListItem("닉네임", "nickname")
-                })
-                    @Html.TextBox("SearchKeyword", Model.SearchKeyword, new { @maxlength = "50" })
-                    @Html.Hidden("BoardId", Model.Id)
-                    <button type="submit">검색</button>
-                </div>
-            }
-        </div>
-        <div class="write">
+            </h1>
+        </span>
+        <span class="write">
             @if (User.Identity.IsAuthenticated)
             {
                 <a href="/new_post">글쓰기</a>
             }
-        </div>
-    </div>
+        </span>
+    </section>
+    <div id="board-page-container"></div>
+    <form asp-action="UpdateBoardPage" asp-controller="Board" method="get" id="board-page-form">
+        @Html.Hidden("BoardId", Model.Id)
+        @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
+        @Html.Hidden("PageSize", Model.Pagination.PageSize)
+        @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+        @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+    </form>
+
+
 </article>
+
+<script>
+    var boardPageForm = $("#board-page-form");
+
+    $(document).ready(function () {
+        boardPageForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#board-page-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        boardPageForm.submit();
+    })
+</script>

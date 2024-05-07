@@ -59,7 +59,7 @@
                             <ul id="popUp" name="popUp">
                                 @if (c.CreatedUid == userId)
                                 {
-                                    <li class="commentEdit"><button id="commentEdit"><i class="fa-regular fa-edit"></i>&nbsp;수정</button></li>
+                                    @* <li class="commentEdit"><button id="commentEdit"><i class="fa-regular fa-edit"></i>&nbsp;수정</button></li> *@
 
                                     @using (Html.BeginForm("Delete", "Comment", FormMethod.Post, new { @name = "commentForm" }))
                                     {
@@ -72,8 +72,8 @@
                                         @Html.AntiForgeryToken()
                                     }
                                 }
-                                <li class="report"><button type="button"><i class="fa-regular fa-flag"></i>&nbsp;신고</button></li>
-                                <li class="block"><button type="button"><i class="fa-solid fa-ban"></i>&nbsp;차단</button></li>
+                                @* <li class="report"><button type="button"><i class="fa-regular fa-flag"></i>&nbsp;신고</button></li>
+                                <li class="block"><button type="button"><i class="fa-solid fa-ban"></i>&nbsp;차단</button></li> *@
                             </ul>
                         </div>
                     </div>

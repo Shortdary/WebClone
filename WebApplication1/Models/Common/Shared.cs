@@ -33,7 +33,7 @@ public partial class PaginationModel
 
     public int PageNumber { get; set; } = 1;
 
-    public int PageSize { get; set; } = 1;
+    public int PageSize { get; set; } = 2;
 
     public int TotalRowNum { get; set; }
 }

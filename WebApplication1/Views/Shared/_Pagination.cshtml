@@ -36,6 +36,8 @@
     function SubmitForms(pageNumber) {
         mainForm.find("#PageNumber").val(pageNumber);
         mainForm.submit();
+        $("#pagination-form").find("#PageNumber").val(pageNumber);
+        $("#pagination-form").submit();
     }
 
     $(document).ready(function () {
@@ -46,7 +48,7 @@
             SubmitForms(pageNumber);
         });
 
-        // 이전 버튼 클릭시 행동
+        // 페이지 클릭시 행동
         var numbers = document.getElementsByName("number-anchor");
 
         for (var i = 0; i < numbers.length; i++) {

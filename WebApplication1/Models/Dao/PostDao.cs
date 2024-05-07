@@ -6,7 +6,7 @@ namespace WebApplication1.Models.Dao
 {
     public class PostDao : DBHelper
     {
-        public (int, string) CreatePost(PostInsert p)
+        public (int, int) CreatePost(PostInsert p)
         {
             using var conn = GetConnection();
             SqlCommand cmd = new("spInsertPost", conn)
@@ -26,7 +26,7 @@ namespace WebApplication1.Models.Dao
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
-            return ((int)returnId.Value, ((string)returnBoardName.Value).Trim());
+            return ((int)returnId.Value, p.BoardId);
         }
         public void EditPost(PostEdit p)
         {
@@ -158,8 +158,6 @@ namespace WebApplication1.Models.Dao
                         BoardName = row.Field<string>("board_name")!,
                         BoardNameEng = row.Field<string?>("board_name_eng") is not null ? row.Field<string?>("board_name_eng").Trim() : row.Field<string?>("board_name_eng"),
                         Description = row.Field<string>("description")!,
-                        PageNumber = p.PageNumber,
-                        PageSize = p.PageSize,
                     };
                 }
 

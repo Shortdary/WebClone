@@ -1,0 +1,92 @@
+﻿@model BoardInfoWithPostList
+@{
+}
+
+<section id="boardList"></section>
+<form asp-action="GetPostList" asp-controller="Board" method="get" id="board-post-list-form">
+    @Html.Hidden("BoardId", Model.Id)
+    @Html.Hidden("PageNumber", Model.Pagination.PageNumber)
+    @Html.Hidden("PageSize", Model.Pagination.PageSize)
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+</form>
+
+<div id="pagination-container"></div>
+<form asp-action="GetPagination" asp-controller="Shared" method="get" id="pagination-form">
+    @Html.Hidden("PageNumber")
+    @Html.Hidden("PageSize")
+    @Html.Hidden("ToTalRowNum", Model.Pagination.TotalRowNum)
+    @Html.Hidden("FormId", Model.Pagination.FormId)
+</form>
+<div id="search-container">
+</div>
+<form asp-action="GetSearch" asp-controller="Shared" method="get" id="search-form">
+    @Html.Hidden("SearchTarget", Model.Search.SearchTarget)
+    @Html.Hidden("SearchKeyword", Model.Search.SearchKeyword)
+    @Html.Hidden("StringifiedSelectListItemList", Model.Search.StringifiedSelectListItemList)
+    @Html.Hidden("FormId", Model.Search.FormId)
+</form>
+
+<script>
+    var boardPostListForm = $("#board-post-list-form");
+    var paginationForm = $("#pagination-form");
+    var searchForm = $("#search-form");
+    var userSuspendForm = $("#user-suspend-form");
+
+    $(document).ready(function () {
+        boardPostListForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#boardList").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        paginationForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#pagination-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        searchForm.submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (data) {
+                    $("#search-container").html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        boardPostListForm.submit();
+        paginationForm.submit();
+        searchForm.submit();
+    })
+</script>
